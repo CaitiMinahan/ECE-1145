@@ -80,7 +80,12 @@ public void BlueStartsWithLeigon(){
   Position BluePlayerPositionLeigon = new Position(1,2);
   assertThat(game.getUnitAt(BluePlayerPositionLeigon).getTypeString(), is(GameConstants.LEGION));
 }
-
+@Test
+public void OnlyOneUnitAllowedOnATile(){
+    Position moveFrom = new Position(0,0);
+    Position moveTo = new Position(0,1);
+    assertEquals(game.moveUnit(moveFrom, moveTo), true); // confirm that we can move our unit from (0,0) to (0,1)
+}
   /** REMOVE ME. Not a test of HotCiv, just an example of what
       matchers the hamcrest library has... */
   @Test

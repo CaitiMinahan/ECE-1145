@@ -46,9 +46,7 @@ public class GameImpl implements Game {
     units.put(new Position(0,0), new UnitImpl(GameConstants.ARCHER, Player.RED));
     units.put(new Position(1,1), new UnitImpl(GameConstants.SETTLER, Player.RED));
     units.put(new Position(1,2), new UnitImpl(GameConstants.LEGION, Player.BLUE));
-
   }
-
   public Tile getTileAt( Position p ) { return null; }
   public Unit getUnitAt( Position p ) {
     // make sure we never return a null unit in the map
@@ -57,7 +55,6 @@ public class GameImpl implements Game {
     if (unit != null){
       return unit;
     }
-
 
     // let's say that the red player has two units initially: archer and settler
     // the archer will be placed at position tile (0,0) and the settler at (1,1)
@@ -116,7 +113,23 @@ public class GameImpl implements Game {
   public Player getWinner() { return null; }
   public int getAge() { return 0; }
   public boolean moveUnit( Position from, Position to ) {
-    return false;
+    // try to move unit and reutrn true if nothing is there
+    // then place the unit at the desired position
+    // check for unit at 'from' position
+    Unit unit_from = getUnitAt(from);
+
+    // if there's no unit at the 'from' position (aka, there's nothing to move)
+    if (unit_from == null){
+      return false;
+    }
+    // if the 'to' unit already has a unit there
+    if (getUnitAt(to) != null) {
+      return false;
+    }
+    // otherwise, move the unit from the original position to the new one
+    units.remove(from);
+    units.put(to, unit_from);
+    return true;
   }
   public void endOfTurn() {
     //swicth players when the other's turn ends
