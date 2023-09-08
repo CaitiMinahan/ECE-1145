@@ -49,10 +49,34 @@ public class TestAlphaCiv {
   @Test
   public void shouldBeRedAsStartingPlayer() {
     assertThat(game, is(notNullValue()));
-    // TODO: reenable the assert below to get started...
-    // assertThat(game.getPlayerInTurn(), is(Player.RED));
+    // TODO: reenable the assert below to get started..
+     assertThat(game.getPlayerInTurn(), is(Player.RED));
   }
 
+  // test alternative players when one's turn ends
+  @Test
+  public void shouldAlternateBetweenRedAndBluePlayers() {
+    assertThat(game, is(notNullValue()));
+
+    // Check that the game starts with RED player
+    assertThat(game.getPlayerInTurn(), is(Player.RED));
+
+    // End the turn, and it should become BLUE player's turn
+    game.endOfTurn();
+    assertThat(game.getPlayerInTurn(), is(Player.BLUE));
+
+    // End the turn again, it should become RED player's turn
+    game.endOfTurn();
+    assertThat(game.getPlayerInTurn(), is(Player.RED));
+  }
+
+  @Test
+  public void Tile_1_0_ShouldBeOcean() {
+    assertThat(game, is(notNullValue()));
+    // check the terrain type
+    assertThat(game.getTileAt(new Position(1,0).getTypeString(), is(GameConstants.OCEANS)));
+  }
+ 
   /** REMOVE ME. Not a test of HotCiv, just an example of what
       matchers the hamcrest library has... */
   @Test

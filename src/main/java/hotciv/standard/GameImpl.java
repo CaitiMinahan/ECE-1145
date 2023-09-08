@@ -30,16 +30,33 @@ import hotciv.framework.*;
 */
 
 public class GameImpl implements Game {
+  // create current player to keep track of
+  private Player currentPlayer;
+
+  // GameImpl constructor
+  public GameImpl(){
+    // initialize the game with the first player as RED
+    currentPlayer = Player.RED;
+  }
+
   public Tile getTileAt( Position p ) { return null; }
   public Unit getUnitAt( Position p ) { return null; }
   public City getCityAt( Position p ) { return null; }
-  public Player getPlayerInTurn() { return null; }
+  public Player getPlayerInTurn() {
+    // return null;
+    // return the current player
+    return currentPlayer;
+    }
   public Player getWinner() { return null; }
   public int getAge() { return 0; }
   public boolean moveUnit( Position from, Position to ) {
     return false;
   }
-  public void endOfTurn() {}
+  public void endOfTurn() {
+    //swicth players when the other's turn ends
+    //later on, we can use a switch case to switch between players (after blue, yellow goes, etc.)
+    currentPlayer = (currentPlayer == Player.RED) ? Player.BLUE : Player.RED;
+  }
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
   public void performUnitActionAt( Position p ) {}
