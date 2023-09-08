@@ -35,12 +35,19 @@ import java.util.Map;
 public class GameImpl implements Game {
   // create current player to keep track of
   private Player currentPlayer;
+  private Player lastPlayer;
   private Map<Position, Unit> units; // use a hash map to store the units on the board
+  private int age;
 
   // GameImpl constructor
   public GameImpl(){
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
+    // initialize the last player as the opposite of RED
+    lastPlayer = Player.BLUE;
+    // game starts at 4000 BC
+    age = 4000;
+    // TODO: may need to later implement players as a list and index through the list to keep track of whose turn it is
     units = new HashMap<>();
     // initialize units of RED and BLUE players
     units.put(new Position(0,0), new UnitImpl(GameConstants.ARCHER, Player.RED));
@@ -111,7 +118,11 @@ public class GameImpl implements Game {
     return currentPlayer;
     }
   public Player getWinner() { return null; }
-  public int getAge() { return 0; }
+  public int getAge() {
+    // a round ends when each player's turn ends
+    return age;
+    //return 0;
+  }
   public boolean moveUnit( Position from, Position to ) {
     // try to move unit and reutrn true if nothing is there
     // then place the unit at the desired position
@@ -134,7 +145,19 @@ public class GameImpl implements Game {
   public void endOfTurn() {
     //swicth players when the other's turn ends
     //later on, we can use a switch case to switch between players (after blue, yellow goes, etc.)
+    lastPlayer = currentPlayer; // update the last player to keep track of who went
     currentPlayer = (currentPlayer == Player.RED) ? Player.BLUE : Player.RED;
+
+    // check if round has ended if everyone has finished their turn
+    if(currentPlayer == Player.RED){
+      endOfRound(); // will set it to turn to move to the next round
+    }
+  }
+  // TODO: check what constitutes as a round
+  public boolean endOfRound(){
+    // all players have ended their turns if currentPlayer is the last player
+    age += 100;
+    return currentPlayer == lastPlayer;
   }
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
