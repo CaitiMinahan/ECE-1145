@@ -117,7 +117,12 @@ public class GameImpl implements Game {
     // return the current player
     return currentPlayer;
     }
-  public Player getWinner() { return null; }
+  public Player getWinner() {
+    if(age == 3000){
+      return Player.RED; // red player wins in 3000 BC
+    }
+    return null;
+  }
   public int getAge() {
     // a round ends when each player's turn ends
     return age;
@@ -145,20 +150,22 @@ public class GameImpl implements Game {
   public void endOfTurn() {
     //swicth players when the other's turn ends
     //later on, we can use a switch case to switch between players (after blue, yellow goes, etc.)
-    lastPlayer = currentPlayer; // update the last player to keep track of who went
+    // lastPlayer = currentPlayer; // update the last player to keep track of who went
     currentPlayer = (currentPlayer == Player.RED) ? Player.BLUE : Player.RED;
 
-    // check if round has ended if everyone has finished their turn
-    if(currentPlayer == Player.RED){
-      endOfRound(); // will set it to turn to move to the next round
-    }
+//    if (endOfRound()){
+//      age -= 100;
+//    }
   }
   // TODO: check what constitutes as a round
-  public boolean endOfRound(){
-    // all players have ended their turns if currentPlayer is the last player
-    age += 100;
-    return currentPlayer == lastPlayer;
-  }
+//  public boolean endOfRound(){
+//    // all players have ended their turns if currentPlayer is the last player
+//    boolean isEndOfRound = currentPlayer == lastPlayer;
+//    if (isEndOfRound){
+//      age -= 100;
+//    }
+//    return isEndOfRound;
+//  }
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
   public void performUnitActionAt( Position p ) {}
