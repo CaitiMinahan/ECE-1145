@@ -56,8 +56,6 @@ public class TestAlphaCiv {
   // test alternative players when one's turn ends
   @Test
   public void shouldAlternateBetweenRedAndBluePlayers() {
-    assertThat(game, is(notNullValue()));
-
     // Check that the game starts with RED player
     assertThat(game.getPlayerInTurn(), is(Player.RED));
 
@@ -69,14 +67,20 @@ public class TestAlphaCiv {
     game.endOfTurn();
     assertThat(game.getPlayerInTurn(), is(Player.RED));
   }
+@Test
+public void RedStartsWithArcherandSettler(){
+    // initialize position of red player
+    Position RedPlayerPositionArcher = new Position(0,0);
+    Position RedPlayerPositionSettler = new Position(1,1);
+    assertThat(game.getUnitAt(RedPlayerPositionArcher).getTypeString(), is(GameConstants.ARCHER));
+    assertThat(game.getUnitAt(RedPlayerPositionSettler).getTypeString(), is(GameConstants.SETTLER));
+}
+@Test
+public void BlueStartsWithLeigon(){
+  Position BluePlayerPositionLeigon = new Position(1,2);
+  assertThat(game.getUnitAt(BluePlayerPositionLeigon).getTypeString(), is(GameConstants.LEGION));
+}
 
-  @Test
-  public void Tile_1_0_ShouldBeOcean() {
-    assertThat(game, is(notNullValue()));
-    // check the terrain type
-    assertThat(game.getTileAt(new Position(1,0).getTypeString(), is(GameConstants.OCEANS)));
-  }
- 
   /** REMOVE ME. Not a test of HotCiv, just an example of what
       matchers the hamcrest library has... */
   @Test
