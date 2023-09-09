@@ -87,22 +87,23 @@ public void OnlyOneUnitAllowedOnATile(){
     assertEquals(game.moveUnit(moveFrom, moveTo), true); // confirm that we can move our unit from (0,0) to (0,1)
 }
 @Test
-public void GameStartsAt4000BC(){
-      assertEquals(game.getAge(), 4000);
+public void GameStartsAt4000BCAndAges100EachRound(){
+    // create a new game instance
+    Game game = new GameImpl();
+    // make sure we initially start the game at year 4000 BC
+    assertEquals(game.getAge(), 4000);
+    // perform one round of turns (RED then BLUE)
+    game.endOfTurn();
+    game.endOfTurn();
+    // verify the age has decreased by 100
+    assertEquals(game.getAge(), 3900);
   }
-//  @Test
-//public void Ages100EachRound(){
-//      game.endOfTurn();
-//      game.endOfTurn();
-//      assertEquals(game.getAge(), 3900);
-//}
-    
 //@Test
 //public void RedWinsIn3000BC(){
 //    // simulate going through the rounds before we each year 3000 BC
-////    while (game.getAge() > 3000){
-////      game.endOfTurn();
-////    }
+//    while (game.getAge() > 3000){
+//      game.endOfTurn();
+//    }
 //    assertThat(game.getAge(), is(3000));
 //    assertThat(game.getWinner(), is(Player.RED));
 //  }
