@@ -98,13 +98,13 @@ public void GameStartsAt4000BCAndAges100EachRound(){
     // verify the age has decreased by 100
     assertEquals(game.getAge(), 3900);
   }
-//@Test
-//public void RedWinsIn3000BC(){
-//    // simulate going through the rounds before we each year 3000 BC
-//    while (game.getAge() > 3000){
-//      game.endOfTurn();
-//    }
-//    assertThat(game.getAge(), is(3000));
-//    assertThat(game.getWinner(), is(Player.RED));
-//  }
+@Test
+public void RedWinsIn3000BC(){
+    // simulate going through the rounds before we each year 3000 BC
+    while (game.getAge() > 3000){
+      game.endOfTurn();
+    }
+    assertThat(game.getAge(), is(3000));
+    assertThat(game.getWinner(), is(Player.RED));
+  }
 }
