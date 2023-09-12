@@ -66,7 +66,15 @@ public class TestAlphaCiv {
     assertThat(game.getTileAt(plainsPosition).getTypeString(), is(GameConstants.PLAINS));
     assertThat(game.getTileAt(plainsPosition2).getTypeString(), is(GameConstants.PLAINS));
   }
+  @Test
+  public void citiesShouldEndWith60Population() {
+        GameImpl.CityImpl city = new GameImpl.CityImpl();
 
+        for (int i = 0; i < 10; i++){
+            game.endOfTurn();
+        }
+        assertThat(city.getTreasury(), is(60));
+  }
   // test alternative players when one's turn ends
   @Test
   public void shouldAlternateBetweenRedAndBluePlayers() {
