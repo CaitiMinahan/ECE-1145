@@ -73,7 +73,9 @@ public class TestAlphaCiv {
         for (int i = 0; i < 10; i++){
             game.endOfTurn();
         }
+        // 10 rounds, 6 production each round = 60 production
         assertThat(city.getTreasury(), is(60));
+        assertThat(city.getSize(), is(1));
   }
   // test alternative players when one's turn ends
   @Test
