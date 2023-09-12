@@ -48,9 +48,23 @@ public class TestAlphaCiv {
   // FRS p. 455 states that 'Red is the first player to take a turn'.
   @Test
   public void shouldBeRedAsStartingPlayer() {
+
     assertThat(game, is(notNullValue()));
-    // TODO: reenable the assert below to get started..
-     assertThat(game.getPlayerInTurn(), is(Player.RED));
+    assertThat(game.getPlayerInTurn(), is(Player.RED));
+  }
+  @Test
+  public void shouldDefineTiles() {
+    Position oceanPosition = new Position(1,0);
+    Position hillsPosition = new Position(0,1);
+    Position mountPosition = new Position(2, 2);
+    Position plainsPosition = new Position(0,0);
+    Position plainsPosition2 = new Position(3,2);
+
+    assertThat(game.getTileAt(oceanPosition).getTypeString(), is(GameConstants.OCEANS));
+    assertThat(game.getTileAt(hillsPosition).getTypeString(), is(GameConstants.HILLS));
+    assertThat(game.getTileAt(mountPosition).getTypeString(), is(GameConstants.MOUNTAINS));
+    assertThat(game.getTileAt(plainsPosition).getTypeString(), is(GameConstants.PLAINS));
+    assertThat(game.getTileAt(plainsPosition2).getTypeString(), is(GameConstants.PLAINS));
   }
 
   // test alternative players when one's turn ends
