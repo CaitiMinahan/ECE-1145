@@ -48,34 +48,100 @@ public class TestAlphaCiv {
   // FRS p. 455 states that 'Red is the first player to take a turn'.
   @Test
   public void shouldBeRedAsStartingPlayer() {
+
     assertThat(game, is(notNullValue()));
-    // TODO: reenable the assert below to get started...
-    // assertThat(game.getPlayerInTurn(), is(Player.RED));
+    assertThat(game.getPlayerInTurn(), is(Player.RED));
   }
-
-  /** REMOVE ME. Not a test of HotCiv, just an example of what
-      matchers the hamcrest library has... */
   @Test
-  public void shouldDefinetelyBeRemoved() {
-    // Matching null and not null values
-    // 'is' require an exact match
-    String s = null;
-    assertThat(s, is(nullValue()));
-    s = "Ok";
-    assertThat(s, is(notNullValue()));
-    assertThat(s, is("Ok"));
+  public void shouldDefineTiles() {
+    Position oceanPosition = new Position(1,0);
+    Position hillsPosition = new Position(0,1);
+    Position mountPosition = new Position(2, 2);
+    Position plainsPosition = new Position(0,0);
+    Position plainsPosition2 = new Position(3,2);
 
-    // If you only validate substrings, use containsString
-    assertThat("This is a dummy test", containsString("dummy"));
-
-    // Match contents of Lists
-    List<String> l = new ArrayList<String>();
-    l.add("Bimse");
-    l.add("Bumse");
-    // Note - ordering is ignored when matching using hasItems
-    assertThat(l, hasItems(new String[] {"Bumse","Bimse"}));
-
-    // Matchers may be combined, like is-not
-    assertThat(l.get(0), is(not("Bumse")));
+    assertThat(game.getTileAt(oceanPosition).getTypeString(), is(GameConstants.OCEANS));
+    assertThat(game.getTileAt(hillsPosition).getTypeString(), is(GameConstants.HILLS));
+    assertThat(game.getTileAt(mountPosition).getTypeString(), is(GameConstants.MOUNTAINS));
+    assertThat(game.getTileAt(plainsPosition).getTypeString(), is(GameConstants.PLAINS));
+    assertThat(game.getTileAt(plainsPosition2).getTypeString(), is(GameConstants.PLAINS));
   }
+
+  // test alternative players when one's turn ends
+  @Test
+  public void shouldAlternateBetweenRedAndBluePlayers() {
+    // Check that the game starts with RED player
+    assertThat(game.getPlayerInTurn(), is(Player.RED));
+
+    // End the turn, and it should become BLUE player's turn
+    game.endOfTurn();
+    assertThat(game.getPlayerInTurn(), is(Player.BLUE));
+
+    // End the turn again, it should become RED player's turn
+    game.endOfTurn();
+    assertThat(game.getPlayerInTurn(), is(Player.RED));
+  }
+@Test
+public void RedStartsWithArcherandSettler(){
+    // initialize position of red player
+    Position RedPlayerPositionArcher = new Position(0,0);
+    Position RedPlayerPositionSettler = new Position(1,1);
+    assertThat(game.getUnitAt(RedPlayerPositionArcher).getTypeString(), is(GameConstants.ARCHER));
+    assertThat(game.getUnitAt(RedPlayerPositionSettler).getTypeString(), is(GameConstants.SETTLER));
 }
+@Test
+public void BlueStartsWithLegion(){
+  Position BluePlayerPositionLeigon = new Position(1,2);
+  assertThat(game.getUnitAt(BluePlayerPositionLeigon).getTypeString(), is(GameConstants.LEGION));
+}
+@Test
+public void OnlyOneUnitAllowedOnATile(){
+    Position moveFrom = new Position(0,0);
+    Position moveTo = new Position(0,1);
+    assertEquals(game.moveUnit(moveFrom, moveTo), true); // confirm that we can move our unit from (0,0) to (0,1)
+}
+@Test
+public void GameStartsAt4000BCAndAges100EachRound(){
+    // create a new game instance
+    Game game = new GameImpl();
+    // make sure we initially start the game at year 4000 BC
+    assertEquals(game.getAge(), 4000);
+    // perform one round of turns (RED then BLUE)
+    game.endOfTurn();
+    game.endOfTurn();
+    // verify the age has decreased by 100
+    assertEquals(game.getAge(), 3900);
+  }
+@Test
+public void RedWinsIn3000BC(){
+    // simulate going through the rounds before we each year 3000 BC
+    while (game.getAge() > 3000){
+      game.endOfTurn();
+    }
+    assertThat(game.getAge(), is(3000));
+    assertThat(game.getWinner(), is(Player.RED));
+  }
+@Test
+public void AttackingUnitShouldAlwaysWin(){
+    // when a unit moves into an occupied space, the battle begins. Attacking unit should always win
+    // initialize the location of the red player
+    Game game = new GameImpl();
+    Position redPlayerPosition = new Position(0,0); // position of red player with archer
+    Position redPlayerPosition2 = new Position(1,1); // position of red player with settler
+    Position bluePlayerPosition = new Position(1,2); // position of blue player with legion
+
+    // check that there are three units
+    assertThat(game.getUnitAt(redPlayerPosition).getOwner(), is(Player.RED));
+    assertThat(game.getUnitAt(redPlayerPosition2).getOwner(), is(Player.RED));
+    assertThat(game.getUnitAt(bluePlayerPosition).getOwner(), is(Player.BLUE));
+
+    // move the red player to attack the blue player
+    // should return true that the red player now moved to the blue's tile
+    assertThat(game.moveUnit(redPlayerPosition, bluePlayerPosition), is(true));
+
+    // check that there are now two units
+    assertThat(game.getUnitAt(bluePlayerPosition).getOwner(), is(Player.RED));
+}
+}
+
+
