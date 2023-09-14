@@ -108,3 +108,8 @@ public void RedWinsIn3000BC(){
     assertThat(game.getWinner(), is(Player.RED));
   }
 }
+
+// check to see if what type of unit the current player has
+// if the current player has a unit, make sure it has no actions
+// also check to see if the unit of the current player is an attacking unit (legion or archer)
+// and declare them as the winner
