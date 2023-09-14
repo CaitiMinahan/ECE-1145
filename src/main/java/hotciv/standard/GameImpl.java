@@ -1,9 +1,8 @@
 package hotciv.standard;
-
 import hotciv.framework.*;
-
 import java.util.HashMap;
 import java.util.Map;
+import hotciv.standard.*;
 
 /** Skeleton implementation of HotCiv.
  
@@ -78,37 +77,7 @@ public class GameImpl implements Game {
     }
     return null;
   }
-  private class UnitImpl implements Unit {
-    private String unit;
-    private Player owner;
-    private int moveCount;
-    private int defensiveStrength;
-    private int attackingStrength;
-    public UnitImpl(String unit, Player owner){
-      this.unit = unit;
-      this.owner = owner;
-    }
-    @Override
-    public String getTypeString() {
-      return unit;
-    }
-    @Override
-    public Player getOwner() {
-      return owner;
-    }
-    @Override
-    public int getMoveCount() {
-      return moveCount;
-    }  // TODO: should MoveCount deal with rounds ending?
-    @Override
-    public int getDefensiveStrength() {
-      return defensiveStrength;
-    }
-    @Override
-    public int getAttackingStrength() {
-      return attackingStrength;
-    }
-  }
+
   public Tile getTileAt( Position p ) {
     if ((p.getRow() == 1) && (p.getColumn() == 0)) {
       return new TileImpl("ocean");
@@ -121,16 +90,7 @@ public class GameImpl implements Game {
       return new TileImpl("plains");
     }
   }
-  private class TileImpl implements Tile {
-      private String terrain;
-      public TileImpl(String terrain){
-        this.terrain = terrain;
-      }
-      @Override
-      public String getTypeString() {
-        return terrain;
-      }
-    }
+
   public City getCityAt( Position p ) { return null; }
   public Player getWinner() {
     if(age == 3000){
