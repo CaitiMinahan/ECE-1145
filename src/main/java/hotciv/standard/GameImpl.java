@@ -1,5 +1,6 @@
 package hotciv.standard;
 import hotciv.framework.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import hotciv.standard.*;
@@ -43,6 +44,8 @@ public class GameImpl implements Game {
   public GameImpl(){
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
+    CityImpl.treasury = 0;
+
     // game starts at 4000 BC
     age = 4000;
     // initialize the turn count to 0
@@ -91,7 +94,9 @@ public class GameImpl implements Game {
     }
   }
 
-  public City getCityAt( Position p ) { return null; }
+  public City getCityAt( Position p ) {
+    return new CityImpl();
+  }
   public Player getWinner() {
     if(age == 3000){
       return Player.RED; // red player wins in 3000 BC
@@ -142,6 +147,10 @@ public class GameImpl implements Game {
   }
   public void endOfTurn() {
     // TODO: check what constitutes as a round
+    // create a city with size (population = 1
+    CityImpl city = new CityImpl();
+    // add 6 production (or money) at the end of the turn
+    city.treasury += 6;
     // later on, we can include all players (after blue, yellow goes, etc.)
     // switch players when it's the other's turn
     currentPlayer = (currentPlayer == Player.RED) ? Player.BLUE : Player.RED;
