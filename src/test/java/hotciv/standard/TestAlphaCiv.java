@@ -67,7 +67,7 @@ public class TestAlphaCiv {
     assertThat(game.getTileAt(plainsPosition2).getTypeString(), is(GameConstants.PLAINS));
   }
   @Test
-  public void citiesShouldEndWith60Population() {
+  public void citiesShouldEndWith60Production() {
         GameImpl.CityImpl city = new GameImpl.CityImpl();
 
         for (int i = 0; i < 10; i++){
