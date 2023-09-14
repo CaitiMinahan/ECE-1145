@@ -1,9 +1,9 @@
 package hotciv.standard;
-
 import hotciv.framework.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import hotciv.standard.*;
 
 /** Skeleton implementation of HotCiv.
  
@@ -40,14 +40,16 @@ public class GameImpl implements Game {
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
 
+  public CityImpl currentCity;
+
+  // TODO: might need to keep track of current tile later
+  public TileImpl currentTile;
 
   // GameImpl constructor
   public GameImpl(){
     // initialize the game with the first player as RED
-
     currentPlayer = Player.RED;
-    CityImpl.treasury = 0;
-
+    currentCity = new CityImpl();
     // game starts at 4000 BC
     age = 4000;
     // initialize the turn count to 0
@@ -59,78 +61,6 @@ public class GameImpl implements Game {
     units.put(new Position(0,0), new UnitImpl(GameConstants.ARCHER, Player.RED));
     units.put(new Position(1,1), new UnitImpl(GameConstants.SETTLER, Player.RED));
     units.put(new Position(1,2), new UnitImpl(GameConstants.LEGION, Player.BLUE));
-
-  }
-  private class UnitImpl implements Unit {
-    private String unit;
-    private Player owner;
-    private int moveCount;
-    private int defensiveStrength;
-    private int attackingStrength;
-    public UnitImpl(String unit, Player owner){
-      this.unit = unit;
-      this.owner = owner;
-    }
-    @Override
-    public String getTypeString() {
-      return unit;
-    }
-    @Override
-    public Player getOwner() {
-      return owner;
-    }
-    @Override
-    public int getMoveCount() {
-      return moveCount;
-    }  // TODO: should MoveCount deal with rounds ending?
-    @Override
-    public int getDefensiveStrength() {
-      return defensiveStrength;
-    }
-    @Override
-    public int getAttackingStrength() {
-      return attackingStrength;
-    }
-  }
-  private class TileImpl implements Tile {
-    private String terrain;
-    public TileImpl(String terrain){
-      this.terrain = terrain;
-    }
-    @Override
-    public String getTypeString() {
-      return terrain;
-    }
-  }
-  public static class CityImpl implements City {
-    private int size;
-    private Player owner;
-
-    /* productionUnit = type of unit being
-      produced at a certain city
-     */
-    private String productionUnit;
-    private String focus;
-    /* treasury = number of money/production in the city's treasury
-     that can be used to produce a
-     unit in the city
-     */
-    private static int treasury;
-
-    public CityImpl() {
-      size = 1;
-    }
-
-    @Override
-    public Player getOwner() { return owner; }
-    @Override
-    public int getSize() { return size; }
-    @Override
-    public int getTreasury() { return treasury; }
-    @Override
-    public String getProduction() { return productionUnit; }
-    @Override
-    public String getWorkforceFocus() { return focus; }
   }
   public Unit getUnitAt( Position p ) {
     // make sure we never return a null unit in the map
@@ -154,6 +84,7 @@ public class GameImpl implements Game {
     }
     return null;
   }
+
   public Tile getTileAt( Position p ) {
     if ((p.getRow() == 1) && (p.getColumn() == 0)) {
       return new TileImpl("ocean");
@@ -166,11 +97,11 @@ public class GameImpl implements Game {
       return new TileImpl("plains");
     }
   }
+
   public City getCityAt( Position p ) {
-    return new CityImpl();
+    return currentCity;
   }
   public Player getWinner() {
-
     if(age == 3000){
       return Player.RED; // red player wins in 3000 BC
     }
@@ -219,11 +150,9 @@ public class GameImpl implements Game {
     return true;
   }
   public void endOfTurn() {
-    // TODO: check what constitutes as a round
     // create a city with size (population = 1
-    CityImpl city = new CityImpl();
     // add 6 production (or money) at the end of the turn
-    city.treasury += 6;
+    currentCity.setTreasury(currentCity.getTreasury()+6);
     // later on, we can include all players (after blue, yellow goes, etc.)
     // switch players when it's the other's turn
     currentPlayer = (currentPlayer == Player.RED) ? Player.BLUE : Player.RED;

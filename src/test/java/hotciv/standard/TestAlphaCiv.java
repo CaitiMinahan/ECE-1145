@@ -68,14 +68,14 @@ public class TestAlphaCiv {
   }
   @Test
   public void citiesShouldEndWith60Production() {
-        GameImpl.CityImpl city = new GameImpl.CityImpl();
-
+//        GameImpl city = new GameImpl();
+      Position cityPosition = new Position(3,2);
         for (int i = 0; i < 10; i++){
             game.endOfTurn();
         }
         // 10 rounds, 6 production each round = 60 production
-        assertThat(city.getTreasury(), is(60));
-        assertThat(city.getSize(), is(1));
+        assertThat(game.getCityAt(cityPosition).getTreasury(), is(60));
+        assertThat(game.getCityAt(cityPosition).getSize(), is(1));
   }
   // test alternative players when one's turn ends
   @Test
@@ -152,6 +152,10 @@ public void AttackingUnitShouldAlwaysWin(){
     // check that there are now two units
     assertThat(game.getUnitAt(bluePlayerPosition).getOwner(), is(Player.RED));
 }
-}
 
+// check to see if what type of unit the current player has
+// if the current player has a unit, make sure it has no actions
+// also check to see if the unit of the current player is an attacking unit (legion or archer)
+// and declare them as the winner
+}
 
