@@ -40,10 +40,14 @@ public class GameImpl implements Game {
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
 
+
   // GameImpl constructor
   public GameImpl(){
     // initialize the game with the first player as RED
+
     currentPlayer = Player.RED;
+    CityImpl.treasury = 0;
+
     // game starts at 4000 BC
     age = 4000;
     // initialize the turn count to 0
@@ -55,28 +59,7 @@ public class GameImpl implements Game {
     units.put(new Position(0,0), new UnitImpl(GameConstants.ARCHER, Player.RED));
     units.put(new Position(1,1), new UnitImpl(GameConstants.SETTLER, Player.RED));
     units.put(new Position(1,2), new UnitImpl(GameConstants.LEGION, Player.BLUE));
-  }
-  public Unit getUnitAt( Position p ) {
-    // make sure we never return a null unit in the map
-    Unit unit = units.get(p);
-    // if the unit is not found in the map, return it
-    if (unit != null){
-      return unit;
-    }
-    // let's initialize the archer will be placed at position tile (0,0) and the settler at (1,1) for the red player
-    if ((currentPlayer == Player.RED && (p.equals(new Position(0,0)) || p.equals(new Position(1,1))))){
-      if(p.equals(new Position(0,0))){
-        return new UnitImpl(GameConstants.ARCHER, Player.RED);
-      }
-      else{
-        return new UnitImpl(GameConstants.SETTLER, Player.RED);
-      }
-    }
-    // let's also initialize the legion placed at position tile (1,2) for the blue player
-    else if ((currentPlayer == Player.BLUE && (p.equals(new Position(1,2))))){
-      return new UnitImpl(GameConstants.LEGION, Player.BLUE);
-    }
-    return null;
+
   }
   private class UnitImpl implements Unit {
     private String unit;
@@ -109,6 +92,68 @@ public class GameImpl implements Game {
       return attackingStrength;
     }
   }
+  private class TileImpl implements Tile {
+    private String terrain;
+    public TileImpl(String terrain){
+      this.terrain = terrain;
+    }
+    @Override
+    public String getTypeString() {
+      return terrain;
+    }
+  }
+  public static class CityImpl implements City {
+    private int size;
+    private Player owner;
+
+    /* productionUnit = type of unit being
+      produced at a certain city
+     */
+    private String productionUnit;
+    private String focus;
+    /* treasury = number of money/production in the city's treasury
+     that can be used to produce a
+     unit in the city
+     */
+    private static int treasury;
+
+    public CityImpl() {
+      size = 1;
+    }
+
+    @Override
+    public Player getOwner() { return owner; }
+    @Override
+    public int getSize() { return size; }
+    @Override
+    public int getTreasury() { return treasury; }
+    @Override
+    public String getProduction() { return productionUnit; }
+    @Override
+    public String getWorkforceFocus() { return focus; }
+  }
+  public Unit getUnitAt( Position p ) {
+    // make sure we never return a null unit in the map
+    Unit unit = units.get(p);
+    // if the unit is not found in the map, return it
+    if (unit != null){
+      return unit;
+    }
+    // let's initialize the archer will be placed at position tile (0,0) and the settler at (1,1) for the red player
+    if ((currentPlayer == Player.RED && (p.equals(new Position(0,0)) || p.equals(new Position(1,1))))){
+      if(p.equals(new Position(0,0))){
+        return new UnitImpl(GameConstants.ARCHER, Player.RED);
+      }
+      else{
+        return new UnitImpl(GameConstants.SETTLER, Player.RED);
+      }
+    }
+    // let's also initialize the legion placed at position tile (1,2) for the blue player
+    else if ((currentPlayer == Player.BLUE && (p.equals(new Position(1,2))))){
+      return new UnitImpl(GameConstants.LEGION, Player.BLUE);
+    }
+    return null;
+  }
   public Tile getTileAt( Position p ) {
     if ((p.getRow() == 1) && (p.getColumn() == 0)) {
       return new TileImpl("ocean");
@@ -121,18 +166,11 @@ public class GameImpl implements Game {
       return new TileImpl("plains");
     }
   }
-  private class TileImpl implements Tile {
-      private String terrain;
-      public TileImpl(String terrain){
-        this.terrain = terrain;
-      }
-      @Override
-      public String getTypeString() {
-        return terrain;
-      }
-    }
-  public City getCityAt( Position p ) { return null; }
+  public City getCityAt( Position p ) {
+    return new CityImpl();
+  }
   public Player getWinner() {
+
     if(age == 3000){
       return Player.RED; // red player wins in 3000 BC
     }
@@ -182,6 +220,10 @@ public class GameImpl implements Game {
   }
   public void endOfTurn() {
     // TODO: check what constitutes as a round
+    // create a city with size (population = 1
+    CityImpl city = new CityImpl();
+    // add 6 production (or money) at the end of the turn
+    city.treasury += 6;
     // later on, we can include all players (after blue, yellow goes, etc.)
     // switch players when it's the other's turn
     currentPlayer = (currentPlayer == Player.RED) ? Player.BLUE : Player.RED;
