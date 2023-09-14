@@ -56,7 +56,6 @@ public class GameImpl implements Game {
     units.put(new Position(1,1), new UnitImpl(GameConstants.SETTLER, Player.RED));
     units.put(new Position(1,2), new UnitImpl(GameConstants.LEGION, Player.BLUE));
   }
-  public Tile getTileAt( Position p ) { return null; }
   public Unit getUnitAt( Position p ) {
     // make sure we never return a null unit in the map
     Unit unit = units.get(p);
@@ -110,11 +109,29 @@ public class GameImpl implements Game {
       return attackingStrength;
     }
   }
-  public City getCityAt( Position p ) { return null; }
-  public Player getPlayerInTurn() {
-    // return the current player
-    return currentPlayer;
+  public Tile getTileAt( Position p ) {
+    if ((p.getRow() == 1) && (p.getColumn() == 0)) {
+      return new TileImpl("ocean");
+    } else if (((p.getRow() == 0) && (p.getColumn() == 1))) {
+      return new TileImpl("hills");
+    } else if (((p.getRow() == 2) && (p.getColumn() == 2))) {
+      return new TileImpl("mountain");
     }
+    else {
+      return new TileImpl("plains");
+    }
+  }
+  private class TileImpl implements Tile {
+      private String terrain;
+      public TileImpl(String terrain){
+        this.terrain = terrain;
+      }
+      @Override
+      public String getTypeString() {
+        return terrain;
+      }
+    }
+  public City getCityAt( Position p ) { return null; }
   public Player getWinner() {
     if(age == 3000){
       return Player.RED; // red player wins in 3000 BC
@@ -124,18 +141,39 @@ public class GameImpl implements Game {
   public int getAge() {
     return age;
   }
+  public Player getPlayerInTurn() {
+    return currentPlayer;
+  }
+  public void killUnit(Position positionToClear) { units.remove(positionToClear); }
   public boolean moveUnit( Position from, Position to ) {
     // try to move unit and return true if nothing is there
     // then place the unit at the desired position
     // check for unit at 'from' position
     Unit unit_from = getUnitAt(from);
+    boolean isAttacking = false;
+
     // if there's no unit at the 'from' position (aka, there's nothing to move)
     if (unit_from == null){
       return false;
     }
     // if the 'to' unit already has a unit there
     if (getUnitAt(to) != null) {
-      return false;
+      // check to see if the current player occupies this unit or an enemy does
+      Unit foundUnit = getUnitAt(to);
+      Unit attackingUnit = getUnitAt(from);
+      Player defendingPlayer = foundUnit.getOwner();
+      Player attackingPlayer = attackingUnit.getOwner();
+
+      if(defendingPlayer != attackingPlayer)
+      {
+        // let the attacking unit remove the defending unit and then successfully move to that tile
+          killUnit(to);
+          // update the destination tile with unit
+        units.remove(from);
+        units.put(to, unit_from);
+          return true;
+      }
+      return false; // cannot fortify tiles (move own units to tile with own units)
     }
     // otherwise, move the unit from the original position to the new one
     units.remove(from);
@@ -160,4 +198,5 @@ public class GameImpl implements Game {
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
   public void performUnitActionAt( Position p ) {}
+
 }
