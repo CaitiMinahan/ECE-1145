@@ -61,6 +61,9 @@ public class GameImpl implements Game {
     units.put(new Position(0,0), new UnitImpl(GameConstants.ARCHER, Player.RED));
     units.put(new Position(1,1), new UnitImpl(GameConstants.SETTLER, Player.RED));
     units.put(new Position(1,2), new UnitImpl(GameConstants.LEGION, Player.BLUE));
+
+    // This is the hotfix for release 2.1
+
   }
   public Unit getUnitAt( Position p ) {
     // make sure we never return a null unit in the map
