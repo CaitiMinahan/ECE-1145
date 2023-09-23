@@ -165,6 +165,33 @@ public void AttackingUnitShouldAlwaysWin(){
     assertThat(game.getUnitAt(bluePlayerPosition).getOwner(), is(Player.RED));
 }
 
+@Test
+public void RedUnitCannotAttackRedUnit(){
+      // when a red unit attempts to move into a space occupied by another red unit,
+      // the original unit should not be able to move (no fortification)
+    Game game = new GameImpl();
+    Position redArcherPosition = new Position(0,0); // position of the red player archer
+    Position redSettlerPosition = new Position(1,1); // position of the red player settler
+
+    // false will indicate that a player cannot move a unit to another tile if another of their own
+    // units occupies that tile
+    assertThat(game.moveUnit(redArcherPosition, redSettlerPosition), is(false));
+}
+
+@Test
+public void NonAttackingUnitCannotAttack(){
+      /* when a unit of non-attacking type attempts to move into
+      * a space occupied by another unit, it cannot attack and should
+      * not be allowed to move */
+    Game game = new GameImpl();
+    Position redSettlerPosition = new Position(1,1);
+    Position blueLegionPosition = new Position(1,2);
+
+    // attempt to move the red settler into the blue occupied tile
+    assertThat(game.moveUnit(redSettlerPosition, blueLegionPosition), is(false));
+}
+
+
 // check to see if what type of unit the current player has
 // if the current player has a unit, make sure it has no actions
 // also check to see if the unit of the current player is an attacking unit (legion or archer)
