@@ -3,6 +3,8 @@ import hotciv.framework.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 import hotciv.standard.*;
 
 /** Skeleton implementation of HotCiv.
@@ -117,6 +119,10 @@ public class GameImpl implements Game {
     return currentPlayer;
   }
   public void killUnit(Position positionToClear) { units.remove(positionToClear); }
+
+  public boolean canUnitAttack(Unit unitToCheck) {
+      return !Objects.equals(unitToCheck.getTypeString(), "settler");
+  }
   public boolean moveUnit( Position from, Position to ) {
     // try to move unit and return true if nothing is there
     // then place the unit at the desired position
@@ -135,6 +141,12 @@ public class GameImpl implements Game {
       Unit attackingUnit = getUnitAt(from);
       Player defendingPlayer = foundUnit.getOwner();
       Player attackingPlayer = attackingUnit.getOwner();
+
+      // check if the attacking unit is capable of attacking
+      // remove this statement to show case breaking
+      if (!canUnitAttack(attackingUnit)) {
+        return false;
+      }
 
       if(defendingPlayer != attackingPlayer)
       {
