@@ -3,39 +3,43 @@ import hotciv.framework.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 import hotciv.standard.*;
 
 /** Skeleton implementation of HotCiv.
- 
-   This source code is from the book 
-     "Flexible, Reliable Software:
-       Using Patterns and Agile Development"
-     published 2010 by CRC Press.
-   Author: 
-     Henrik B Christensen 
-     Department of Computer Science
-     Aarhus University
-   
-   Please visit http://www.baerbak.com/ for further information.
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
- 
-       http://www.apache.org/licenses/LICENSE-2.0
- 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+ This source code is from the book
+ "Flexible, Reliable Software:
+ Using Patterns and Agile Development"
+ published 2010 by CRC Press.
+ Author:
+ Henrik B Christensen
+ Department of Computer Science
+ Aarhus University
 
-*/
+ Please visit http://www.baerbak.com/ for further information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ */
 
 public class GameImpl implements Game {
+  private WorldLayout worldLayoutStrategy;  // TODO: concrete instance of worldLayoutStrategy (delegate)
+
   // create current player to keep track of
   private Player currentPlayer;
-  private Map<Position, Unit> units; // use a hash map to store the units on the board
+  public Map<Position, Unit> units; // use a hash map to store the units on the board
   private int age;
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
@@ -46,7 +50,8 @@ public class GameImpl implements Game {
   public TileImpl currentTile;
 
   // GameImpl constructor
-  public GameImpl(){
+  public GameImpl(WorldLayout worldLayoutStrategy){
+    this.worldLayoutStrategy = worldLayoutStrategy;
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
     currentCity = new CityImpl();
@@ -57,6 +62,7 @@ public class GameImpl implements Game {
     // TODO: may need to later implement players as a list and index through the list to keep track of whose turn it is
     // use a HashMap uses key value pairs to store the positions of the units (positions = keys and units = values)
     units = new HashMap<>();
+
     // initialize units of RED and BLUE players (RES gets archer and settler and BLUE gets legion)
     units.put(new Position(0,0), new UnitImpl(GameConstants.ARCHER, Player.RED));
     units.put(new Position(1,1), new UnitImpl(GameConstants.SETTLER, Player.RED));
@@ -64,7 +70,24 @@ public class GameImpl implements Game {
 
     // This is the hotfix for release 2.1
 
+
+    // TODO: remove this implementation because now we have different world layouts for alpha, beta, gamma and delta
+//    // initialize units of RED and BLUE players (RES gets archer and settler and BLUE gets legion)
+//    units.put(new Position(0,0), new UnitImpl(GameConstants.ARCHER, Player.RED));
+//    units.put(new Position(1,1), new UnitImpl(GameConstants.SETTLER, Player.RED));
+//    units.put(new Position(1,2), new UnitImpl(GameConstants.LEGION, Player.BLUE));
+
+    // TODO: call setUpWorldLayout in constructor so we can set the map according to the strategy specified
+    setupWorldLayout(worldLayoutStrategy);
   }
+
+  // TODO: create helper function to set the map according to setupWorld method in WorldLayout interface
+  public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
+    if (worldLayoutStrategy != null) {
+      worldLayoutStrategy.setupWorld(this); // Pass the current game instance to the layout strategy
+    }
+  }
+
   public Unit getUnitAt( Position p ) {
     // make sure we never return a null unit in the map
     Unit unit = units.get(p);
@@ -117,6 +140,10 @@ public class GameImpl implements Game {
     return currentPlayer;
   }
   public void killUnit(Position positionToClear) { units.remove(positionToClear); }
+
+  public boolean canUnitAttack(Unit unitToCheck) {
+    return !Objects.equals(unitToCheck.getTypeString(), "settler");
+  }
   public boolean moveUnit( Position from, Position to ) {
     // try to move unit and return true if nothing is there
     // then place the unit at the desired position
@@ -136,14 +163,20 @@ public class GameImpl implements Game {
       Player defendingPlayer = foundUnit.getOwner();
       Player attackingPlayer = attackingUnit.getOwner();
 
+      // check if the attacking unit is capable of attacking
+      // remove this statement to show case breaking
+      if (!canUnitAttack(attackingUnit)) {
+        return false;
+      }
+
       if(defendingPlayer != attackingPlayer)
       {
         // let the attacking unit remove the defending unit and then successfully move to that tile
-          killUnit(to);
-          // update the destination tile with unit
+        killUnit(to);
+        // update the destination tile with unit
         units.remove(from);
         units.put(to, unit_from);
-          return true;
+        return true;
       }
       return false; // cannot fortify tiles (move own units to tile with own units)
     }
@@ -173,4 +206,15 @@ public class GameImpl implements Game {
   public void changeProductionInCityAt( Position p, String unitType ) {}
   public void performUnitActionAt( Position p ) {}
 
+  // TODO: added helper function for adding new cities
+  public void placeCity(Position position, Player player) {
+    // Check if a city already exists at the specified position
+    City existingCity = getCityAt(position);
+
+    // If there is no existing city at the position, create a new one and place it
+    if (existingCity == null) {
+      // TODO: create a new city with all the generic parameters set in CityImpl
+      currentCity = new CityImpl();
+    }
+  }
 }

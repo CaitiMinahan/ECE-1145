@@ -6,8 +6,6 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-import java.util.*;
-
 /** Skeleton class for AlphaCiv test cases
 
     Updated Oct 2015 for using Hamcrest matchers
@@ -38,14 +36,18 @@ import java.util.*;
 */
 public class TestAlphaCiv {
   private Game game;
+  private WorldLayout worldLayout;
 
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-    game = new GameImpl();
+      // TODO: refactor worldLayout to use a concrete WorldLayout instance
+      // TODO: when we create TestDeltaCiv, we will specify the layout in the setUp as new DeltaCivWorldLayout
+      WorldLayout worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
+      game = new GameImpl(worldLayout);
   }
 
-  // FRS p. 455 states that 'Red is the first player to take a turn'.
+    // FRS p. 455 states that 'Red is the first player to take a turn'.
   @Test
   public void shouldBeRedAsStartingPlayer() {
 
@@ -113,7 +115,8 @@ public void OnlyOneUnitAllowedOnATile(){
 @Test
 public void GameStartsAt4000BCAndAges100EachRound(){
     // create a new game instance
-    Game game = new GameImpl();
+    // TODO: update GameImp constructor
+    Game game = new GameImpl(worldLayout);
     // make sure we initially start the game at year 4000 BC
     assertEquals(game.getAge(), 4000);
     // perform one round of turns (RED then BLUE)
@@ -135,7 +138,8 @@ public void RedWinsIn3000BC(){
 public void AttackingUnitShouldAlwaysWin(){
     // when a unit moves into an occupied space, the battle begins. Attacking unit should always win
     // initialize the location of the red player
-    Game game = new GameImpl();
+    // TODO: remove line below so the test passes
+//    Game game = new GameImpl(worldLayout);
     Position redPlayerPosition = new Position(0,0); // position of red player with archer
     Position redPlayerPosition2 = new Position(1,1); // position of red player with settler
     Position bluePlayerPosition = new Position(1,2); // position of blue player with legion
@@ -153,10 +157,6 @@ public void AttackingUnitShouldAlwaysWin(){
     assertThat(game.getUnitAt(bluePlayerPosition).getOwner(), is(Player.RED));
 }
 
-// check to see if what type of unit the current player has
-// if the current player has a unit, make sure it has no actions
-// also check to see if the unit of the current player is an attacking unit (legion or archer)
-// and declare them as the winner
 }
 
 
