@@ -133,5 +133,8 @@ public interface Game {
    * @param p the position of a unit that must perform its action.
    * Nothing happens in case the unit has no associated action.
    */
-  public void performUnitActionAt( Position p );  
+  public void performUnitActionAt( Position p );
+
+  //  TODO: ask if I can add this to the interface so I can do unit testing
+  public void placeCity(Position p, Player owner);
 }

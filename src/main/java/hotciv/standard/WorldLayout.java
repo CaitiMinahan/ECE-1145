@@ -2,7 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
-// TODO: this is the worldLayout interface
+// TODO: step 1 - introduce WorldLayout interface
 public interface WorldLayout {
     void setupWorld(GameImpl game);
 }

@@ -5,6 +5,7 @@ import hotciv.framework.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import hotciv.standard.*;
 
 /** Skeleton class for AlphaCiv test cases
 
@@ -41,7 +42,7 @@ public class TestAlphaCiv {
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-      // TODO: refactor worldLayout to use a concrete WorldLayout instance
+      // TODO: step 3 - refactor worldLayout to use a concrete WorldLayout instance
       // TODO: when we create TestDeltaCiv, we will specify the layout in the setUp as new DeltaCivWorldLayout
       WorldLayout worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
       game = new GameImpl(worldLayout);
@@ -93,9 +94,9 @@ public class TestAlphaCiv {
     game.endOfTurn();
     assertThat(game.getPlayerInTurn(), is(Player.RED));
   }
+
 @Test
 public void RedStartsWithArcherandSettler(){
-    // initialize position of red player
     Position RedPlayerPositionArcher = new Position(0,0);
     Position RedPlayerPositionSettler = new Position(1,1);
     assertThat(game.getUnitAt(RedPlayerPositionArcher).getTypeString(), is(GameConstants.ARCHER));
@@ -103,9 +104,10 @@ public void RedStartsWithArcherandSettler(){
 }
 @Test
 public void BlueStartsWithLegion(){
-  Position BluePlayerPositionLeigon = new Position(1,2);
-  assertThat(game.getUnitAt(BluePlayerPositionLeigon).getTypeString(), is(GameConstants.LEGION));
+    Position BluePlayerPositionLeigon = new Position(1,2);
+    assertThat(game.getUnitAt(BluePlayerPositionLeigon).getTypeString(), is(GameConstants.LEGION));
 }
+
 @Test
 public void OnlyOneUnitAllowedOnATile(){
     Position moveFrom = new Position(0,0);
