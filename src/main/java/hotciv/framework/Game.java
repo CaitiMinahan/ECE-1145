@@ -135,6 +135,4 @@ public interface Game {
    */
   public void performUnitActionAt( Position p );
 
-  //  TODO: ask if I can add this to the interface so I can do unit testing
-  public void placeCity(Position p, Player owner);
 }

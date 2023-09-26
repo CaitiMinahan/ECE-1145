@@ -54,7 +54,8 @@ public class TestDeltaCiv {
         Player player = Player.RED;
 
         // Call the method to place the city
-        game.placeCity(redCityPosition, player);
+        // try casting the method instead:
+        ((GameImpl) game).placeCity(redCityPosition, player);
 
         // Retrieve the city at the specified position
         City placedCity = game.getCityAt(redCityPosition);
@@ -71,7 +72,7 @@ public class TestDeltaCiv {
         Player player = Player.BLUE;
 
         // Call the method to place the city
-        game.placeCity(blueCityPosition, player);
+        ((GameImpl) game).placeCity(blueCityPosition, player);
 
         // Retrieve the city at the specified position
         City placedCity = game.getCityAt(blueCityPosition);

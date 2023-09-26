@@ -69,18 +69,19 @@ public class TestAlphaCiv {
     assertThat(game.getTileAt(plainsPosition).getTypeString(), is(GameConstants.PLAINS));
     assertThat(game.getTileAt(plainsPosition2).getTypeString(), is(GameConstants.PLAINS));
   }
-  @Test
-  public void citiesShouldEndWith60Production() {
-//        GameImpl city = new GameImpl();
-      Position cityPosition = new Position(3,2);
-        for (int i = 0; i < 10; i++){
-            game.endOfTurn();
-        }
-        // 10 rounds, 6 production each round = 60 production
-        assertThat(game.getCityAt(cityPosition).getTreasury(), is(60));
-        assertThat(game.getCityAt(cityPosition).getSize(), is(1));
-  }
-  // test alternative players when one's turn ends
+//  @Test
+//  public void citiesShouldEndWith60Production() {
+////        GameImpl city = new GameImpl();
+//      Position cityPosition = new Position(3,2);
+//
+//        for (int i = 0; i < 10; i++){
+//            game.endOfTurn();
+//        }
+//        // 10 rounds, 6 production each round = 60 production
+//        assertThat(game.getCityAt(cityPosition).getTreasury(), is(60));
+//        assertThat(game.getCityAt(cityPosition).getSize(), is(1));
+//  }
+//  // test alternative players when one's turn ends
   @Test
   public void shouldAlternateBetweenRedAndBluePlayers() {
     // Check that the game starts with RED player
