@@ -56,30 +56,42 @@ public class TestAlphaCiv {
     assertThat(game.getPlayerInTurn(), is(Player.RED));
   }
   @Test
-  public void shouldDefineTiles() {
+  public void shouldDefineOceanTile() {
     Position oceanPosition = new Position(1,0);
-    Position hillsPosition = new Position(0,1);
-    Position mountPosition = new Position(2, 2);
-    Position plainsPosition = new Position(0,0);
-    Position plainsPosition2 = new Position(3,2);
-
     assertThat(game.getTileAt(oceanPosition).getTypeString(), is(GameConstants.OCEANS));
-    assertThat(game.getTileAt(hillsPosition).getTypeString(), is(GameConstants.HILLS));
-    assertThat(game.getTileAt(mountPosition).getTypeString(), is(GameConstants.MOUNTAINS));
-    assertThat(game.getTileAt(plainsPosition).getTypeString(), is(GameConstants.PLAINS));
-    assertThat(game.getTileAt(plainsPosition2).getTypeString(), is(GameConstants.PLAINS));
+  }
+  @Test
+  public void shouldDefineHillTile() {
+      Position hillsPosition = new Position(0,1);
+      assertThat(game.getTileAt(hillsPosition).getTypeString(), is(GameConstants.HILLS));
+  }
+  @Test
+  public void shouldDefineMountainTile() {
+      Position mountPosition = new Position(2, 2);
+      assertThat(game.getTileAt(mountPosition).getTypeString(), is(GameConstants.MOUNTAINS));
+  }
+  @Test
+  public void shouldDefinePlainsTile() {
+      Position plainsPosition = new Position(3,2);
+      assertThat(game.getTileAt(plainsPosition).getTypeString(), is(GameConstants.PLAINS));
   }
   @Test
   public void citiesShouldEndWith60Production() {
-//        GameImpl city = new GameImpl();
       Position cityPosition = new Position(3,2);
 
         for (int i = 0; i < 10; i++){
             game.endOfTurn();
         }
         // 10 rounds, 6 production each round = 60 production
-        assertThat(game.getCityAt(cityPosition).getTreasury(), is(60));
-        assertThat(game.getCityAt(cityPosition).getSize(), is(1));
+      assertThat(game.getCityAt(cityPosition).getTreasury(), is(60));
+  }
+  @Test
+  public void cityShouldHaveSizeOne() {
+      Position cityPosition = new Position(3,2);
+      for (int i = 0; i < 10; i++){
+          game.endOfTurn();
+      }
+      assertThat(game.getCityAt(cityPosition).getSize(), is(1));
   }
 //  // test alternative players when one's turn ends
   @Test
@@ -113,7 +125,7 @@ public void BlueStartsWithLegion(){
 public void OnlyOneUnitAllowedOnATile(){
     Position moveFrom = new Position(0,0);
     Position moveTo = new Position(0,1);
-    assertEquals(game.moveUnit(moveFrom, moveTo), true); // confirm that we can move our unit from (0,0) to (0,1)
+    assertThat(game.moveUnit(moveFrom, moveTo), is(true)); // confirm that we can move our unit from (0,0) to (0,1)
 }
 @Test
 public void GameStartsAt4000BCAndAges100EachRound(){
@@ -160,5 +172,38 @@ public void AttackingUnitShouldAlwaysWin(){
     assertThat(game.getUnitAt(bluePlayerPosition).getOwner(), is(Player.RED));
 }
 
+
+@Test
+public void RedUnitCannotAttackRedUnit(){
+      // when a red unit attempts to move into a space occupied by another red unit,
+      // the original unit should not be able to move (no fortification)
+    Game game = new GameImpl();
+    Position redArcherPosition = new Position(0,0); // position of the red player archer
+    Position redSettlerPosition = new Position(1,1); // position of the red player settler
+
+    // false will indicate that a player cannot move a unit to another tile if another of their own
+    // units occupies that tile
+    assertThat(game.moveUnit(redArcherPosition, redSettlerPosition), is(false));
 }
+
+@Test
+public void NonAttackingUnitCannotAttack(){
+      /* when a unit of non-attacking type attempts to move into
+      * a space occupied by another unit, it cannot attack and should
+      * not be allowed to move */
+    Game game = new GameImpl();
+    Position redSettlerPosition = new Position(1,1);
+    Position blueLegionPosition = new Position(1,2);
+
+    // attempt to move the red settler into the blue occupied tile
+    assertThat(game.moveUnit(redSettlerPosition, blueLegionPosition), is(false));
+}
+
+
+// check to see if what type of unit the current player has
+// if the current player has a unit, make sure it has no actions
+// also check to see if the unit of the current player is an attacking unit (legion or archer)
+// and declare them as the winner
+}
+
 
