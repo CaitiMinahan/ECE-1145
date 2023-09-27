@@ -27,6 +27,8 @@ public class CityImpl implements City {
     public void setTreasury(int t){
         this.treasury = t;
     }
+
+    public void setSize(int size) { this.size = size;}
     @Override
     public Player getOwner() { return owner; }
     @Override
