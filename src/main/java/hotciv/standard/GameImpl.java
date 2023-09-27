@@ -36,7 +36,7 @@ import hotciv.standard.*;
 
 public class GameImpl implements Game {
 
-  // TODO: Refactor GameImpl tp use a reference WorldLayout instance for setting the tiles (Delegate)
+  // TODO: step 2 - Refactor GameImpl tp use a reference WorldLayout instance for setting the tiles (Delegate)
   private WorldLayout worldLayoutStrategy;
 
   // create current player to keep track of
@@ -44,7 +44,7 @@ public class GameImpl implements Game {
   public Map<Position, Unit> units; // use a hash map to store the units on the board
 
   //  TODO: added this since we can't edit city interface
-  private Map<Position, Player> cityOwners = new HashMap<>();
+  private Map<Position, City> cities = new HashMap<>();
 
   private int age;
   // tracks the number of turns in a round (increments every time each player becomes the current player)
@@ -93,25 +93,31 @@ public class GameImpl implements Game {
     }
   }
 
+  // TODO: modified this
   public Unit getUnitAt( Position p ) {
     // make sure we never return a null unit in the map
-    Unit unit = units.get(p);
+//    Unit unit = units.get(p);
     // if the unit is not found in the map, return it
-    if (unit != null){
-      return unit;
-    }
+//    if (unit != null){
+//      return unit;
+//    }
     // let's initialize the archer will be placed at position tile (0,0) and the settler at (1,1) for the red player
-    if ((currentPlayer == Player.RED && (p.equals(new Position(0,0)) || p.equals(new Position(1,1))))){
-      if(p.equals(new Position(0,0))){
-        return new UnitImpl(GameConstants.ARCHER, Player.RED);
-      }
-      else{
-        return new UnitImpl(GameConstants.SETTLER, Player.RED);
-      }
-    }
-    // let's also initialize the legion placed at position tile (1,2) for the blue player
-    else if ((currentPlayer == Player.BLUE && (p.equals(new Position(1,2))))){
-      return new UnitImpl(GameConstants.LEGION, Player.BLUE);
+//    if ((currentPlayer == Player.RED && (p.equals(new Position(0,0)) || p.equals(new Position(1,1))))){
+//      if(p.equals(new Position(0,0))){
+//        return new UnitImpl(GameConstants.ARCHER, Player.RED);
+//      }
+//      else{
+//        return new UnitImpl(GameConstants.SETTLER, Player.RED);
+//      }
+//    }
+//    // let's also initialize the legion placed at position tile (1,2) for the blue player
+//    else if ((currentPlayer == Player.BLUE && (p.equals(new Position(1,2))))){
+//      return new UnitImpl(GameConstants.LEGION, Player.BLUE);
+//    }
+//    return null;
+
+    if (units.containsKey(p)) {
+      return units.get(p);
     }
     return null;
   }
@@ -131,14 +137,11 @@ public class GameImpl implements Game {
 
   // TODO: modified this
   public City getCityAt(Position p) {
-    // Check if the position exists in the cityOwners map
-    if (cityOwners.containsKey(p)) {
-      Player owner = cityOwners.get(p);
-      // Create and return a city with the correct owner
-      return new CityImpl(owner);
+    if (cities.containsKey(p)) {
+      return cities.get(p);
     }
-    // Return null if no city is found at the position
     return null;
+
   }
 
   public Player getWinner() {
@@ -200,14 +203,17 @@ public class GameImpl implements Game {
     return true;
   }
   public void endOfTurn() {
-    // create a city with size (population = 1
+
     // add 6 production (or money) at the end of the turn
     currentCity.setTreasury(currentCity.getTreasury()+6);
+
     // later on, we can include all players (after blue, yellow goes, etc.)
-    // switch players when it's the other's turn
+    // switch players when it's turn ends
     currentPlayer = (currentPlayer == Player.RED) ? Player.BLUE : Player.RED;
+
     // increment the turn count after every player goes
     turnCount++;
+
     // check if round is over
     // if both players have gone, the turnCount should = 2, therefore we can move onto the next round
     // TODO: the turnCount will be 4 after all players go (RED, BLUE, YELLOW and GREEN)
@@ -216,6 +222,7 @@ public class GameImpl implements Game {
       age -= 100;
     }
   }
+
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
   public void performUnitActionAt( Position p ) {}
@@ -223,13 +230,14 @@ public class GameImpl implements Game {
   // TODO: step 4 - added helper function for adding new cities for DeltaCiv
   public void placeCity(Position position, Player player) {
     // Check if a city already exists at the specified position
-    City existingCity = getCityAt(position);
+    City existingCity = cities.get(position);
 
     // If there is no existing city at the position, create a new one and set its owner
     if (existingCity == null) {
       City newCity = new CityImpl(player);
-      // Add the city's position and owner to the map
-      cityOwners.put(position, player);
+      // Add the city to the collection
+      cities.put(position, newCity);
+      currentCity = (CityImpl) newCity;  // TODO: modified this
     }
   }
 }

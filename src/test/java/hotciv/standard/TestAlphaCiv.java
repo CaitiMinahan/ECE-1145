@@ -11,23 +11,23 @@ import hotciv.standard.*;
 
     Updated Oct 2015 for using Hamcrest matchers
 
-   This source code is from the book 
+   This source code is from the book
      "Flexible, Reliable Software:
        Using Patterns and Agile Development"
      published 2010 by CRC Press.
-   Author: 
-     Henrik B Christensen 
+   Author:
+     Henrik B Christensen
      Department of Computer Science
      Aarhus University
-   
+
    Please visit http://www.baerbak.com/ for further information.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
- 
+
        http://www.apache.org/licenses/LICENSE-2.0
- 
+
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,12 +39,16 @@ public class TestAlphaCiv {
   private Game game;
   private WorldLayout worldLayout;
 
-  /** Fixture for alphaciv testing. */
+//  int initialTreasury = 0; // Set the initial treasury value as needed
+
+
+    /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
       // TODO: step 3 - refactor worldLayout to use a concrete WorldLayout instance
       // TODO: when we create TestDeltaCiv, we will specify the layout in the setUp as new DeltaCivWorldLayout
       WorldLayout worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
+//      int initialTreasury = 0;
       game = new GameImpl(worldLayout);
   }
 
@@ -77,23 +81,34 @@ public class TestAlphaCiv {
   }
   @Test
   public void citiesShouldEndWith60Production() {
-      Position cityPosition = new Position(3,2);
+      Position cityPosition = new Position(3, 2);
+      ((GameImpl) game).placeCity(cityPosition, Player.RED);
 
-        for (int i = 0; i < 10; i++){
-            game.endOfTurn();
-        }
-        // 10 rounds, 6 production each round = 60 production
+      for (int i = 0; i < 10; i++) {
+          game.endOfTurn();
+      }
+
+      // 10 rounds, 6 production each round = 60 production
       assertThat(game.getCityAt(cityPosition).getTreasury(), is(60));
   }
   @Test
   public void cityShouldHaveSizeOne() {
       Position cityPosition = new Position(3,2);
+      ((GameImpl) game).placeCity(cityPosition, Player.RED);
+
       for (int i = 0; i < 10; i++){
           game.endOfTurn();
       }
+
+      // Retrieve the city at the specified position
+      City city = game.getCityAt(cityPosition);
+
+      // Check that the placedCity is not null, indicating a city was successfully placed
+      assertThat(city, is(notNullValue()));
+
       assertThat(game.getCityAt(cityPosition).getSize(), is(1));
   }
-//  // test alternative players when one's turn ends
+  // test alternative players when one's turn ends
   @Test
   public void shouldAlternateBetweenRedAndBluePlayers() {
     // Check that the game starts with RED player
@@ -151,10 +166,9 @@ public void RedWinsIn3000BC(){
   }
 @Test
 public void AttackingUnitShouldAlwaysWin(){
+
     // when a unit moves into an occupied space, the battle begins. Attacking unit should always win
     // initialize the location of the red player
-    // TODO: remove line below so the test passes
-//    Game game = new GameImpl(worldLayout);
     Position redPlayerPosition = new Position(0,0); // position of red player with archer
     Position redPlayerPosition2 = new Position(1,1); // position of red player with settler
     Position bluePlayerPosition = new Position(1,2); // position of blue player with legion
@@ -172,12 +186,11 @@ public void AttackingUnitShouldAlwaysWin(){
     assertThat(game.getUnitAt(bluePlayerPosition).getOwner(), is(Player.RED));
 }
 
-
 @Test
 public void RedUnitCannotAttackRedUnit(){
       // when a red unit attempts to move into a space occupied by another red unit,
       // the original unit should not be able to move (no fortification)
-    Game game = new GameImpl();
+    Game game = new GameImpl(worldLayout);
     Position redArcherPosition = new Position(0,0); // position of the red player archer
     Position redSettlerPosition = new Position(1,1); // position of the red player settler
 
@@ -191,7 +204,8 @@ public void NonAttackingUnitCannotAttack(){
       /* when a unit of non-attacking type attempts to move into
       * a space occupied by another unit, it cannot attack and should
       * not be allowed to move */
-    Game game = new GameImpl();
+    Game game = new GameImpl(worldLayout);
+
     Position redSettlerPosition = new Position(1,1);
     Position blueLegionPosition = new Position(1,2);
 
@@ -199,11 +213,6 @@ public void NonAttackingUnitCannotAttack(){
     assertThat(game.moveUnit(redSettlerPosition, blueLegionPosition), is(false));
 }
 
-
-// check to see if what type of unit the current player has
-// if the current player has a unit, make sure it has no actions
-// also check to see if the unit of the current player is an attacking unit (legion or archer)
-// and declare them as the winner
 }
 
 
