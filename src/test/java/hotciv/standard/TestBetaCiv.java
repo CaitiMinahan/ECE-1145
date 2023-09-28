@@ -84,4 +84,21 @@ public class TestBetaCiv {
         }
         assertThat(game.getAge(), is(1980));
     }
+    @Test
+    public void shouldSetAge() {
+        ((GameImpl) game).setAge(1950);
+        assertThat(game.getAge(), is(1950));
+    }
+    @Test
+    public void shouldSetTurnCount() {
+        ((GameImpl) game).setTurnCount(2);
+        assertThat(((GameImpl) game).getTurnCount(), is(2));
+    }
+    @Test
+    public void shouldGetTurnCount() {
+        ((GameImpl) game).setTurnCount(10);
+        int testAge = ((GameImpl) game).getTurnCount();
+
+        assertThat(testAge, is(10));
+    }
 }
