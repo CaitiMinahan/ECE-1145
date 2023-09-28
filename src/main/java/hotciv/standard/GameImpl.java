@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import hotciv.standard.WorldAging;
 import hotciv.standard.*;
 
 /** Skeleton implementation of HotCiv.
@@ -38,6 +39,7 @@ public class GameImpl implements Game {
 
   // TODO: step 2 - Refactor GameImpl tp use a reference WorldLayout instance for setting the tiles (Delegate)
   private WorldLayout worldLayoutStrategy;
+  private WorldAging worldAgingStrategy;
 
   // create current player to keep track of
   private Player currentPlayer;
@@ -56,20 +58,20 @@ public class GameImpl implements Game {
   public TileImpl currentTile;
 
   // GameImpl constructor
-  public GameImpl(WorldLayout worldLayoutStrategy){
+  public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging){
 
     // TODO: step 3 - refactor GameImpl to use a concrete WorldLayout instance
     this.worldLayoutStrategy = worldLayoutStrategy;
+    this.worldAgingStrategy = worldAging;
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
     currentCity = new CityImpl(currentPlayer);
 
     // game starts at 4000 BC
-    age = 4000;
-
+    setAge(-4000);
     // initialize the turn count to 0
-    turnCount = 0;
+    setTurnCount(0);
 
     // TODO: may need to later implement players as a list and index through the list to keep track of whose turn it is
     // use a HashMap uses key value pairs to store the positions of the units (positions = keys and units = values)
@@ -145,7 +147,7 @@ public class GameImpl implements Game {
   }
 
   public Player getWinner() {
-    if(age == 3000){
+    if(getAge() == -3000){
       return Player.RED; // red player wins in 3000 BC
     }
     return null;
@@ -212,15 +214,19 @@ public class GameImpl implements Game {
     currentPlayer = (currentPlayer == Player.RED) ? Player.BLUE : Player.RED;
 
     // increment the turn count after every player goes
-    turnCount++;
+    setTurnCount(getTurnCount()+1);
 
+    worldAgingStrategy.gameAging(this);
     // check if round is over
     // if both players have gone, the turnCount should = 2, therefore we can move onto the next round
     // TODO: the turnCount will be 4 after all players go (RED, BLUE, YELLOW and GREEN)
-    if (turnCount % 2 == 0){
-      // age by 100 years after the round ends
-      age -= 100;
-    }
+
+
+    // This is implemented within GenericWorldAging
+//    if (getTurnCount() % 2 == 0){
+//      // age by 100 years after the round ends
+//      age -= 100;
+//    }
   }
 
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
@@ -239,5 +245,16 @@ public class GameImpl implements Game {
       cities.put(position, newCity);
       currentCity = (CityImpl) newCity;  // TODO: modified this
     }
+  }
+
+  // HELPER FUNCTIONS FOR BETACIV
+  public void setTurnCount(int turnCount){
+    this.turnCount = turnCount;
+  }
+  public int getTurnCount(){
+    return turnCount;
+  }
+  public void setAge(int age){
+    this.age = age;
   }
 }
