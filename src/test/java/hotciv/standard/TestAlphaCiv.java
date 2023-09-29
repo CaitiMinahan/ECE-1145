@@ -38,6 +38,7 @@ import hotciv.standard.*;
 public class TestAlphaCiv {
   private Game game;
   private WorldLayout worldLayout;
+  private Winner winner;
 
   private WorldAging worldAging;
 //  int initialTreasury = 0; // Set the initial treasury value as needed
@@ -50,8 +51,9 @@ public class TestAlphaCiv {
       // TODO: when we create TestDeltaCiv, we will specify the layout in the setUp as new DeltaCivWorldLayout
       WorldLayout worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
       WorldAging worldAging = new GenericWorldAging();
+      Winner genericWinner = new GenericWinner();
 //      int initialTreasury = 0;
-      game = new GameImpl(worldLayout, worldAging);
+      game = new GameImpl(worldLayout, worldAging, genericWinner);
   }
 
     // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -191,7 +193,6 @@ public void AttackingUnitShouldAlwaysWin(){
 public void RedUnitCannotAttackRedUnit(){
       // when a red unit attempts to move into a space occupied by another red unit,
       // the original unit should not be able to move (no fortification)
-    Game game = new GameImpl(worldLayout, worldAging);
     Position redArcherPosition = new Position(0,0); // position of the red player archer
     Position redSettlerPosition = new Position(1,1); // position of the red player settler
 
@@ -205,7 +206,6 @@ public void NonAttackingUnitCannotAttack(){
       /* when a unit of non-attacking type attempts to move into
       * a space occupied by another unit, it cannot attack and should
       * not be allowed to move */
-    Game game = new GameImpl(worldLayout, worldAging);
 
     Position redSettlerPosition = new Position(1,1);
     Position blueLegionPosition = new Position(1,2);
