@@ -38,6 +38,7 @@ import hotciv.standard.*;
 public class TestAlphaCiv {
   private Game game;
   private WorldLayout worldLayout;
+  private UnitAction unitActionType;
 
 //  int initialTreasury = 0; // Set the initial treasury value as needed
 
@@ -47,9 +48,10 @@ public class TestAlphaCiv {
   public void setUp() {
       // TODO: step 3 - refactor worldLayout to use a concrete WorldLayout instance
       // TODO: when we create TestDeltaCiv, we will specify the layout in the setUp as new DeltaCivWorldLayout
-      WorldLayout worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
+       worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
+       unitActionType = new GenericUnitAction();
 //      int initialTreasury = 0;
-      game = new GameImpl(worldLayout);
+      game = new GameImpl(worldLayout, unitActionType);
   }
 
     // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -146,7 +148,7 @@ public void OnlyOneUnitAllowedOnATile(){
 public void GameStartsAt4000BCAndAges100EachRound(){
     // create a new game instance
     // TODO: update GameImp constructor
-    Game game = new GameImpl(worldLayout);
+    Game game = new GameImpl(worldLayout, unitActionType);
     // make sure we initially start the game at year 4000 BC
     assertEquals(game.getAge(), 4000);
     // perform one round of turns (RED then BLUE)
@@ -190,7 +192,7 @@ public void AttackingUnitShouldAlwaysWin(){
 public void RedUnitCannotAttackRedUnit(){
       // when a red unit attempts to move into a space occupied by another red unit,
       // the original unit should not be able to move (no fortification)
-    Game game = new GameImpl(worldLayout);
+    Game game = new GameImpl(worldLayout, unitActionType);
     Position redArcherPosition = new Position(0,0); // position of the red player archer
     Position redSettlerPosition = new Position(1,1); // position of the red player settler
 
@@ -204,7 +206,7 @@ public void NonAttackingUnitCannotAttack(){
       /* when a unit of non-attacking type attempts to move into
       * a space occupied by another unit, it cannot attack and should
       * not be allowed to move */
-    Game game = new GameImpl(worldLayout);
+    Game game = new GameImpl(worldLayout, unitActionType);
 
     Position redSettlerPosition = new Position(1,1);
     Position blueLegionPosition = new Position(1,2);

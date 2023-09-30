@@ -11,13 +11,15 @@ import java.lang.reflect.Method;
 public class TestDeltaCiv {
     private Game game;
     private WorldLayout deltaCivWorldLayout;
+    private UnitAction unitActionType;
 
     /** Fixture for deltaciv testing. */
     @Before
     public void setUp() {
         // layout for DeltaCiv as specified in DeltaCivWorldLayout
         WorldLayout deltaCivWorldLayout = new DeltaCivWorldLayout();
-        game = new GameImpl(deltaCivWorldLayout);
+        unitActionType = new GenericUnitAction();
+        game = new GameImpl(deltaCivWorldLayout,unitActionType );
     }
 
     @Test

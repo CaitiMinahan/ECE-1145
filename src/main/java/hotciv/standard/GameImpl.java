@@ -4,6 +4,9 @@ import hotciv.framework.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID; // TODO: had to add this to track units
+import java.util.logging.*;
+
 
 import hotciv.standard.*;
 
@@ -39,6 +42,10 @@ public class GameImpl implements Game {
   // TODO: step 2 - Refactor GameImpl tp use a reference WorldLayout instance for setting the tiles (Delegate)
   private WorldLayout worldLayoutStrategy;
 
+  // Added in the private implementation for UnitAction
+  // This is refactoring the non-existent unit action file and setting an action(Delegate) based on the type of civ
+  private UnitAction unitActionCivType;
+
   // create current player to keep track of
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
@@ -56,10 +63,12 @@ public class GameImpl implements Game {
   public TileImpl currentTile;
 
   // GameImpl constructor
-  public GameImpl(WorldLayout worldLayoutStrategy){
+  public GameImpl(WorldLayout worldLayoutStrategy, UnitAction unitActionCivType){
 
     // TODO: step 3 - refactor GameImpl to use a concrete WorldLayout instance
     this.worldLayoutStrategy = worldLayoutStrategy;
+    // assign the unit action type as the incoming parameter
+    this.unitActionCivType = unitActionCivType;
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -83,7 +92,6 @@ public class GameImpl implements Game {
 
     // TODO: step 4 - call helper function to set up the world layout according to strategy passed
     setupWorldLayout(worldLayoutStrategy);
-
   }
 
   // TODO: step 4 - create helper function to set the map according to setupWorld method in WorldLayout interface
@@ -122,6 +130,27 @@ public class GameImpl implements Game {
     return null;
   }
 
+  // TODO: added a helper function to get the Position of a unit
+  public Position getPositionFromUnit(UnitImpl u)
+  {
+    // loop through the units map and find the unit with the corresponding ID
+    UUID tempId = u.getUnitID();
+    for (Map.Entry<Position, Unit> entry: units.entrySet()) {
+     // get the key (position)
+     // get the unit (value)
+      Position pos = entry.getKey();
+      Unit unit = entry.getValue();
+      UnitImpl ui = (UnitImpl)unit;
+      if (ui.getUnitID() == u.getUnitID())
+      {
+        // this is the position we want
+        return pos;
+      }
+    }
+    // TODO: make not that we should never see this happen
+    return new Position(-1,-1);
+  }
+
   public Tile getTileAt( Position p ) {
     if ((p.getRow() == 1) && (p.getColumn() == 0)) {
       return new TileImpl("ocean");
@@ -158,49 +187,54 @@ public class GameImpl implements Game {
   }
   public void killUnit(Position positionToClear) { units.remove(positionToClear); }
 
+  /**
+   * @param unitToCheck
+   * @return inversion of the check to settler type
+   */
   public boolean canUnitAttack(Unit unitToCheck) {
     return !Objects.equals(unitToCheck.getTypeString(), "settler");
   }
-  public boolean moveUnit( Position from, Position to ) {
-    // try to move unit and return true if nothing is there
-    // then place the unit at the desired position
-    // check for unit at 'from' position
-    Unit unit_from = getUnitAt(from);
-    boolean isAttacking = false;
 
-    // if there's no unit at the 'from' position (aka, there's nothing to move)
-    if (unit_from == null){
-      return false;
+  // Helper function to retrieve the unit action type and not change the template design
+  UnitAction getUnitActionType()
+  {
+    return unitActionCivType;
+  }
+  // refactored this to use the different ActionType versions (Delegate)
+  public boolean moveUnit(Position from, Position to) {
+    // get the current unit action type
+    UnitAction UnitActionCivType = getUnitActionType();
+    // based on the type of game we are playing this will use the different implementations
+    if(UnitActionCivType != null )
+    {
+      // run the move function
+      return UnitActionCivType.moveUnit(from, to, this);
     }
-    // if the 'to' unit already has a unit there
-    if (getUnitAt(to) != null) {
-      // check to see if the current player occupies this unit or an enemy does
-      Unit foundUnit = getUnitAt(to);
-      Unit attackingUnit = getUnitAt(from);
-      Player defendingPlayer = foundUnit.getOwner();
-      Player attackingPlayer = attackingUnit.getOwner();
-
-      // check if the attacking unit is capable of attacking
-      // remove this statement to show case breaking
-      if (!canUnitAttack(attackingUnit)) {
-        return false;
-      }
-
-      if(defendingPlayer != attackingPlayer)
-      {
-        // let the attacking unit remove the defending unit and then successfully move to that tile
-        killUnit(to);
-        // update the destination tile with unit
-        units.remove(from);
-        units.put(to, unit_from);
-        return true;
-      }
-      return false; // cannot fortify tiles (move own units to tile with own units)
+    else
+    {
+      // for some reason the unitActionCivType is null when it should be generic or gammaCiv instance
+      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
     }
-    // otherwise, move the unit from the original position to the new one
-    units.remove(from);
-    units.put(to, unit_from);
-    return true;
+    return false;
+  }
+
+  // TODO: when unit needs to take action, use this function
+  public void takeUnitAction(Unit u, GameImpl game, UnitAction unitActionCivType) {
+    // based on the type of game we are playing this will use the different implementations
+    if(unitActionCivType != null )
+    {
+      // get the position based on the unit
+      // convert unit to unit impl
+      UnitImpl ui = (UnitImpl) u;
+      Position p = getPositionFromUnit(ui);
+      // run the action function
+      unitActionCivType.performAction( ui,  p, game);
+    }
+    else
+    {
+      // for some reason the unitActionCivType is null when it should be generic or gammaCiv instance
+      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+    }
   }
   public void endOfTurn() {
 
