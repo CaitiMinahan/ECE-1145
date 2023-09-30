@@ -19,7 +19,9 @@ public class TestDeltaCiv {
         // layout for DeltaCiv as specified in DeltaCivWorldLayout
         WorldLayout deltaCivWorldLayout = new DeltaCivWorldLayout();
         unitActionType = new GenericUnitAction();
-        game = new GameImpl(deltaCivWorldLayout,unitActionType );
+        GenericWorldAging genericWorldAging = new GenericWorldAging();
+        Winner genericWinner = new GenericWinner();
+        game = new GameImpl(deltaCivWorldLayout, genericWorldAging, genericWinner, unitActionType);
     }
 
     @Test
@@ -29,11 +31,13 @@ public class TestDeltaCiv {
         assertThat(game.getPlayerInTurn(), is(Player.RED));
     }
 
-    // TODO: integration test for testing if DeltaCiv world layout was set up properly
-    // TODO: this is an integration test b/c it tests the game logic's interaction w/ the world layout methods
+    // TODO: integration test for testing if DeltaCiv world layout was set up
+    // properly
+    // TODO: this is an integration test b/c it tests the game logic's interaction
+    // w/ the world layout methods
     @Test
-    public void setDeltaCivWorldLayoutCorrectlyRED(){
-        Position RedPlayerCity = new Position(8,12);
+    public void setDeltaCivWorldLayoutCorrectlyRED() {
+        Position RedPlayerCity = new Position(8, 12);
         assertThat(game.getCityAt(RedPlayerCity).getOwner(), is(Player.RED));
     }
 
@@ -49,9 +53,10 @@ public class TestDeltaCiv {
     }
 
     // TODO: unit test for testing the placeCity() method in GameImpl
-    // TODO: this is a unit test b/c it isolates the placeCity() method to ensure its functionality
+    // TODO: this is a unit test b/c it isolates the placeCity() method to ensure
+    // its functionality
     @Test
-    public void placeCityForRedPlayer(){
+    public void placeCityForRedPlayer() {
         Position redCityPosition = new Position(8, 12);
         Player player = Player.RED;
 
@@ -62,14 +67,16 @@ public class TestDeltaCiv {
         // Retrieve the city at the specified position
         City placedCity = game.getCityAt(redCityPosition);
 
-        // Check that the placedCity is not null, indicating a city was successfully placed
+        // Check that the placedCity is not null, indicating a city was successfully
+        // placed
         assertThat(placedCity, is(notNullValue()));
 
         // Check that the owner of the placed city is the expected player
         assertThat(placedCity.getOwner(), is(player));
     }
+
     @Test
-    public void placeCityForBluePlayer(){
+    public void placeCityForBluePlayer() {
         Position blueCityPosition = new Position(4, 5);
         Player player = Player.BLUE;
 
@@ -79,7 +86,8 @@ public class TestDeltaCiv {
         // Retrieve the city at the specified position
         City placedCity = game.getCityAt(blueCityPosition);
 
-        // Check that the placedCity is not null, indicating a city was successfully placed
+        // Check that the placedCity is not null, indicating a city was successfully
+        // placed
         assertThat(placedCity, is(notNullValue()));
 
         // Check that the owner of the placed city is the expected player
