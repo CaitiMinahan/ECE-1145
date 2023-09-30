@@ -8,11 +8,35 @@ public class TestBetaCiv {
     private Game game;
     private WorldAging worldAging;
 
+    private Winner winner;
+
     @Before
     public void setUp() {
         WorldAging betaAging = new BetaCivWorldAging();
         WorldLayout genericWorld = new GenericWorldLayout();
-        game = new GameImpl(genericWorld, betaAging);
+        Winner betaWinner = new BetaCivWinner();
+        game = new GameImpl(genericWorld, betaAging, betaWinner);
+    }
+    @Test
+    public void blueWinsFromOwningAllCities() {
+        ((GameImpl) game).placeCity(new Position(5,5), Player.BLUE);
+        ((GameImpl) game).placeCity(new Position(7,4), Player.BLUE);
+
+        assertThat(game.getWinner(), is(Player.BLUE));
+    }
+    @Test
+    public void redWinsFromOwningAllCities() {
+        ((GameImpl) game).placeCity(new Position(2,5), Player.RED);
+        ((GameImpl) game).placeCity(new Position(6,1), Player.RED);
+
+        assertThat(game.getWinner(), is(Player.RED));
+    }
+    @Test
+    public void shouldReturnNullForMultiplePlayersOwningCities() {
+        ((GameImpl) game).placeCity(new Position(2,5), Player.RED);
+        ((GameImpl) game).placeCity(new Position(6,1), Player.BLUE);
+
+        assertNull(game.getWinner());
     }
     @Test
     public void shouldBe100BCAfter39Turns() {

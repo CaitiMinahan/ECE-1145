@@ -18,7 +18,8 @@ public class TestDeltaCiv {
         // layout for DeltaCiv as specified in DeltaCivWorldLayout
         WorldLayout deltaCivWorldLayout = new DeltaCivWorldLayout();
         GenericWorldAging genericWorldAging = new GenericWorldAging();
-        game = new GameImpl(deltaCivWorldLayout, genericWorldAging);
+        Winner genericWinner = new GenericWinner();
+        game = new GameImpl(deltaCivWorldLayout, genericWorldAging, genericWinner);
     }
 
     @Test

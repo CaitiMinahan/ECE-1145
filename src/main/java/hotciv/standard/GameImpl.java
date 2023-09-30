@@ -40,13 +40,14 @@ public class GameImpl implements Game {
   // TODO: step 2 - Refactor GameImpl tp use a reference WorldLayout instance for setting the tiles (Delegate)
   private WorldLayout worldLayoutStrategy;
   private WorldAging worldAgingStrategy;
+  private Winner winnerStrategy;
 
   // create current player to keep track of
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
 
   //  TODO: added this since we can't edit city interface
-  private Map<Position, City> cities = new HashMap<>();
+  public Map<Position, City> cities = new HashMap<>();
 
   private int age;
   // tracks the number of turns in a round (increments every time each player becomes the current player)
@@ -58,11 +59,12 @@ public class GameImpl implements Game {
   public TileImpl currentTile;
 
   // GameImpl constructor
-  public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging){
+  public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging, Winner winnerStrategy){
 
     // TODO: step 3 - refactor GameImpl to use a concrete WorldLayout instance
     this.worldLayoutStrategy = worldLayoutStrategy;
     this.worldAgingStrategy = worldAging;
+    this.winnerStrategy = winnerStrategy;
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -147,10 +149,7 @@ public class GameImpl implements Game {
   }
 
   public Player getWinner() {
-    if(getAge() == -3000){
-      return Player.RED; // red player wins in 3000 BC
-    }
-    return null;
+    return winnerStrategy.gameWinner(this);
   }
   public int getAge() {
     return age;
@@ -233,7 +232,7 @@ public class GameImpl implements Game {
   public void changeProductionInCityAt( Position p, String unitType ) {}
   public void performUnitActionAt( Position p ) {}
 
-  // TODO: step 4 - added helper function for adding new cities for DeltaCiv
+  // TODO: step 4 - added helper function for adding new cities for DeltaCiv and BetaCiv
   public void placeCity(Position position, Player player) {
     // Check if a city already exists at the specified position
     City existingCity = cities.get(position);
