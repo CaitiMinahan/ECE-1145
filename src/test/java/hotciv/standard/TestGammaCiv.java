@@ -9,7 +9,6 @@ import static org.hamcrest.CoreMatchers.*;
 public class TestGammaCiv {
     private GameImpl game;
     private WorldLayout gammaCivWorldLayout;
-
     private Winner gammaWinner;
     private UnitAction gammaUnitAction;
     private GenericWorldAging gammaWorldAging;
@@ -20,7 +19,6 @@ public class TestGammaCiv {
         gammaUnitAction = new GammaCivUnitAction();
         gammaWinner = new GenericWinner();
         gammaWorldAging = new GenericWorldAging();
-
         game = new GameImpl(gammaCivWorldLayout, gammaWorldAging, gammaWinner, gammaUnitAction);
     }
 
@@ -82,11 +80,25 @@ public class TestGammaCiv {
         game.takeUnitAction(redArcherUnit, game, gammaUnitAction);
         // attempt to move
         assertThat(game.moveUnit(redArcherPos, redArcherPosNew), is(true));
-
     }
 
     // ----- UNIT TESTS ----- //
-//    @Test
-//    public
-
+    @Test
+    public void getUnitActionTypeShouldBeGamma(){
+        String newUnit = game.getUnitActionStringType();
+        assertThat(newUnit,is("GammaCivUnitAction"));
+        }
+    @Test
+    public void getUnitAtTileShouldBeSame(){
+        // get the known units in specific locations
+        Position redArcherPos = new Position(0,0);
+        Unit oldUnit = game.getUnitAt(redArcherPos);
+        Position toPos = new Position(5,5);
+        // attempt to move the unit
+        boolean didMove = game.moveUnit(redArcherPos, toPos);
+        Unit newUnit = null;
+        newUnit = game.getUnitAt(toPos);
+        // check that the specific unit exists there now
+        assertThat(oldUnit, is(newUnit));
+    }
 }

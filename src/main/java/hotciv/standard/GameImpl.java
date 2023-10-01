@@ -216,14 +216,22 @@ public class GameImpl implements Game {
 
   // Helper function to retrieve the unit action type and not change the template
   // design
-  UnitAction getUnitActionType() {
-    return unitActionCivType;
+  String getUnitActionStringType() {
+    if(unitActionCivType instanceof GammaCivUnitAction)
+    {
+      return "GammaCivUnitAction";
+    }
+    else if(unitActionCivType instanceof GenericUnitAction)
+    {
+      return "GenericUnitAction";
+    }
+    return "invalid class type";
   }
 
   // refactored this to use the different ActionType versions (Delegate)
   public boolean moveUnit(Position from, Position to) {
     // get the current unit action type
-    UnitAction UnitActionCivType = getUnitActionType();
+    UnitAction UnitActionCivType = unitActionCivType; // from constructor/priv variables
     // based on the type of game we are playing this will use the different
     // implementations
     if (UnitActionCivType != null) {

@@ -36,6 +36,7 @@ public class GammaCivUnitAction implements UnitAction{
         }
     }
     public boolean moveUnit( Position from, Position to, GameImpl game) {
+
         // try to move unit and return true if nothing is there
         // then place the unit at the desired position
         // check for unit at 'from' position
@@ -51,6 +52,11 @@ public class GammaCivUnitAction implements UnitAction{
         }
         else if (unit_from.getTypeString().equals("archer") && ((UnitImpl) unit_from).getCanMove() == true)
         {
+            // update the destination tile with unit
+            // TODO : should abstract this to function since it gets called 3 different times
+            game.units.remove(from);
+            game.units.put(to, unit_from);
+//            updateUnitMap();
             return true;
         }
         // if the 'to' unit already has a unit there
@@ -74,6 +80,7 @@ public class GammaCivUnitAction implements UnitAction{
                 // update the destination tile with unit
                 game.units.remove(from);
                 game.units.put(to, unit_from);
+//                updateUnitMap();
                 return true;
             }
             return false; // cannot fortify tiles (move own units to tile with own units)
@@ -81,6 +88,7 @@ public class GammaCivUnitAction implements UnitAction{
         // otherwise, move the unit from the original position to the new one
         game.units.remove(from);
         game.units.put(to, unit_from);
+//        updateUnitMap();
         return true;
     }
 
