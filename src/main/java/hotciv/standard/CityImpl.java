@@ -18,13 +18,17 @@ public class CityImpl implements City {
      */
     private int treasury;
 
-    public CityImpl() {
+    // TODO: modified CityImpl function so we pass in the owner of the city
+    public CityImpl(Player owner) {
         size = 1;
         treasury = 0;
+        this.owner = owner;
     }
     public void setTreasury(int t){
         this.treasury = t;
     }
+
+    public void setSize(int size) { this.size = size;}
     @Override
     public Player getOwner() { return owner; }
     @Override

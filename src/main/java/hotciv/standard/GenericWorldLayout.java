@@ -6,8 +6,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import hotciv.standard.*;
-// TODO: define generic world layout for alphaciv, betaciv and gammaciv (assuming deltaciv is the only variant)
-// TODO: this implements the worldLayout interface
+// TODO: this defines generic world layout for alphaciv, betaciv and gammaciv (assuming deltaciv is the only variant)
+// TODO: step 4 - move world layout setup to a class implementing the worldLayout interface
+
 public class GenericWorldLayout implements WorldLayout {
     @Override
     public void setupWorld(GameImpl game) {
@@ -17,5 +18,4 @@ public class GenericWorldLayout implements WorldLayout {
         game.units.put(new Position(1, 1), new UnitImpl(GameConstants.SETTLER, Player.RED));
         game.units.put(new Position(1, 2), new UnitImpl(GameConstants.LEGION, Player.BLUE));
     }
-
 }
