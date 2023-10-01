@@ -9,15 +9,22 @@ import static org.hamcrest.CoreMatchers.*;
 public class TestGammaCiv {
     private GameImpl game;
     private WorldLayout gammaCivWorldLayout;
+
+    private Winner gammaWinner;
     private UnitAction gammaUnitAction;
+    private GenericWorldAging gammaWorldAging;
 
     @Before
     public void setUp() {
         gammaCivWorldLayout = new GenericWorldLayout();
         gammaUnitAction = new GammaCivUnitAction();
-        game = new GameImpl(gammaCivWorldLayout, gammaUnitAction);
+        gammaWinner = new GenericWinner();
+        gammaWorldAging = new GenericWorldAging();
+
+        game = new GameImpl(gammaCivWorldLayout, gammaWorldAging, gammaWinner, gammaUnitAction);
     }
 
+    // ---- INTEGRATION TESTS ----- //
     // This test shows what happens to a settler when unit action is taken in delta
     // civ
     @Test
@@ -77,5 +84,9 @@ public class TestGammaCiv {
         assertThat(game.moveUnit(redArcherPos, redArcherPosNew), is(true));
 
     }
+
+    // ----- UNIT TESTS ----- //
+//    @Test
+//    public
 
 }

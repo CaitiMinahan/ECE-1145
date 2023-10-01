@@ -39,10 +39,13 @@ import hotciv.standard.*;
 public class TestAlphaCiv {
   private Game game;
   private WorldLayout worldLayout;
-  private UnitAction unitActionType;
+  private UnitAction genericUnitAction;
+
+  private Winner genericWinner;
+  private WorldAging worldAging;
+
   private Winner winner;
 
-  private WorldAging worldAging;
   // int initialTreasury = 0; // Set the initial treasury value as needed
 
   /** Fixture for alphaciv testing. */
@@ -52,13 +55,12 @@ public class TestAlphaCiv {
     // TODO: when we create TestDeltaCiv, we will specify the layout in the setUp as
     // new DeltaCivWorldLayout
     worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
-    unitActionType = new GenericUnitAction();
+    genericUnitAction = new GenericUnitAction();
     // int initialTreasury = 0;
-    WorldLayout worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
-    WorldAging worldAging = new GenericWorldAging();
-    Winner genericWinner = new GenericWinner();
+    worldAging = new GenericWorldAging();
+    genericWinner = new GenericWinner();
     // int initialTreasury = 0;
-    game = new GameImpl(worldLayout, worldAging, genericWinner, unitActionType);
+    game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
   }
 
   // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -101,7 +103,6 @@ public class TestAlphaCiv {
     for (int i = 0; i < 10; i++) {
       game.endOfTurn();
     }
-
     // 10 rounds, 6 production each round = 60 production
     assertThat(game.getCityAt(cityPosition).getTreasury(), is(60));
   }
@@ -114,14 +115,12 @@ public class TestAlphaCiv {
     for (int i = 0; i < 10; i++) {
       game.endOfTurn();
     }
-
     // Retrieve the city at the specified position
     City city = game.getCityAt(cityPosition);
 
     // Check that the placedCity is not null, indicating a city was successfully
     // placed
     assertThat(city, is(notNullValue()));
-
     assertThat(game.getCityAt(cityPosition).getSize(), is(1));
   }
 
@@ -186,7 +185,6 @@ public class TestAlphaCiv {
 
   @Test
   public void AttackingUnitShouldAlwaysWin() {
-
     // when a unit moves into an occupied space, the battle begins. Attacking unit
     // should always win
     // initialize the location of the red player
@@ -211,7 +209,7 @@ public class TestAlphaCiv {
   public void RedUnitCannotAttackRedUnit() {
     // when a red unit attempts to move into a space occupied by another red unit,
     // the original unit should not be able to move (no fortification)
-    Game game = new GameImpl(worldLayout, unitActionType);
+    Game game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
     Position redArcherPosition = new Position(0, 0); // position of the red player archer
     Position redSettlerPosition = new Position(1, 1); // position of the red player settler
 
@@ -228,11 +226,8 @@ public class TestAlphaCiv {
      * a space occupied by another unit, it cannot attack and should
      * not be allowed to move
      */
-    Game game = new GameImpl(worldLayout, unitActionType);
-
     Position redSettlerPosition = new Position(1, 1);
     Position blueLegionPosition = new Position(1, 2);
-
     // attempt to move the red settler into the blue occupied tile
     assertThat(game.moveUnit(redSettlerPosition, blueLegionPosition), is(false));
   }

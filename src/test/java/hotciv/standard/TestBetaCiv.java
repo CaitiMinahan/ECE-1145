@@ -9,13 +9,15 @@ public class TestBetaCiv {
     private WorldAging worldAging;
 
     private Winner winner;
+    private UnitAction betaUnitAction;
 
     @Before
     public void setUp() {
         WorldAging betaAging = new BetaCivWorldAging();
         WorldLayout genericWorld = new GenericWorldLayout();
         Winner betaWinner = new BetaCivWinner();
-        game = new GameImpl(genericWorld, betaAging, betaWinner);
+        betaUnitAction = new GenericUnitAction();
+        game = new GameImpl(genericWorld, betaAging, betaWinner, betaUnitAction);
     }
     @Test
     public void blueWinsFromOwningAllCities() {
