@@ -120,6 +120,7 @@ public class GameImpl implements Game {
 
   // TODO: modified this
   public Unit getUnitAt(Position p) {
+
     // make sure we never return a null unit in the map
     // Unit unit = units.get(p);
     // if the unit is not found in the map, return it
@@ -241,6 +242,7 @@ public class GameImpl implements Game {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance
       System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+
     }
     return false;
   }
@@ -325,5 +327,6 @@ public class GameImpl implements Game {
 
   public void setAge(int age) {
     this.age = age;
+
   }
 }

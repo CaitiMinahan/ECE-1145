@@ -13,7 +13,6 @@ public class DeltaCivWorldLayout implements WorldLayout {
         // Place cities at the specified positions for Red and Blue players
         game.placeCity(new Position(8, 12), Player.RED);
         game.placeCity(new Position(4, 5), Player.BLUE);
-
     }
 }
 
