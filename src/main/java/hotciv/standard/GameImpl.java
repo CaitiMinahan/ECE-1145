@@ -58,7 +58,7 @@ public class GameImpl implements Game {
 
   public Map<Position, City> cities = new HashMap<>();
 
-  private int age;
+  private int age; // represents current year of the game
 
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
@@ -294,6 +294,5 @@ public class GameImpl implements Game {
 
   public void setAge(int age) {
     this.age = age;
-
   }
 }
