@@ -41,7 +41,7 @@ import hotciv.standard.*;
 
 public class GameImpl implements Game {
 
-  // TODO: step 2 - Refactor GameImpl tp use a reference WorldLayout instance for
+  // Refactor GameImpl tp use a reference WorldLayout instance for
   // setting the tiles (Delegate)
   private WorldLayout worldLayoutStrategy;
   private WorldAging worldAgingStrategy;
@@ -56,12 +56,11 @@ public class GameImpl implements Game {
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
 
-  // TODO: added this since we can't edit city interface
   public Map<Position, City> cities = new HashMap<>();
 
   private int age;
-  // tracks the number of turns in a round (increments every time each player
-  // becomes the current player)
+
+  // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
 
   public CityImpl currentCity;
@@ -73,7 +72,7 @@ public class GameImpl implements Game {
   public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging, Winner winnerStrategy,
       UnitAction unitActionCivType) {
 
-    // TODO: step 3 - refactor GameImpl to use a concrete WorldLayout instance
+    // refactor GameImpl to use a concrete WorldLayout instance
     this.worldLayoutStrategy = worldLayoutStrategy;
     this.worldAgingStrategy = worldAging;
     this.winnerStrategy = winnerStrategy;
@@ -92,25 +91,14 @@ public class GameImpl implements Game {
     // TODO: may need to later implement players as a list and index through the
     // list to keep track of whose turn it is
     // use a HashMap uses key value pairs to store the positions of the units
-    // (positions = keys and units = values)
     units = new HashMap<>();
 
-    // TODO: remove this implementation because now we have different world layouts
-    // for alpha, beta, gamma and delta
-    // initialize units of RED and BLUE players (RES gets archer and settler and
-    // BLUE gets legion)
-    // units.put(new Position(0,0), new UnitImpl(GameConstants.ARCHER, Player.RED));
-    // units.put(new Position(1,1), new UnitImpl(GameConstants.SETTLER,
-    // Player.RED));
-    // units.put(new Position(1,2), new UnitImpl(GameConstants.LEGION,
-    // Player.BLUE));
-
-    // TODO: step 4 - call helper function to set up the world layout according to
+    // call helper function to set up the world layout according to
     // strategy passed
     setupWorldLayout(worldLayoutStrategy);
   }
 
-  // TODO: step 4 - create helper function to set the map according to setupWorld
+  // create helper function to set the map according to setupWorld
   // method in WorldLayout interface
   public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
     if (worldLayoutStrategy != null) {
@@ -118,40 +106,13 @@ public class GameImpl implements Game {
     }
   }
 
-  // TODO: modified this
   public Unit getUnitAt(Position p) {
-
-    // make sure we never return a null unit in the map
-    // Unit unit = units.get(p);
-    // if the unit is not found in the map, return it
-    // if (unit != null){
-    // return unit;
-    // }
-    // let's initialize the archer will be placed at position tile (0,0) and the
-    // settler at (1,1) for the red player
-    // if ((currentPlayer == Player.RED && (p.equals(new Position(0,0)) ||
-    // p.equals(new Position(1,1))))){
-    // if(p.equals(new Position(0,0))){
-    // return new UnitImpl(GameConstants.ARCHER, Player.RED);
-    // }
-    // else{
-    // return new UnitImpl(GameConstants.SETTLER, Player.RED);
-    // }
-    // }
-    // // let's also initialize the legion placed at position tile (1,2) for the
-    // blue player
-    // else if ((currentPlayer == Player.BLUE && (p.equals(new Position(1,2))))){
-    // return new UnitImpl(GameConstants.LEGION, Player.BLUE);
-    // }
-    // return null;
-
     if (units.containsKey(p)) {
       return units.get(p);
     }
     return null;
   }
 
-  // TODO: added a helper function to get the Position of a unit
   public Position getPositionFromUnit(UnitImpl u) {
     // loop through the units map and find the unit with the corresponding ID
     UUID tempId = u.getUnitID();
@@ -166,7 +127,6 @@ public class GameImpl implements Game {
         return pos;
       }
     }
-    // TODO: make not that we should never see this happen
     return new Position(-1, -1);
   }
 
@@ -182,13 +142,11 @@ public class GameImpl implements Game {
     }
   }
 
-  // TODO: modified this
   public City getCityAt(Position p) {
     if (cities.containsKey(p)) {
       return cities.get(p);
     }
     return null;
-
   }
 
   public Player getWinner() {
@@ -215,8 +173,7 @@ public class GameImpl implements Game {
     return !Objects.equals(unitToCheck.getTypeString(), "settler");
   }
 
-  // Helper function to retrieve the unit action type and not change the template
-  // design
+  // Helper function to retrieve the unit action type and not change the template design
   String getUnitActionStringType() {
     if(unitActionCivType instanceof GammaCivUnitAction)
     {
@@ -247,7 +204,8 @@ public class GameImpl implements Game {
     return false;
   }
 
-  // TODO: when unit needs to take action, use this function
+
+  // when unit needs to take action, use this function
   public void takeUnitAction(Unit u, GameImpl game, UnitAction unitActionCivType) {
     // based on the type of game we are playing this will use the different
     // implementations
@@ -278,17 +236,7 @@ public class GameImpl implements Game {
     setTurnCount(getTurnCount() + 1);
 
     worldAgingStrategy.gameAging(this);
-    // check if round is over
-    // if both players have gone, the turnCount should = 2, therefore we can move
-    // onto the next round
-    // TODO: the turnCount will be 4 after all players go (RED, BLUE, YELLOW and
-    // GREEN)
 
-    // This is implemented within GenericWorldAging
-    // if (getTurnCount() % 2 == 0){
-    // // age by 100 years after the round ends
-    // age -= 100;
-    // }
   }
 
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
@@ -300,20 +248,39 @@ public class GameImpl implements Game {
   public void performUnitActionAt(Position p) {
   }
 
-  // TODO: step 4 - added helper function for adding new cities for DeltaCiv and
-  // BetaCiv
-  public void placeCity(Position position, Player player) {
-    // Check if a city already exists at the specified position
-    City existingCity = cities.get(position);
+  // added helper function for adding new cities for DeltaCiv and BetaCiv
+//  public void placeCity(Position position, Player player) {
+//    // Check if a city already exists at the specified position
+//    City existingCity = cities.get(position);
+//
+//    // If there is no existing city at the position, create a new one and set its
+//    // owner
+//    if (existingCity == null) {
+//      City newCity = new CityImpl(player);
+//      // Add the city to the collection
+//      cities.put(position, newCity);
+//      currentCity = (CityImpl) newCity;
+//    }
+//  }
 
-    // If there is no existing city at the position, create a new one and set its
-    // owner
-    if (existingCity == null) {
-      City newCity = new CityImpl(player);
-      // Add the city to the collection
+  public void placeCity(Position position, Player player) {
+    if (!cityExistsAt(position)) {
+      City newCity = createCity(player);
       cities.put(position, newCity);
-      currentCity = (CityImpl) newCity; // TODO: modified this
+      setCurrentCity(newCity);
     }
+  }
+
+  private boolean cityExistsAt(Position position) {
+    return cities.containsKey(position);
+  }
+
+  private City createCity(Player player) {
+    return new CityImpl(player);
+  }
+
+  private void setCurrentCity(City city) {
+    currentCity = (CityImpl) city;
   }
 
   // HELPER FUNCTIONS FOR BETACIV
