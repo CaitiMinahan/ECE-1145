@@ -199,6 +199,7 @@ public class GameImpl implements Game {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance
       System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+
     }
     return false;
   }
@@ -293,5 +294,6 @@ public class GameImpl implements Game {
 
   public void setAge(int age) {
     this.age = age;
+
   }
 }
