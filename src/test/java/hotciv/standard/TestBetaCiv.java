@@ -6,9 +6,6 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 public class TestBetaCiv {
     private Game game;
-    private WorldAging worldAging;
-
-    private Winner winner;
     private UnitAction betaUnitAction;
 
     @Before
