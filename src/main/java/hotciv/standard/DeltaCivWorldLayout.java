@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import hotciv.standard.*;
-// TODO: this is the first variant of the world layout interface: DeltaCiv
+// this is the first variant of the world layout interface: DeltaCiv
 public class DeltaCivWorldLayout implements WorldLayout {
     @Override
     public void setupWorld(GameImpl game) {

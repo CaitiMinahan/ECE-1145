@@ -20,7 +20,6 @@ public class BetaCivWinner implements Winner{
                 }
             }
         }
-        // TODO: implement the player that conquers all cities in the world
         return owner;
     }
 }
