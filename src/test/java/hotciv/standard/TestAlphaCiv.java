@@ -48,6 +48,7 @@ public class TestAlphaCiv {
 
   // int initialTreasury = 0; // Set the initial treasury value as needed
 
+
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
@@ -61,9 +62,10 @@ public class TestAlphaCiv {
     genericWinner = new GenericWinner();
     // int initialTreasury = 0;
     game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
+
   }
 
-  // FRS p. 455 states that 'Red is the first player to take a turn'.
+    // FRS p. 455 states that 'Red is the first player to take a turn'.
   @Test
   public void shouldBeRedAsStartingPlayer() {
 
@@ -218,6 +220,7 @@ public class TestAlphaCiv {
     // units occupies that tile
     assertThat(game.moveUnit(redArcherPosition, redSettlerPosition), is(false));
   }
+
 
   @Test
   public void NonAttackingUnitCannotAttack() {
