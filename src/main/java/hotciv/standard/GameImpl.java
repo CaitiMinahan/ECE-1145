@@ -56,6 +56,8 @@ public class GameImpl implements Game {
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
 
+  public Map<Player, Integer> playerSuccessfulAttacks; // Hash map to associate a player with their successful attacks
+
   public Map<Position, City> cities = new HashMap<>();
 
   private int age; // represents current year of the game
@@ -187,6 +189,11 @@ public class GameImpl implements Game {
   }
 
   // refactored this to use the different ActionType versions (Delegate)
+  /* TODO: Need to refactor so when using EpsilonCiv,
+  *   The move unit function will take into account when
+  *   the units do battle and append the playerSuccessfulAttacks map
+  *
+  * */
   public boolean moveUnit(Position from, Position to) {
     // get the current unit action type
     UnitAction UnitActionCivType = unitActionCivType; // from constructor/priv variables
