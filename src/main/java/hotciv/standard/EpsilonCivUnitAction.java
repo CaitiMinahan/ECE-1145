@@ -2,8 +2,6 @@ package hotciv.standard;
 import hotciv.framework.*;
 import java.util.Objects;
 
-import static java.util.Objects.isNull;
-
 /* The following code is a copy of gamma civ, but now we need
 * to also track the successful attacks that the player has won
 * */
@@ -93,6 +91,34 @@ public class EpsilonCivUnitAction implements UnitAction{
             return true;
         }
 
-    }
+        // TODO: All 4 of these functions would be good to unit test.
 
+        // function to compare the defensive and attacking strength of two units.
+        public boolean canAttackerBeatDefender(){
+            return false;
+        }
+
+        // function to get the attacking strength + terrain bonus
+        public int getAttackingUnitStrength() {
+            return -1;
+        }
+
+        // function to get the defensive strength + terrain bonus
+        public int getDefendingUnitStrength() {
+            return -1;
+        }
+
+        // function to get the terrain bonus
+        public int getTerrainMultiplier(UnitImpl unit){
+            String terrainType = unit.getTypeString();
+            switch(terrainType) {
+                case "forest":
+                case "hill":
+                    return 2;
+                case "city":
+                    return 3;
+                default:
+                    return -1;
+            }
+        }
 }
