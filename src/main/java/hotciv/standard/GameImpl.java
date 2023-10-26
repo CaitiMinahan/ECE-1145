@@ -52,6 +52,10 @@ public class GameImpl implements Game {
   // action(Delegate) based on the type of civ
   private UnitAction unitActionCivType;
 
+  // TODO: ask if we still need those private variables (above) after refactoring for abstract factory
+  // step 3 in refactoring for abstract factory: modify GameImpl constructor to accept GameFactory as its parameter
+  private GameFactory gameFactory;
+
   // create current player to keep track of
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
@@ -68,16 +72,25 @@ public class GameImpl implements Game {
   // TODO: might need to keep track of current tile later
   public TileImpl currentTile;
 
+  // TODO: remove old implementation
   // GameImpl constructor
-  public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging, Winner winnerStrategy,
-      UnitAction unitActionCivType) {
+//  public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging, Winner winnerStrategy,
+//      UnitAction unitActionCivType) {
+  public GameImpl(GameFactory gameFactory) {
 
+    // TODO: remove old implementation
     // refactor GameImpl to use a concrete WorldLayout instance
-    this.worldLayoutStrategy = worldLayoutStrategy;
-    this.worldAgingStrategy = worldAging;
-    this.winnerStrategy = winnerStrategy;
-    // assign the unit action type as the incoming parameter
-    this.unitActionCivType = unitActionCivType;
+//    this.worldLayoutStrategy = worldLayoutStrategy;
+//    this.worldAgingStrategy = worldAging;
+//    this.winnerStrategy = winnerStrategy;
+//    // assign the unit action type as the incoming parameter
+//    this.unitActionCivType = unitActionCivType;
+
+    // use the factory to create the appropriate strategies for the following variant behaviors:
+    this.worldLayoutStrategy = gameFactory.createWorldLayout();
+    this.worldAgingStrategy = gameFactory.createWorldAging();
+    this.winnerStrategy = gameFactory.createWinnerStrategy();
+    this.unitActionCivType = gameFactory.createUnitAction();
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -247,21 +260,6 @@ public class GameImpl implements Game {
 
   public void performUnitActionAt(Position p) {
   }
-
-  // added helper function for adding new cities for DeltaCiv and BetaCiv
-//  public void placeCity(Position position, Player player) {
-//    // Check if a city already exists at the specified position
-//    City existingCity = cities.get(position);
-//
-//    // If there is no existing city at the position, create a new one and set its
-//    // owner
-//    if (existingCity == null) {
-//      City newCity = new CityImpl(player);
-//      // Add the city to the collection
-//      cities.put(position, newCity);
-//      currentCity = (CityImpl) newCity;
-//    }
-//  }
 
   public void placeCity(Position position, Player player) {
     if (!cityExistsAt(position)) {
