@@ -26,7 +26,7 @@ public class AlternatingWinnerStrategy implements Winner{
                 currentWinnerState = new BetaCivWinner();
                 return currentWinnerState.gameWinner(game);
             } else {
-                currentWinnerState = new EpsilonCivWinner();  // TODO: get EpsilonCivWinner when it is ready
+                // currentWinnerState = new EpsilonCivWinner();  // TODO: get EpsilonCivWinner when it is ready
                 return currentWinnerState.gameWinner(game);
             }
         }
