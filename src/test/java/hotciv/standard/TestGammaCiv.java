@@ -8,18 +8,13 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class TestGammaCiv {
     private GameImpl game;
-    private WorldLayout gammaCivWorldLayout;
-    private Winner gammaWinner;
     private UnitAction gammaUnitAction;
-    private GenericWorldAging gammaWorldAging;
+    private GameFactory gameFactory;
 
     @Before
     public void setUp() {
-        gammaCivWorldLayout = new GenericWorldLayout();
-        gammaUnitAction = new GammaCivUnitAction();
-        gammaWinner = new GenericWinner();
-        gammaWorldAging = new GenericWorldAging();
-        game = new GameImpl(gammaCivWorldLayout, gammaWorldAging, gammaWinner, gammaUnitAction);
+        gameFactory = new GammaCivFactory();
+        game = new GameImpl(gameFactory);
     }
 
     // ---- INTEGRATION TESTS ----- //

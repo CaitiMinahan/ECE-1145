@@ -6,15 +6,12 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 public class TestBetaCiv {
     private Game game;
-    private UnitAction betaUnitAction;
+    private GameFactory gameFactory;
 
     @Before
     public void setUp() {
-        WorldAging betaAging = new BetaCivWorldAging();
-        WorldLayout genericWorld = new GenericWorldLayout();
-        Winner betaWinner = new BetaCivWinner();
-        betaUnitAction = new GenericUnitAction();
-        game = new GameImpl(genericWorld, betaAging, betaWinner, betaUnitAction);
+        gameFactory = new BetaCivFactory();
+        game = new GameImpl(gameFactory);
     }
     @Test
     public void blueWinsFromOwningAllCities() {
