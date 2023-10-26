@@ -46,6 +46,8 @@ public class GameImpl implements Game {
   private WorldLayout worldLayoutStrategy;
   private WorldAging worldAgingStrategy;
   private Winner winnerStrategy;
+  private PlayerSetup playerSetupStrategy;
+
 
   // Added in the private implementation for UnitAction
   // This is refactoring the non-existent unit action file and setting an
@@ -72,7 +74,7 @@ public class GameImpl implements Game {
 
   // GameImpl constructor
   public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging, Winner winnerStrategy,
-      UnitAction unitActionCivType) {
+      UnitAction unitActionCivType, PlayerSetup playerSetupStrategy) {
 
     // refactor GameImpl to use a concrete WorldLayout instance
     this.worldLayoutStrategy = worldLayoutStrategy;
@@ -80,6 +82,7 @@ public class GameImpl implements Game {
     this.winnerStrategy = winnerStrategy;
     // assign the unit action type as the incoming parameter
     this.unitActionCivType = unitActionCivType;
+    this.playerSetupStrategy = playerSetupStrategy; // initialized the hash map for players (for attacking)
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -98,6 +101,8 @@ public class GameImpl implements Game {
     // call helper function to set up the world layout according to
     // strategy passed
     setupWorldLayout(worldLayoutStrategy);
+    // player init setup stat passed
+    setupPlayers(playerSetupStrategy);
   }
 
   // create helper function to set the map according to setupWorld
@@ -105,6 +110,13 @@ public class GameImpl implements Game {
   public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
     if (worldLayoutStrategy != null) {
       worldLayoutStrategy.setupWorld(this); // Pass the current game instance to the layout strategy
+    }
+  }
+
+  // This function is setting up the players and initializing them to 0 succesful attacks to start
+  public void setupPlayers(PlayerSetup playerSetupStrategy) {
+    if(playerSetupStrategy != null){
+      playerSetupStrategy.setupPlayer(this);
     }
   }
 

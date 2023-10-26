@@ -9,18 +9,20 @@ import org.junit.Test;
 public class TestEpsilonCiv {
     private GameImpl game;
     private WorldLayout epsilonCivWorldLayout;
-    private Winner epsilonWinner;
+    private Winner epsilonCivWinner;
     private UnitAction epsilonUnitAction;
     private GenericWorldAging epsilonWorldAging;
+    private PlayerSetup epsilonCivPlayerSetup;
 
     @Before
     public void setUp() {
         epsilonCivWorldLayout = new GenericWorldLayout();
         epsilonUnitAction = new GammaCivUnitAction();
         // todo: Need to add in the EpsilonWinner strat
-        epsilonWinner = new EpsilonWinner();
+        epsilonCivWinner = new EpsilonCivWinner();
         epsilonWorldAging = new GenericWorldAging();
-        game = new GameImpl(epsilonCivWorldLayout, epsilonWorldAging, epsilonWinner, epsilonUnitAction);
+        epsilonCivPlayerSetup = new EpsilonCivPlayerSetup();
+        game = new GameImpl(epsilonCivWorldLayout, epsilonWorldAging, epsilonCivWinner, epsilonUnitAction, epsilonCivPlayerSetup);
     }
 
     @Test
