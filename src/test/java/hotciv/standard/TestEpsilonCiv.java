@@ -34,7 +34,6 @@ public class TestEpsilonCiv {
     public void NoCurrentWinnerYieldsNullPlayer(){
         Player winner = game.getWinner();
         assertThat(winner, is(nullValue()));
-
     }
 
     @Test

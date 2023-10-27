@@ -58,7 +58,7 @@ public class GameImpl implements Game {
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
 
-  public Map<Player, Integer> playerSuccessfulAttacks; // Hash map to associate a player with their successful attacks
+  public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // Hash map to associate a player with their successful attacks
 
   public Map<Position, City> cities = new HashMap<>();
 
