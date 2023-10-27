@@ -219,16 +219,16 @@ public class GameImpl implements Game {
 
 
   // when unit needs to take action, use this function
-  public void takeUnitAction(Unit u, GameImpl game, UnitAction unitActionCivType) {
+  public void takeUnitAction(Unit u) {
     // based on the type of game we are playing this will use the different
     // implementations
-    if (unitActionCivType != null) {
+    if (this.unitActionCivType != null) {
       // get the position based on the unit
       // convert unit to unit impl
       UnitImpl ui = (UnitImpl) u;
       Position p = getPositionFromUnit(ui);
       // run the action function
-      unitActionCivType.performAction(ui, p, game);
+      this.unitActionCivType.performAction(ui, p, this);
     } else {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance
