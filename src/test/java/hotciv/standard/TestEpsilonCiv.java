@@ -1,7 +1,12 @@
 package hotciv.standard;
 
-import org.junit.Before;
-import org.junit.Test;
+import hotciv.standard.*;
+import hotciv.framework.*;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import java.lang.reflect.Method;
 
 /*
 * This file will use Test Stubs to allow the game winner to be determined.
@@ -23,6 +28,13 @@ public class TestEpsilonCiv {
         epsilonWorldAging = new GenericWorldAging();
         epsilonCivPlayerSetup = new EpsilonCivPlayerSetup();
         game = new GameImpl(epsilonCivWorldLayout, epsilonWorldAging, epsilonCivWinner, epsilonUnitAction, epsilonCivPlayerSetup);
+    }
+
+    @Test
+    public void NoCurrentWinnerYieldsNullPlayer(){
+        Player winner = game.getWinner();
+        assertThat(winner, is(nullValue()));
+
     }
 
     @Test

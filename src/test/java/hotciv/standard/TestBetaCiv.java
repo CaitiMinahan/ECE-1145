@@ -7,6 +7,8 @@ import static org.hamcrest.CoreMatchers.*;
 public class TestBetaCiv {
     private Game game;
     private UnitAction betaUnitAction;
+    private PlayerSetup playerSetup;
+
 
     @Before
     public void setUp() {
@@ -14,7 +16,8 @@ public class TestBetaCiv {
         WorldLayout genericWorld = new GenericWorldLayout();
         Winner betaWinner = new BetaCivWinner();
         betaUnitAction = new GenericUnitAction();
-        game = new GameImpl(genericWorld, betaAging, betaWinner, betaUnitAction);
+        playerSetup = new EpsilonCivPlayerSetup();
+        game = new GameImpl(genericWorld, betaAging, betaWinner, betaUnitAction, playerSetup);
     }
     @Test
     public void blueWinsFromOwningAllCities() {

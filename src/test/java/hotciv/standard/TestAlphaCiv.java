@@ -44,6 +44,8 @@ public class TestAlphaCiv {
   private Winner genericWinner;
   private WorldAging worldAging;
 
+  private PlayerSetup playerSetup;
+
   private Winner winner;
 
   // int initialTreasury = 0; // Set the initial treasury value as needed
@@ -60,8 +62,9 @@ public class TestAlphaCiv {
     // int initialTreasury = 0;
     worldAging = new GenericWorldAging();
     genericWinner = new GenericWinner();
+    playerSetup = new EpsilonCivPlayerSetup();
     // int initialTreasury = 0;
-    game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
+    game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction, playerSetup);
 
   }
 
@@ -211,7 +214,7 @@ public class TestAlphaCiv {
   public void RedUnitCannotAttackRedUnit() {
     // when a red unit attempts to move into a space occupied by another red unit,
     // the original unit should not be able to move (no fortification)
-    Game game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
+    Game game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction, playerSetup);
     Position redArcherPosition = new Position(0, 0); // position of the red player archer
     Position redSettlerPosition = new Position(1, 1); // position of the red player settler
 

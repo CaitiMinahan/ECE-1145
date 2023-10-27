@@ -13,6 +13,9 @@ public class TestDeltaCiv {
     private WorldLayout deltaCivWorldLayout;
     private UnitAction unitActionType;
 
+    private PlayerSetup playerSetup;
+
+
     /** Fixture for deltaciv testing. */
     @Before
     public void setUp() {
@@ -21,7 +24,8 @@ public class TestDeltaCiv {
         unitActionType = new GenericUnitAction();
         GenericWorldAging genericWorldAging = new GenericWorldAging();
         Winner genericWinner = new GenericWinner();
-        game = new GameImpl(deltaCivWorldLayout, genericWorldAging, genericWinner, unitActionType);
+        playerSetup = new EpsilonCivPlayerSetup();
+        game = new GameImpl(deltaCivWorldLayout, genericWorldAging, genericWinner, unitActionType, playerSetup);
     }
 
     @Test

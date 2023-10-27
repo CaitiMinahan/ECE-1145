@@ -12,6 +12,8 @@ public class TestGammaCiv {
     private Winner gammaWinner;
     private UnitAction gammaUnitAction;
     private GenericWorldAging gammaWorldAging;
+    private PlayerSetup playerSetup;
+
 
     @Before
     public void setUp() {
@@ -19,7 +21,7 @@ public class TestGammaCiv {
         gammaUnitAction = new GammaCivUnitAction();
         gammaWinner = new GenericWinner();
         gammaWorldAging = new GenericWorldAging();
-        game = new GameImpl(gammaCivWorldLayout, gammaWorldAging, gammaWinner, gammaUnitAction);
+        game = new GameImpl(gammaCivWorldLayout, gammaWorldAging, gammaWinner, gammaUnitAction, playerSetup);
     }
 
     // ---- INTEGRATION TESTS ----- //
