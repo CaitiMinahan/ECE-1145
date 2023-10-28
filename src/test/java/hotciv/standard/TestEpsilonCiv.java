@@ -18,7 +18,7 @@ public class TestEpsilonCiv {
     @Before
     public void setUp() {
         gameFactory = new EpsilonCivFactory();
-        game =  new GameImpl(gameFactory);
+        game = new GameImpl(gameFactory);
     }
 
     // a test stub for setting the defensive and attacking strengths
