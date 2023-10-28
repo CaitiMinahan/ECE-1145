@@ -116,26 +116,26 @@ public class GameImpl implements Game {
 
     // call helper function to set up the world layout according to
     // strategy passed
-    setupWorldLayout(worldLayoutStrategy);
+//    setupWorldLayout(worldLayoutStrategy);
     // player init setup stat passed
-    setupPlayers(playerSetupStrategy);
+//    setupPlayers(playerSetupStrategy);
   }
 
   // create helper function to set the map according to setupWorld
   // method in WorldLayout interface
-  public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
-    if (worldLayoutStrategy != null) {
-      worldLayoutStrategy.setupWorld(this); // Pass the current game instance to the layout strategy
-    }
-  }
+//  public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
+//    if (worldLayoutStrategy != null) {
+//      worldLayoutStrategy.setupWorld(this); // Pass the current game instance to the layout strategy
+//    }
+//  }
 
   // This function is setting up the players and initializing them to 0 succesful
   // attacks to start
-  public void setupPlayers(PlayerSetup playerSetupStrategy) {
-    if (playerSetupStrategy != null) {
-      playerSetupStrategy.setupPlayer(this);
-    }
-  }
+//  public void setupPlayers(PlayerSetup playerSetupStrategy) {
+//    if (playerSetupStrategy != null) {
+//      playerSetupStrategy.setupPlayer(this);
+//    }
+//  }
 
   public Unit getUnitAt(Position p) {
     if (units.containsKey(p)) {
@@ -216,15 +216,9 @@ public class GameImpl implements Game {
   }
 
   // refactored this to use the different ActionType versions (Delegate)
-  /*
-   * TODO: Need to refactor so when using EpsilonCiv,
-   * The move unit function will take into account when
-   * the units do battle and append the playerSuccessfulAttacks map
-   *
-   */
   public boolean moveUnit(Position from, Position to) {
     // get the current unit action type
-    UnitAction UnitActionCivType = unitActionCivType; // from constructor/priv variables
+    UnitAction UnitActionCivType = gameFactory.createUnitAction(); // from constructor/priv variables
     // based on the type of game we are playing this will use the different
     // implementations
     if (UnitActionCivType != null) {
