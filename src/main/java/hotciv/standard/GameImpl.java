@@ -99,6 +99,11 @@ public class GameImpl implements Game {
     // TODO - add this into factory
     // this.playerSetupStrategy = playerSetupStrategy; // initialized the hash map
     // for players (for attacking)
+    this.worldLayoutStrategy = gameFactory.createWorldLayout();
+    this.worldAgingStrategy = gameFactory.createWorldAging();
+    this.winnerStrategy = gameFactory.createWinnerStrategy();
+    this.unitActionCivType = gameFactory.createUnitAction();
+    this.playerSetupStrategy = gameFactory.setupPlayer();
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -218,7 +223,7 @@ public class GameImpl implements Game {
   // refactored this to use the different ActionType versions (Delegate)
   public boolean moveUnit(Position from, Position to) {
     // get the current unit action type
-    UnitAction UnitActionCivType = gameFactory.createUnitAction(); // from constructor/priv variables
+    UnitAction UnitActionCivType = unitActionCivType; // from constructor/priv variables
     // based on the type of game we are playing this will use the different
     // implementations
     if (UnitActionCivType != null) {
