@@ -46,7 +46,7 @@ public class GameImpl implements Game {
   private WorldLayout worldLayoutStrategy;
   private WorldAging worldAgingStrategy;
   private Winner winnerStrategy;
-  private PlayerSetup playerSetupStrategy;
+  private GenericPlayerSetup playerSetupStrategy;
 
   // Added in the private implementation for UnitAction
   // This is refactoring the non-existent unit action file and setting an
@@ -131,7 +131,7 @@ public class GameImpl implements Game {
 
   // This function is setting up the players and initializing them to 0 succesful
   // attacks to start
-  public void setupPlayers(PlayerSetup playerSetupStrategy) {
+  public void setupPlayers(GenericPlayerSetup playerSetupStrategy) {
     if (playerSetupStrategy != null) {
       playerSetupStrategy.setupPlayer(this);
     }

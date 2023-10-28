@@ -1,9 +1,11 @@
 package hotciv.standard;
+
 import hotciv.framework.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
 public class EpsilonCivPlayerSetup implements PlayerSetup {
     @Override
     public void setupPlayer(GameImpl game) {
@@ -13,4 +15,3 @@ public class EpsilonCivPlayerSetup implements PlayerSetup {
         game.playerSuccessfulAttacks.put(Player.BLUE, 0);
     }
 }
-
