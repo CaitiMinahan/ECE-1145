@@ -13,7 +13,7 @@ public class EpsilonCivFactory implements GameFactory {
     }
     @Override
     public Winner createWinnerStrategy() {
-        return new AlternatingWinnerStrategy();
+        return new EpsilonCivWinner();
     }
 
     @Override
