@@ -105,6 +105,7 @@ public class EpsilonCivUnitAction implements UnitAction{
     }
 
     // TODO: All 4 of these functions would be good to unit test.
+    // TODO: extend these functions into another file that can be used for stubbing
 
     // function to compare the defensive and attacking strength of two units.
     public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, GameImpl game){
@@ -112,7 +113,6 @@ public class EpsilonCivUnitAction implements UnitAction{
         // scale by terrain
         int attackStrength = getAttackingUnitStrength(attacker, from, game) * getTerrainMultiplier(attacker);
         int defendStrength = getDefendingUnitStrength(defender, to, game) * getTerrainMultiplier(defender);
-
         return attackStrength > defendStrength;
     }
 

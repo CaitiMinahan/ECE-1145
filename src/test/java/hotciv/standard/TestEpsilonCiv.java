@@ -11,6 +11,7 @@ import static org.hamcrest.CoreMatchers.*;
 public class TestEpsilonCiv {
     private GameImpl game;
     private GameFactory gameFactory;
+
     @Before
     public void setUp() {
         gameFactory = new EpsilonCivFactory();
@@ -32,7 +33,7 @@ public class TestEpsilonCiv {
 //
 //        @Override
 //        public Player getOwner() {
-//            return -1;
+//            return Player.RED;
 //        }
 //
 //        @Override
@@ -44,7 +45,29 @@ public class TestEpsilonCiv {
 //        public int getDefensiveStrength() {
 //            return 1;
 //        }
-//    }
+// }
+
+    // test stub should be the EpsilonCivUnitAction since there are so many things going on there
+    public class fixedEpsilonUnitAction implements UnitAction{
+
+        @Override
+        public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame) {
+
+        }
+
+        @Override
+        public boolean moveUnit(Position from, Position to, GameImpl currentGame) {
+            return false;
+        }
+
+        @Override
+        public void updateUnitMap(Position from, Position to, Unit unit_from, GameImpl currentGame) {
+            // do nothing
+        }
+        public int getNumFriendlyTiles(Position from, GameImpl game){
+            return 5; //hard coded value
+        }
+    }
 
     @Test
     public void NoCurrentWinnerYieldsNullPlayer(){
@@ -62,6 +85,10 @@ public class TestEpsilonCiv {
 
         //set attacking strength -- stubs
         // set defending strength -- stubs
+        // fight
+        boolean didRedWin = game.moveUnit(redArcherPos, blueLegionPos);
+        Player winner =  game.getWinner();
+        assertThat(didRedWin, is(true));
     }
 
     @Test
