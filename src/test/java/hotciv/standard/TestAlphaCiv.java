@@ -40,12 +40,9 @@ public class TestAlphaCiv {
   private Game game;
   private WorldLayout worldLayout;
   private UnitAction genericUnitAction;
-
   private Winner genericWinner;
   private WorldAging worldAging;
-
   private PlayerSetup playerSetup;
-
   private Winner winner;
 
   // int initialTreasury = 0; // Set the initial treasury value as needed
