@@ -47,7 +47,6 @@ public class GameImpl implements Game {
   private WorldAging worldAgingStrategy;
   private Winner winnerStrategy;
   private UnitAction unitActionCivType;
-
   private PlayerSetup playerSetup; // this is the variable for setting up the player attacking wins hashmap
 
   // TODO: ask if we still need those private variables (above) after refactoring for abstract factory
@@ -91,6 +90,7 @@ public class GameImpl implements Game {
     this.worldAgingStrategy = gameFactory.createWorldAging();
     this.winnerStrategy = gameFactory.createWinnerStrategy();
     this.unitActionCivType = gameFactory.createUnitAction();
+    this.playerSetup = gameFactory.createPlayerSetup();
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
