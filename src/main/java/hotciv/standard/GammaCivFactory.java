@@ -24,5 +24,7 @@ public class GammaCivFactory implements GameFactory {
         return new GammaCivUnitAction();
     }
     @Override
-    public PlayerSetup createPlayerSetup() { return new GenericPlayerSetup();}
+    public PlayerSetup createPlayerSetup() {
+        return new GenericPlayerSetup();
+    }
 }

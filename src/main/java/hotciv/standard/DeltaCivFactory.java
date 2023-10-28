@@ -32,6 +32,8 @@ public class DeltaCivFactory implements GameFactory {
         return new GenericUnitAction();
     }
     @Override
-    public PlayerSetup createPlayerSetup() { return new GenericPlayerSetup();}
+    public PlayerSetup createPlayerSetup() {
+        return new GenericPlayerSetup();
+    }
 
 }

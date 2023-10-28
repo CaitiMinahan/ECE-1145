@@ -2,29 +2,26 @@ package hotciv.standard;
 import hotciv.framework.*;
 import hotciv.standard.*;
 
-public class BetaCivFactory implements GameFactory {
+public class EpsilonCivFactory implements GameFactory {
     @Override
     public WorldLayout createWorldLayout() {
-        // BetaCiv = generic layout
         return new GenericWorldLayout();
     }
     @Override
     public WorldAging createWorldAging() {
-        // BetaCiv = betaCiv aging
-        return new BetaCivWorldAging();
+        return new GenericWorldAging();
     }
     @Override
     public Winner createWinnerStrategy() {
-        // BetaCiv = betaCiv winner
-        return new BetaCivWinner();
+        return new AlternatingWinnerStrategy();
     }
+
     @Override
     public UnitAction createUnitAction() {
-        // BetaCiv = generic unit action
-        return new GenericUnitAction();
+        return new EpsilonCivUnitAction();
     }
     @Override
     public PlayerSetup createPlayerSetup() {
-        return new GenericPlayerSetup();
+        return new EpsilonCivPlayerSetup();
     }
 }
