@@ -46,11 +46,9 @@ public class GameImpl implements Game {
   private WorldLayout worldLayoutStrategy;
   private WorldAging worldAgingStrategy;
   private Winner winnerStrategy;
-
-  // Added in the private implementation for UnitAction
-  // This is refactoring the non-existent unit action file and setting an
-  // action(Delegate) based on the type of civ
   private UnitAction unitActionCivType;
+
+  private PlayerSetup playerSetup; // this is the variable for setting up the player attacking wins hashmap
 
   // TODO: ask if we still need those private variables (above) after refactoring for abstract factory
   // step 3 in refactoring for abstract factory: modify GameImpl constructor to accept GameFactory as its parameter
@@ -61,6 +59,8 @@ public class GameImpl implements Game {
   public Map<Position, Unit> units; // use a hash map to store the units on the board
 
   public Map<Position, City> cities = new HashMap<>();
+
+  public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
 
   private int age; // represents current year of the game
 
