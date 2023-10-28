@@ -10,7 +10,12 @@ import java.util.Objects;
 /* The following code is a copy of gamma civ, but now we need
  * to also track the successful attacks that the player has won
  * */
+
+
 public class EpsilonCivUnitAction implements UnitAction{
+
+    // create an instance of the generic Unit attacking
+    private GenericUnitAttacking genericUnitAttacking = new GenericUnitAttacking();
     @Override
     public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame)
     {
@@ -84,7 +89,7 @@ public class EpsilonCivUnitAction implements UnitAction{
                 // TODO: have to go through the attacking a defensive calculations before killing a unit
 
                 // call the functions
-                if(canAttackerBeatDefender((UnitImpl)attackingUnit, (UnitImpl)foundUnit, from, to, game)) {
+                if(genericUnitAttacking.canAttackerBeatDefender((UnitImpl) attackingUnit, (UnitImpl) foundUnit, from, to, game)) {
                     game.killUnit(to);
                     updateUnitMap(from, to, unit_from, game);
                     // update the successful attack map
@@ -108,80 +113,83 @@ public class EpsilonCivUnitAction implements UnitAction{
     // TODO: extend these functions into another file that can be used for stubbing
 
     // function to compare the defensive and attacking strength of two units.
-    public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, GameImpl game){
-        // get attacking strength and defensive strength
-        // scale by terrain
-        int attackStrength = getAttackingUnitStrength(attacker, from, game) * getTerrainMultiplier(attacker);
-        int defendStrength = getDefendingUnitStrength(defender, to, game) * getTerrainMultiplier(defender);
-        return attackStrength > defendStrength;
-    }
-
-    // function to get the attacking strength + terrain bonus
-    public int getAttackingUnitStrength(UnitImpl attacker, Position from, GameImpl game) {
-        // look at the surrounding 8 tiles and get the unit's attacking strength as well as the friendly count
-        int numSupporters = getNumFriendlyTiles(from, game);
-        return attacker.getAttackingStrength() + numSupporters;
-    }
-
-    // function to get the defensive strength + terrain bonus
-    public int getDefendingUnitStrength(UnitImpl defender, Position to, GameImpl game) {
-        // look at the surrounding 8 tiles and get the unit's defending strength as well as the friendly count
-        int numSupporters = getNumFriendlyTiles(to, game);
-        return defender.getDefensiveStrength() + numSupporters;
-    }
-
-    // function to get the terrain bonus
-    public int getTerrainMultiplier(UnitImpl unit){
-        String terrainType = unit.getTypeString();
-        switch(terrainType) {
-            case "forest":
-            case "hill":
-                return 2;
-            case "city":
-                return 3;
-            default:
-                return -1;
-        }
-    }
-
-    public int getNumFriendlyTiles(Position from, GameImpl game){
-        // want the logic from the Utility code provided
-        Iterable<Position> neighborIterator = get8neighborhoodOf(from);
-        int countFriendlyUnits = 0;
-        Player attackingPlayer = game.getUnitAt(from).getOwner();
-        for (Position pos: neighborIterator) {
-            Player owner = game.getUnitAt(pos).getOwner();
-            if(attackingPlayer == owner)
-                countFriendlyUnits++;
-        }
-        return countFriendlyUnits;
-    }
-    public static Iterator<Position> get8neighborhoodIterator(Position center) {
-        List<Position> list = new ArrayList<>();
-        // Define the 'delta' to add to the row for the 8 positions
-        int[] rowDelta = new int[] {-1, -1, 0, +1, +1, +1, 0, -1};
-        // Define the 'delta' to add to the colum for the 8 positions
-        int[] columnDelta = new int[] {0, +1, +1, +1, 0, -1, -1, -1};
-
-        for (int index = 0; index < rowDelta.length; index++) {
-            int row = center.getRow() + rowDelta[index];
-            int col = center.getColumn() + columnDelta[index];
-            if (row >= 0 && col >= 0
-                    && row < GameConstants.WORLDSIZE
-                    && col < GameConstants.WORLDSIZE)
-                list.add(new Position(row, col));
-        }
-        return list.iterator();
-    }
-
-    public static Iterable<Position> get8neighborhoodOf(Position center) {
-        final Iterator<Position> iterator = get8neighborhoodIterator(center);
-        Iterable<Position> iterable = new Iterable<Position>() {
-            @Override
-            public Iterator<Position> iterator() {
-                return iterator;
-            }
-        };
-        return iterable;
-    }
+//    {
+//        public boolean canAttackerBeatDefender (UnitImpl attacker, UnitImpl defender, Position from, Position
+//        to, GameImpl game){
+//        // get attacking strength and defensive strength
+//        // scale by terrain
+//        int attackStrength = getAttackingUnitStrength(attacker, from, game) * getTerrainMultiplier(attacker);
+//        int defendStrength = getDefendingUnitStrength(defender, to, game) * getTerrainMultiplier(defender);
+//        return attackStrength > defendStrength;
+//    }
+//
+//        // function to get the attacking strength + terrain bonus
+//        public int getAttackingUnitStrength (UnitImpl attacker, Position from, GameImpl game){
+//        // look at the surrounding 8 tiles and get the unit's attacking strength as well as the friendly count
+//        int numSupporters = getNumFriendlyTiles(from, game);
+//        return attacker.getAttackingStrength() + numSupporters;
+//    }
+//
+//        // function to get the defensive strength + terrain bonus
+//        public int getDefendingUnitStrength (UnitImpl defender, Position to, GameImpl game){
+//        // look at the surrounding 8 tiles and get the unit's defending strength as well as the friendly count
+//        int numSupporters = getNumFriendlyTiles(to, game);
+//        return defender.getDefensiveStrength() + numSupporters;
+//    }
+//
+//        // function to get the terrain bonus
+//        public int getTerrainMultiplier (UnitImpl unit){
+//        String terrainType = unit.getTypeString();
+//        switch (terrainType) {
+//            case "forest":
+//            case "hill":
+//                return 2;
+//            case "city":
+//                return 3;
+//            default:
+//                return -1;
+//        }
+//    }
+//
+//        public int getNumFriendlyTiles (Position from, GameImpl game){
+//        // want the logic from the Utility code provided
+//        Iterable<Position> neighborIterator = get8neighborhoodOf(from);
+//        int countFriendlyUnits = 0;
+//        Player attackingPlayer = game.getUnitAt(from).getOwner();
+//        for (Position pos : neighborIterator) {
+//            Player owner = game.getUnitAt(pos).getOwner();
+//            if (attackingPlayer == owner)
+//                countFriendlyUnits++;
+//        }
+//        return countFriendlyUnits;
+//    }
+//        public static Iterator<Position> get8neighborhoodIterator (Position center){
+//        List<Position> list = new ArrayList<>();
+//        // Define the 'delta' to add to the row for the 8 positions
+//        int[] rowDelta = new int[]{-1, -1, 0, +1, +1, +1, 0, -1};
+//        // Define the 'delta' to add to the colum for the 8 positions
+//        int[] columnDelta = new int[]{0, +1, +1, +1, 0, -1, -1, -1};
+//
+//        for (int index = 0; index < rowDelta.length; index++) {
+//            int row = center.getRow() + rowDelta[index];
+//            int col = center.getColumn() + columnDelta[index];
+//            if (row >= 0 && col >= 0
+//                    && row < GameConstants.WORLDSIZE
+//                    && col < GameConstants.WORLDSIZE)
+//                list.add(new Position(row, col));
+//        }
+//        return list.iterator();
+//    }
+//
+//        public static Iterable<Position> get8neighborhoodOf (Position center){
+//        final Iterator<Position> iterator = get8neighborhoodIterator(center);
+//        Iterable<Position> iterable = new Iterable<Position>() {
+//            @Override
+//            public Iterator<Position> iterator() {
+//                return iterator;
+//            }
+//        };
+//        return iterable;
+//    }
+//    }
 }
