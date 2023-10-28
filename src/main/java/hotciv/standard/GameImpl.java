@@ -61,7 +61,7 @@ public class GameImpl implements Game {
 
   // create current player to keep track of
   private Player currentPlayer;
-  public Map<Position, Unit> units; // use a hash map to store the units on the board
+  public Map<Position, Unit> units = new HashMap<>(); // use a hash map to store the units on the board
 
   public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // Hash map to associate a player with their
                                                                          // successful attacks
@@ -117,7 +117,7 @@ public class GameImpl implements Game {
     // TODO: may need to later implement players as a list and index through the
     // list to keep track of whose turn it is
     // use a HashMap uses key value pairs to store the positions of the units
-    units = new HashMap<>();
+//    units = new HashMap<>();
 
     // call helper function to set up the world layout according to
     // strategy passed
