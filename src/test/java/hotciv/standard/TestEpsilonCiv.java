@@ -13,51 +13,42 @@ import java.lang.reflect.Method;
 * */
 public class TestEpsilonCiv {
     private GameImpl game;
-    private WorldLayout epsilonCivWorldLayout;
-    private Winner epsilonCivWinner;
-    private UnitAction epsilonUnitAction;
-    private GenericWorldAging epsilonWorldAging;
-    private PlayerSetup epsilonCivPlayerSetup;
+    private GameFactory gameFactory;
 
     @Before
     public void setUp() {
-        epsilonCivWorldLayout = new GenericWorldLayout();
-        epsilonUnitAction = new GammaCivUnitAction();
-        // todo: Need to add in the EpsilonWinner strat
-        epsilonCivWinner = new EpsilonCivWinner();
-        epsilonWorldAging = new GenericWorldAging();
-        epsilonCivPlayerSetup = new EpsilonCivPlayerSetup();
-        game = new GameImpl(epsilonCivWorldLayout, epsilonWorldAging, epsilonCivWinner, epsilonUnitAction, epsilonCivPlayerSetup);
+        gameFactory = new EpsilonCivFactory();
+        game =  new GameImpl(gameFactory);
     }
 
     // a test stub for setting the defensive and attacking strengths
-    public class FixedStrengthStrategy implements Unit{
-        // want to return the strengths of the unit
-        @Override
-        public int getAttackingStrength(){
-            return 100;
-        }
-
-        @Override
-        public String getTypeString() {
-            return null;
-        }
-
-        @Override
-        public Player getOwner() {
-            return getO;
-        }
-
-        @Override
-        public int getMoveCount() {
-            return 0;
-        }
-
-        @Override
-        public int getDefensiveStrength() {
-            return 1;
-        }
-    }
+//    public class FixedStrengthStrategy implements Unit{
+//        // want to return the strengths of the unit
+//        @Override
+//        public int getAttackingStrength(){
+//            return 100;
+//        }
+//
+//        @Override
+//        public String getTypeString() {
+//            return null;
+//        }
+//
+//        @Override
+//        public Player getOwner() {
+//            return -1;
+//        }
+//
+//        @Override
+//        public int getMoveCount() {
+//            return 0;
+//        }
+//
+//        @Override
+//        public int getDefensiveStrength() {
+//            return 1;
+//        }
+//    }
 
     @Test
     public void NoCurrentWinnerYieldsNullPlayer(){

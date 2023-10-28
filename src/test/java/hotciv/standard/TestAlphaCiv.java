@@ -38,12 +38,11 @@ import hotciv.standard.*;
  */
 public class TestAlphaCiv {
   private Game game;
-  private WorldLayout worldLayout;
-  private UnitAction genericUnitAction;
-  private Winner genericWinner;
-  private WorldAging worldAging;
-  private GenericPlayerSetup playerSetup;
-  private Winner winner;
+//  private WorldLayout worldLayout;
+//  private UnitAction genericUnitAction;
+//  private Winner genericWinner;
+//  private WorldAging worldAging;
+//  private PlayerSetup playerSetup;
 
   // int initialTreasury = 0; // Set the initial treasury value as needed
 

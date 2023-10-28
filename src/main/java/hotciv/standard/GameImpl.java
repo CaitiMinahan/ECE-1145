@@ -5,7 +5,7 @@ import hotciv.framework.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID; // TODO: had to add this to track units
+import java.util.UUID;
 import java.util.logging.*;
 
 import hotciv.standard.WorldAging;
@@ -46,7 +46,7 @@ public class GameImpl implements Game {
   private WorldLayout worldLayoutStrategy;
   private WorldAging worldAgingStrategy;
   private Winner winnerStrategy;
-  private GenericPlayerSetup playerSetupStrategy;
+  private PlayerSetup playerSetupStrategy;
 
   // Added in the private implementation for UnitAction
   // This is refactoring the non-existent unit action file and setting an
@@ -131,7 +131,7 @@ public class GameImpl implements Game {
 
   // This function is setting up the players and initializing them to 0 succesful
   // attacks to start
-  public void setupPlayers(GenericPlayerSetup playerSetupStrategy) {
+  public void setupPlayers(PlayerSetup playerSetupStrategy) {
     if (playerSetupStrategy != null) {
       playerSetupStrategy.setupPlayer(this);
     }

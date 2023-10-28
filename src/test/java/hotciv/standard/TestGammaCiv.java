@@ -8,7 +8,6 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class TestGammaCiv {
     private GameImpl game;
-    private UnitAction gammaUnitAction;
     private GameFactory gameFactory;
 
     @Before
