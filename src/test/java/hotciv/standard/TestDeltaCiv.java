@@ -13,19 +13,25 @@ public class TestDeltaCiv {
     private WorldLayout deltaCivWorldLayout;
     private UnitAction unitActionType;
 
-    private PlayerSetup playerSetup;
-
+    private GameFactory gameFactory;
 
     /** Fixture for deltaciv testing. */
     @Before
     public void setUp() {
+        // TODO: remove old implementation
         // layout for DeltaCiv as specified in DeltaCivWorldLayout
-        WorldLayout deltaCivWorldLayout = new DeltaCivWorldLayout();
-        unitActionType = new GenericUnitAction();
-        GenericWorldAging genericWorldAging = new GenericWorldAging();
-        Winner genericWinner = new GenericWinner();
-        playerSetup = new EpsilonCivPlayerSetup();
-        game = new GameImpl(deltaCivWorldLayout, genericWorldAging, genericWinner, unitActionType, playerSetup);
+        // WorldLayout deltaCivWorldLayout = new DeltaCivWorldLayout();
+        // unitActionType = new GenericUnitAction();
+        // GenericWorldAging genericWorldAging = new GenericWorldAging();
+        // Winner genericWinner = new GenericWinner();
+        // game = new GameImpl(deltaCivWorldLayout, genericWorldAging, genericWinner,
+        // unitActionType);
+
+        // step 4 in refactoring for abstract factory: create an instance of the
+        // concrete factory for the appropriate game variant:
+        gameFactory = new DeltaCivFactory();
+        game = new GameImpl(gameFactory);
+
     }
 
     @Test

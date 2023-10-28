@@ -48,23 +48,30 @@ public class GameImpl implements Game {
   private Winner winnerStrategy;
   private PlayerSetup playerSetupStrategy;
 
-
   // Added in the private implementation for UnitAction
   // This is refactoring the non-existent unit action file and setting an
   // action(Delegate) based on the type of civ
   private UnitAction unitActionCivType;
 
+  // TODO: ask if we still need those private variables (above) after refactoring
+  // for abstract factory
+  // step 3 in refactoring for abstract factory: modify GameImpl constructor to
+  // accept GameFactory as its parameter
+  private GameFactory gameFactory;
+
   // create current player to keep track of
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
 
-  public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // Hash map to associate a player with their successful attacks
+  public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // Hash map to associate a player with their
+                                                                         // successful attacks
 
   public Map<Position, City> cities = new HashMap<>();
 
   private int age; // represents current year of the game
 
-  // tracks the number of turns in a round (increments every time each player becomes the current player)
+  // tracks the number of turns in a round (increments every time each player
+  // becomes the current player)
   private int turnCount;
 
   public CityImpl currentCity;
@@ -72,17 +79,26 @@ public class GameImpl implements Game {
   // TODO: might need to keep track of current tile later
   public TileImpl currentTile;
 
+  // TODO: remove old implementation
   // GameImpl constructor
-  public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging, Winner winnerStrategy,
-      UnitAction unitActionCivType, PlayerSetup playerSetupStrategy) {
+  // public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging,
+  // Winner winnerStrategy,
+  // UnitAction unitActionCivType, PlayerSetup playerSetupStrategy) {
+  public GameImpl(GameFactory gameFactory) {
 
+    // TODO: remove old implementation
     // refactor GameImpl to use a concrete WorldLayout instance
-    this.worldLayoutStrategy = worldLayoutStrategy;
-    this.worldAgingStrategy = worldAging;
-    this.winnerStrategy = winnerStrategy;
-    // assign the unit action type as the incoming parameter
-    this.unitActionCivType = unitActionCivType;
-    this.playerSetupStrategy = playerSetupStrategy; // initialized the hash map for players (for attacking)
+    // this.worldLayoutStrategy = worldLayoutStrategy;
+    // this.worldAgingStrategy = worldAging;
+    // this.winnerStrategy = winnerStrategy;
+    // // assign the unit action type as the incoming parameter
+    // this.unitActionCivType = unitActionCivType;
+
+    // use the factory to create the appropriate strategies for the following
+    // variant behaviors:
+    // TODO - add this into factory
+    // this.playerSetupStrategy = playerSetupStrategy; // initialized the hash map
+    // for players (for attacking)
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -113,9 +129,10 @@ public class GameImpl implements Game {
     }
   }
 
-  // This function is setting up the players and initializing them to 0 succesful attacks to start
+  // This function is setting up the players and initializing them to 0 succesful
+  // attacks to start
   public void setupPlayers(PlayerSetup playerSetupStrategy) {
-    if(playerSetupStrategy != null){
+    if (playerSetupStrategy != null) {
       playerSetupStrategy.setupPlayer(this);
     }
   }
@@ -187,25 +204,24 @@ public class GameImpl implements Game {
     return !Objects.equals(unitToCheck.getTypeString(), "settler");
   }
 
-  // Helper function to retrieve the unit action type and not change the template design
+  // Helper function to retrieve the unit action type and not change the template
+  // design
   String getUnitActionStringType() {
-    if(unitActionCivType instanceof GammaCivUnitAction)
-    {
+    if (unitActionCivType instanceof GammaCivUnitAction) {
       return "GammaCivUnitAction";
-    }
-    else if(unitActionCivType instanceof GenericUnitAction)
-    {
+    } else if (unitActionCivType instanceof GenericUnitAction) {
       return "GenericUnitAction";
     }
     return "invalid class type";
   }
 
   // refactored this to use the different ActionType versions (Delegate)
-  /* TODO: Need to refactor so when using EpsilonCiv,
-  *   The move unit function will take into account when
-  *   the units do battle and append the playerSuccessfulAttacks map
-  *
-  * */
+  /*
+   * TODO: Need to refactor so when using EpsilonCiv,
+   * The move unit function will take into account when
+   * the units do battle and append the playerSuccessfulAttacks map
+   *
+   */
   public boolean moveUnit(Position from, Position to) {
     // get the current unit action type
     UnitAction UnitActionCivType = unitActionCivType; // from constructor/priv variables
@@ -223,18 +239,17 @@ public class GameImpl implements Game {
     return false;
   }
 
-
   // when unit needs to take action, use this function
-  public void takeUnitAction(Unit u, GameImpl game, UnitAction unitActionCivType) {
+  public void takeUnitAction(Unit u) {
     // based on the type of game we are playing this will use the different
     // implementations
-    if (unitActionCivType != null) {
+    if (this.unitActionCivType != null) {
       // get the position based on the unit
       // convert unit to unit impl
       UnitImpl ui = (UnitImpl) u;
       Position p = getPositionFromUnit(ui);
       // run the action function
-      unitActionCivType.performAction(ui, p, game);
+      this.unitActionCivType.performAction(ui, p, this);
     } else {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance
@@ -266,21 +281,6 @@ public class GameImpl implements Game {
 
   public void performUnitActionAt(Position p) {
   }
-
-  // added helper function for adding new cities for DeltaCiv and BetaCiv
-//  public void placeCity(Position position, Player player) {
-//    // Check if a city already exists at the specified position
-//    City existingCity = cities.get(position);
-//
-//    // If there is no existing city at the position, create a new one and set its
-//    // owner
-//    if (existingCity == null) {
-//      City newCity = new CityImpl(player);
-//      // Add the city to the collection
-//      cities.put(position, newCity);
-//      currentCity = (CityImpl) newCity;
-//    }
-//  }
 
   public void placeCity(Position position, Player player) {
     if (!cityExistsAt(position)) {
