@@ -30,4 +30,7 @@ public class AlphaCivFactory implements GameFactory {
     public UnitAction createUnitAction() {
         return new GenericUnitAction();
     }
+
+    @Override
+    public PlayerSetup createPlayerSetup() { return new GenericPlayerSetup();}
 }

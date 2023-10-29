@@ -31,5 +31,9 @@ public class DeltaCivFactory implements GameFactory {
         // Use the generic UnitAction for ZetaCiv
         return new GenericUnitAction();
     }
+    @Override
+    public PlayerSetup createPlayerSetup() {
+        return new GenericPlayerSetup();
+    }
 
 }

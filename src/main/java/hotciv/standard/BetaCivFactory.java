@@ -23,4 +23,8 @@ public class BetaCivFactory implements GameFactory {
         // BetaCiv = generic unit action
         return new GenericUnitAction();
     }
+    @Override
+    public PlayerSetup createPlayerSetup() {
+        return new GenericPlayerSetup();
+    }
 }
