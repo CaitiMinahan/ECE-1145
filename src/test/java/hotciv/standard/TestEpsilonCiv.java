@@ -44,9 +44,7 @@ public class TestEpsilonCiv {
     }
 
     // Show that a successful attack increases the player's win count
-    /*
-    * Defense was set to be higher than defense in the stub
-    * */
+    // Defense was set to be higher than defense in the stub
     @Test
     public void AttackIsResolvedAsWin(){
         // attacking unit - archer at 0,0 red
@@ -58,27 +56,59 @@ public class TestEpsilonCiv {
         int numRedWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.RED);
         // fight
         boolean didRedWin = strongerAttackerGame.moveUnit(redArcherPos, blueLegionPos);
-        Player winner =  strongerAttackerGame.getWinner();
         assertThat(didRedWin, is(true));
         // test that the hash map has incremented
         int updatedNumRedWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.RED);
         assertThat(updatedNumRedWins > numRedWins, is(true));
     }
 
+    // show that with three successful attacks, a Player has won the whole game
     @Test
     public void ThreeSuccessfulAttacksYieldsWin(){
+        // there are 5 Red player units on the board now using the
+        // use the strongerAttackerWithManyUnitsGame game
+        strongerAttackerGame.units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerAttackerGame.units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerDefenderGame.units.put(new Position(2,4), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerAttackerGame.units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
+        Position redArcher1Pos = new Position(0,0);
+        Position redArcher2Pos = new Position(2,2);
+        Position redArcher3Pos = new Position(2,3);
+        Position blueArcherPos = new Position(3,0); // Blue will be doing the attacking
 
+        // no winner to start
+        boolean didBlueWin = strongerAttackerGame.moveUnit(blueArcherPos, redArcher1Pos);
+        didBlueWin = strongerAttackerGame.moveUnit(redArcher1Pos, redArcher2Pos);
+        didBlueWin = strongerAttackerGame.moveUnit(redArcher2Pos, redArcher3Pos);
+
+        int blueWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.BLUE);
+        Player winner = strongerAttackerGame.getWinner();
+
+        // assert the following
+        assertThat(winner, is(Player.BLUE));
+        assertThat(blueWins, is(3));
     }
 
     // TODO: need to change the last two test case names to reflect what is happening
-    @Test
-    public void combinedAttackStrength(){
 
+    // An attacker with > attacking strength beats defender
+    @Test
+    public void strongerAttackerBeatsWeakDefender(){
+        Position RedArcherPos = new Position(0,0);
+        Position BlueLegionPos = new Position(1,2);
+        // attack
+        boolean didRedWin = strongerAttackerGame.moveUnit(RedArcherPos, BlueLegionPos);
+        assertThat(didRedWin, is(true));
     }
 
+    // An attacker with < attacking strength loses to defender
     @Test
-    public void combinedDefensiveStrength(){
-
+    void strongerDefenderBeatsWeakAttacker(){
+        Position RedArcherPos = new Position(0,0);
+        Position BlueLegionPos = new Position(1,2);
+        // attack
+        boolean didRedWin = strongerDefenderGame.moveUnit(RedArcherPos, BlueLegionPos);
+        assertThat(didRedWin, is(false));
     }
 
 }
