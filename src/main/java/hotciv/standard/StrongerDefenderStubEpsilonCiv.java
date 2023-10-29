@@ -31,7 +31,7 @@ public class StrongerDefenderStubEpsilonCiv implements UnitAttacking{
     @Override
     // Doesn't matter, not being tested
     public int getTerrainMultiplier(UnitImpl unit) {
-        return -1;
+        return 1;
     }
 
     @Override

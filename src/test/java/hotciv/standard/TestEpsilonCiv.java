@@ -103,7 +103,7 @@ public class TestEpsilonCiv {
 
     // An attacker with < attacking strength loses to defender
     @Test
-    void strongerDefenderBeatsWeakAttacker(){
+    public void strongerDefenderBeatsWeakAttacker(){
         Position RedArcherPos = new Position(0,0);
         Position BlueLegionPos = new Position(1,2);
         // attack
