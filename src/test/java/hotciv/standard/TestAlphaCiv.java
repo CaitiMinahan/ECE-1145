@@ -48,21 +48,24 @@ public class TestAlphaCiv {
 
   // int initialTreasury = 0; // Set the initial treasury value as needed
 
+  private GameFactory gameFactory;
+
 
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-    // TODO: step 3 - refactor worldLayout to use a concrete WorldLayout instance
-    // TODO: when we create TestDeltaCiv, we will specify the layout in the setUp as
-    // new DeltaCivWorldLayout
-    worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
-    genericUnitAction = new GenericUnitAction();
+    // TODO: remove old implementation
+//    worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
+//    genericUnitAction = new GenericUnitAction();
+//    // int initialTreasury = 0;
+//    worldAging = new GenericWorldAging();
+//    genericWinner = new GenericWinner();
     // int initialTreasury = 0;
-    worldAging = new GenericWorldAging();
-    genericWinner = new GenericWinner();
-    // int initialTreasury = 0;
-    game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
+//    game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
 
+    // step 4 in refactoring for abstract factory: create an instance of the concrete factory for the appropriate game variant:
+    gameFactory = new AlphaCivFactory();
+    game = new GameImpl(gameFactory);
   }
 
     // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -211,7 +214,9 @@ public class TestAlphaCiv {
   public void RedUnitCannotAttackRedUnit() {
     // when a red unit attempts to move into a space occupied by another red unit,
     // the original unit should not be able to move (no fortification)
-    Game game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
+    // TODO: remove old implementation
+//    Game game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
+    Game game = new GameImpl(gameFactory);
     Position redArcherPosition = new Position(0, 0); // position of the red player archer
     Position redSettlerPosition = new Position(1, 1); // position of the red player settler
 
