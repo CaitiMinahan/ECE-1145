@@ -3,8 +3,17 @@ import hotciv.framework.*;
 import hotciv.standard.*;
 
 public class EpsilonCivFactory implements GameFactory {
-    // this override requires param
     public UnitAttacking unitAttacking;
+
+    // default constructor with no params
+    public EpsilonCivFactory(){
+        this.unitAttacking = new GenericUnitAttacking();
+    }
+    public EpsilonCivFactory(UnitAttacking unitAttacking) {
+        this.unitAttacking = unitAttacking;
+    }
+
+    // this override requires param
     @Override
     public WorldLayout createWorldLayout() {
         return new GenericWorldLayout();
