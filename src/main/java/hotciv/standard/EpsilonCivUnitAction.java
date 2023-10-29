@@ -71,7 +71,7 @@ public class EpsilonCivUnitAction implements UnitAction{
         // check to see if the unit to move is a fortified archer
         if(unitTypeString.equals("archer") && !unitCanMove)
             return false;
-        else if (unitTypeString.equals("archer") && unitCanMove)
+        else if (unitTypeString.equals("archer") && unitCanMove && game.getUnitAt(to) == null)
         {
             updateUnitMap(from, to, unit_from, game);
             return true;
@@ -86,6 +86,13 @@ public class EpsilonCivUnitAction implements UnitAction{
 
             // check if the attacking unit is capable of attacking
             if (!game.canUnitAttack(attackingUnit)) {
+                return false;
+            }
+            // check if the unit is an immobilized archer
+            // get the unit impl of attacking unit
+            UnitImpl attackingUnitImpl = (UnitImpl)attackingUnit;
+            if(Objects.equals(attackingUnit.getTypeString(), "archer") && !attackingUnitImpl.getCanMove())
+            {
                 return false;
             }
             if(defendingPlayer != attackingPlayer)

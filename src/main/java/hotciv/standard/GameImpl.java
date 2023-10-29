@@ -109,6 +109,8 @@ public class GameImpl implements Game {
     // call helper function to set up the world layout according to
     // strategy passed
     setupWorldLayout(worldLayoutStrategy);
+    // setup the player based on the hash map
+    playerSetup.setupPlayer(this);
   }
 
   // create helper function to set the map according to setupWorld

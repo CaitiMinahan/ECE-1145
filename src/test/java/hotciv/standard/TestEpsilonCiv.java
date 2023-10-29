@@ -38,6 +38,9 @@ public class TestEpsilonCiv {
     public void NoCurrentWinnerYieldsNullPlayer(){
         Player winner = genericGame.getWinner();
         assertThat(winner, is(nullValue()));
+        // ensure that the successfulPlayerAttacks map is not zero
+        int numRedWins = genericGame.playerSuccessfulAttacks.get(Player.RED);
+        assertThat(numRedWins, is(0));
     }
 
     // Show that a successful attack increases the player's win count
@@ -59,7 +62,7 @@ public class TestEpsilonCiv {
         assertThat(didRedWin, is(true));
         // test that the hash map has incremented
         int updatedNumRedWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.RED);
-        assertThat(numRedWins > updatedNumRedWins, is(true));
+        assertThat(updatedNumRedWins > numRedWins, is(true));
     }
 
     @Test
