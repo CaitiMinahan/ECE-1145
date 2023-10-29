@@ -12,6 +12,11 @@ public class TestEpsilonCiv {
     private GameImpl game;
     private GameFactory gameFactory;
 
+    // variables for the generic unitAttack and Stubs
+    private GenericUnitAttacking genericUnitAttacking;
+    private StrongerAttackerStubEpsilonCiv strongerAttackerStubEpsilonCiv;
+
+
     @Before
     public void setUp() {
         gameFactory = new EpsilonCivFactory();
@@ -48,26 +53,25 @@ public class TestEpsilonCiv {
 // }
 
     // test stub should be the EpsilonCivUnitAction since there are so many things going on there
-    public class fixedEpsilonUnitAction implements UnitAction{
-
-        @Override
-        public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame) {
-
-        }
-
-        @Override
-        public boolean moveUnit(Position from, Position to, GameImpl currentGame) {
-            return false;
-        }
-
-        @Override
-        public void updateUnitMap(Position from, Position to, Unit unit_from, GameImpl currentGame) {
-            // do nothing
-        }
-        public int getNumFriendlyTiles(Position from, GameImpl game){
-            return 5; //hard coded value
-        }
-    }
+//    public class fixedEpsilonUnitAction implements UnitAction{
+//
+//        @Override
+//        public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame) {
+//
+//        }
+//
+//        @Override
+//        public boolean moveUnit(Position from, Position to, GameImpl currentGame) {
+//            return false;
+//        }
+//
+//        @Override
+//        public void updateUnitMap(Position from, Position to, Unit unit_from, GameImpl currentGame) {
+//            // do nothing
+//        }
+//        public int getNumFriendlyTiles(Position from, GameImpl game){
+//            return 5; //hard coded value
+//        }
 
     @Test
     public void NoCurrentWinnerYieldsNullPlayer(){

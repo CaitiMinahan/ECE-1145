@@ -15,7 +15,12 @@ import java.util.Objects;
 public class EpsilonCivUnitAction implements UnitAction{
 
     // create an instance of the generic Unit attacking
-    private GenericUnitAttacking genericUnitAttacking = new GenericUnitAttacking();
+    private UnitAttacking unitAttacking;
+
+    // create a constructor that can use the different unitAttacking types
+    public EpsilonCivUnitAction(UnitAttacking unitAttacking){
+        this.unitAttacking = unitAttacking; // this is important for testing
+    }
     @Override
     public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame)
     {
@@ -89,7 +94,7 @@ public class EpsilonCivUnitAction implements UnitAction{
                 // TODO: have to go through the attacking a defensive calculations before killing a unit
 
                 // call the functions
-                if(genericUnitAttacking.canAttackerBeatDefender((UnitImpl) attackingUnit, (UnitImpl) foundUnit, from, to, game)) {
+                if(unitAttacking.canAttackerBeatDefender((UnitImpl) attackingUnit, (UnitImpl) foundUnit, from, to, game)) {
                     game.killUnit(to);
                     updateUnitMap(from, to, unit_from, game);
                     // update the successful attack map
