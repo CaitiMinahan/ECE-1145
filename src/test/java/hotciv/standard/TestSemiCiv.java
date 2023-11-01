@@ -38,11 +38,9 @@ public class TestSemiCiv {
 
     @Before
     public void setUp() {
-        gameFactory = new SemiCivFactory();
-        game = new GameImpl(gameFactory);
 
         // for each stub, create a new instantiation
-        GameFactory genericGameFactory = new EpsilonCivFactory(); // could pass in GenericUnitAttacking or not since constructor
+        //GameFactory genericGameFactory = new EpsilonCivFactory(); // could pass in GenericUnitAttacking or not since constructor
         GameFactory strongerAttackerStubGameFactory = new EpsilonCivFactory(strongerAttackerStubEpsilonCiv);
         GameFactory strongerDefenderStubGameFactory = new EpsilonCivFactory(strongerDefenderStubEpsilonCiv);
         GameFactory attackerHasTerrainAdvantageStubGameFactory = new EpsilonCivFactory(attackerHasTerrainAdvantageStubEpsilonCiv);
@@ -51,13 +49,16 @@ public class TestSemiCiv {
         GameFactory defenderHasMoreNeighborsStubGameFactory = new EpsilonCivFactory(defenderHasMoreNeighborsStubEpsilonCiv);
 
         // function is overloaded
-        genericGame = new GameImpl(genericGameFactory); // use for main implementation testing
+        //genericGame = new GameImpl(genericGameFactory); // use for main implementation testing
         strongerAttackerGame = new GameImpl(strongerAttackerStubGameFactory);
         strongerDefenderGame = new GameImpl(strongerDefenderStubGameFactory);
         attackerHasTerrainAdvantageGame = new GameImpl(attackerHasTerrainAdvantageStubGameFactory);
         defenderHasTerrainAdvantageGame = new GameImpl(defenderHasTerrainAdvantageStubGameFactory);
         attackerHasMoreNeighborsGame = new GameImpl(attackerHasMoreNeighborsStubGameFactory);
         defenderHasMoreNeighborsGame = new GameImpl(defenderHasMoreNeighborsStubGameFactory);
+
+        gameFactory = new SemiCivFactory();
+        game = new GameImpl(gameFactory);
     }
 
     // Testing BetaCiv's Aging Algorithm
@@ -156,7 +157,7 @@ public class TestSemiCiv {
         Player winner = game.getWinner();
         assertThat(winner, is(nullValue()));
         // ensure that the successfulPlayerAttacks map is not zero
-        int numRedWins = genericGame.playerSuccessfulAttacks.get(Player.RED);
+        int numRedWins = ((GameImpl)game).playerSuccessfulAttacks.get(Player.RED);
         assertThat(numRedWins, is(0));
     }
 
