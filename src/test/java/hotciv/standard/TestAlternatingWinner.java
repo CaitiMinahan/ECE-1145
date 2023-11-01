@@ -2,10 +2,10 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import hotciv.standard.Factories.ZetaCivFactory;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
-import hotciv.standard.*;
 
 public class TestAlternatingWinner {
     private Game game;

@@ -1,36 +1,30 @@
-package hotciv.standard;
-
+package hotciv.standard.Factories;
 import hotciv.framework.*;
-
 import hotciv.standard.*;
 
-public class AlphaCivFactory implements GameFactory {
-
-//    @Override
-//    public Game createGame() {
-//        return new GameImpl(this);
-//    }
-
+public class GammaCivFactory implements GameFactory {
     @Override
     public WorldLayout createWorldLayout() {
+        // GammaCiv = generic layout
         return new GenericWorldLayout();
     }
-
     @Override
     public WorldAging createWorldAging() {
+        // GammaCiv = generic aging
         return new GenericWorldAging();
     }
-
     @Override
     public Winner createWinnerStrategy() {
+        // GammaCiv = generic winner
         return new GenericWinner();
     }
-
     @Override
     public UnitAction createUnitAction() {
-        return new GenericUnitAction();
+        // GammaCiv = GammaCiv unit action
+        return new GammaCivUnitAction();
     }
-
     @Override
-    public PlayerSetup createPlayerSetup() { return new GenericPlayerSetup();}
+    public PlayerSetup createPlayerSetup() {
+        return new GenericPlayerSetup();
+    }
 }

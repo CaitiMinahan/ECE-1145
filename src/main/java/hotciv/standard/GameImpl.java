@@ -40,51 +40,22 @@ import hotciv.standard.*;
  */
 
 public class GameImpl implements Game {
-
-  // Refactor GameImpl tp use a reference WorldLayout instance for
-  // setting the tiles (Delegate)
   private WorldLayout worldLayoutStrategy;
   private WorldAging worldAgingStrategy;
   private Winner winnerStrategy;
   private UnitAction unitActionCivType;
-  private PlayerSetup playerSetup; // this is the variable for setting up the player attacking wins hashmap
-
-  // TODO: ask if we still need those private variables (above) after refactoring for abstract factory
-  // step 3 in refactoring for abstract factory: modify GameImpl constructor to accept GameFactory as its parameter
+  private PlayerSetup playerSetup;
   private GameFactory gameFactory;
-
-  // create current player to keep track of
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
-
   public Map<Position, City> cities = new HashMap<>();
-
   public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
-
   private int age; // represents current year of the game
-
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
-
   public CityImpl currentCity;
-
-  // TODO: might need to keep track of current tile later
   public TileImpl currentTile;
-
-  // TODO: remove old implementation
-  // GameImpl constructor
-//  public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging, Winner winnerStrategy,
-//      UnitAction unitActionCivType) {
   public GameImpl(GameFactory gameFactory) {
-
-    // TODO: remove old implementation
-    // refactor GameImpl to use a concrete WorldLayout instance
-//    this.worldLayoutStrategy = worldLayoutStrategy;
-//    this.worldAgingStrategy = worldAging;
-//    this.winnerStrategy = winnerStrategy;
-//    // assign the unit action type as the incoming parameter
-//    this.unitActionCivType = unitActionCivType;
-
     // use the factory to create the appropriate strategies for the following variant behaviors:
     this.worldLayoutStrategy = gameFactory.createWorldLayout();
     this.worldAgingStrategy = gameFactory.createWorldAging();
@@ -101,8 +72,6 @@ public class GameImpl implements Game {
     // initialize the turn count to 0
     setTurnCount(0);
 
-    // TODO: may need to later implement players as a list and index through the
-    // list to keep track of whose turn it is
     // use a HashMap uses key value pairs to store the positions of the units
     units = new HashMap<>();
 
@@ -112,7 +81,6 @@ public class GameImpl implements Game {
     // setup the player based on the hash map
     playerSetup.setupPlayer(this);
   }
-
   // create helper function to set the map according to setupWorld
   // method in WorldLayout interface
   public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
@@ -219,7 +187,6 @@ public class GameImpl implements Game {
     return false;
   }
 
-
   // when unit needs to take action, use this function
   public void takeUnitAction(Unit u) {
     // based on the type of game we are playing this will use the different
@@ -249,11 +216,10 @@ public class GameImpl implements Game {
 
     // increment the turn count after every player goes
     setTurnCount(getTurnCount() + 1);
-
     worldAgingStrategy.gameAging(this);
-
   }
 
+  // @TODO: check to make sure the following three functions are used/needed by anyone
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
   }
 

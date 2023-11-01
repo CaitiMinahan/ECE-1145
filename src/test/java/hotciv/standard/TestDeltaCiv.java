@@ -2,11 +2,10 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import hotciv.standard.Factories.DeltaCivFactory;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
-import hotciv.standard.*;
-import java.lang.reflect.Method;
 
 public class TestDeltaCiv {
     private Game game;
