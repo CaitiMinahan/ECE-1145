@@ -1,10 +1,8 @@
 package hotciv.standard;
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.UnitAttacking;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-public class GenericUnitAttacking implements UnitAttacking{
+public class GenericUnitAttacking implements UnitAttacking {
     @Override
     public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, GameImpl game) {
         // get attacking strength and defensive strength

@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID; // TODO: had to add this to track units
-import java.util.logging.*;
 
-import hotciv.standard.WorldAging;
-import hotciv.standard.*;
+import hotciv.standard.Interfaces.*;
 
 /**
  * Skeleton implementation of HotCiv.

@@ -1,6 +1,6 @@
 package hotciv.standard.Factories;
-import hotciv.framework.*;
 import hotciv.standard.*;
+import hotciv.standard.Interfaces.*;
 
 public class EpsilonCivFactory implements GameFactory {
     public UnitAttacking unitAttacking;

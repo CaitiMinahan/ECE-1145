@@ -1,6 +1,6 @@
 package hotciv.standard.Factories;
-import hotciv.framework.*;
 import hotciv.standard.*;
+import hotciv.standard.Interfaces.*;
 
 public class ZetaCivFactory implements GameFactory {
     // step 2 in refactoring for abstract factory: create concrete factory classes for each game variant

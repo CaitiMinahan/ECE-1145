@@ -1,12 +1,9 @@
 package hotciv.standard.TestStubs;
 import hotciv.framework.*;
 import hotciv.standard.GameImpl;
-import hotciv.standard.UnitAttacking;
+import hotciv.standard.Interfaces.UnitAttacking;
 import hotciv.standard.UnitImpl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 public class AttackerHasTerrainAdvantageStubEpsilonCiv implements UnitAttacking {
     @Override
     // Same as before in the generic

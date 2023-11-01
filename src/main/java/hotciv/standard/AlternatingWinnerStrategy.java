@@ -1,7 +1,8 @@
 package hotciv.standard;
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.Winner;
 
-public class AlternatingWinnerStrategy implements Winner{
+public class AlternatingWinnerStrategy implements Winner {
     private Winner currentWinnerState;
     private int round;
     public AlternatingWinnerStrategy(){
