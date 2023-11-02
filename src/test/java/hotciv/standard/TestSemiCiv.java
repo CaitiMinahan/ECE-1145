@@ -1,6 +1,10 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
+import hotciv.standard.*;
+import hotciv.standard.Factories.*;
+import hotciv.standard.Interfaces.*;
+import hotciv.standard.TestStubs.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -57,7 +61,7 @@ public class TestSemiCiv {
         attackerHasMoreNeighborsGame = new GameImpl(attackerHasMoreNeighborsStubGameFactory);
         defenderHasMoreNeighborsGame = new GameImpl(defenderHasMoreNeighborsStubGameFactory);
 
-        gameFactory = new SemiCivFactory();
+        gameFactory = new ThetaCivFactory.SemiCivFactory();
         game = new GameImpl(gameFactory);
     }
 
