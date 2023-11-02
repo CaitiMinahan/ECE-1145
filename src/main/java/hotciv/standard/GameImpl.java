@@ -185,24 +185,6 @@ public class GameImpl implements Game {
     return false;
   }
 
-  // when unit needs to take action, use this function
-  public void takeUnitAction(Unit u) {
-    // based on the type of game we are playing this will use the different
-    // implementations
-    if (this.unitActionCivType != null) {
-      // get the position based on the unit
-      // convert unit to unit impl
-      UnitImpl ui = (UnitImpl) u;
-      Position p = getPositionFromUnit(ui);
-      // run the action function
-      this.unitActionCivType.performAction(ui, p, this);
-    } else {
-      // for some reason the unitActionCivType is null when it should be generic or
-      // gammaCiv instance
-      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
-    }
-  }
-
   public void endOfTurn() {
 
     // add 6 production (or money) at the end of the turn
@@ -224,9 +206,23 @@ public class GameImpl implements Game {
   public void changeProductionInCityAt(Position p, String unitType) {
   }
 
+  // TODO: make sure all function calls to take Unit Action are replaced with perform unit action
   public void performUnitActionAt(Position p) {
+    Unit u = getUnitAt(p);
+    // based on the type of game we are playing this will use the different
+    // implementations
+    if (this.unitActionCivType != null) {
+      // get the position based on the unit
+      // convert unit to unit impl
+      UnitImpl ui = (UnitImpl) u;
+      // run the action function
+      this.unitActionCivType.performAction(ui, p, this);
+    } else {
+      // for some reason the unitActionCivType is null when it should be generic or
+      // gammaCiv instance
+      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+    }
   }
-
   public void placeCity(Position position, Player player) {
     if (!cityExistsAt(position)) {
       City newCity = createCity(player);
