@@ -52,6 +52,7 @@ public class GameImpl implements Game {
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
   public CityImpl currentCity;
+  private Unit currentUnit;
   public TileImpl currentTile;
   public GameImpl(GameFactory gameFactory) {
     // use the factory to create the appropriate strategies for the following variant behaviors:
@@ -79,6 +80,7 @@ public class GameImpl implements Game {
     // setup the player based on the hash map
     playerSetup.setupPlayer(this);
   }
+
   // create helper function to set the map according to setupWorld
   // method in WorldLayout interface
   public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
@@ -93,6 +95,10 @@ public class GameImpl implements Game {
     }
     return null;
   }
+
+  // Getter and setter for the current Unit variable
+  public Unit getCurrentUnit(){ return currentUnit; }
+  public void setCurrentUnit (Unit u) { currentUnit = u; }
 
   public Position getPositionFromUnit(UnitImpl u) {
     // loop through the units map and find the unit with the corresponding ID
@@ -197,6 +203,14 @@ public class GameImpl implements Game {
     // increment the turn count after every player goes
     setTurnCount(getTurnCount() + 1);
     worldAgingStrategy.gameAging(this);
+
+    // reset the current units move counter back to 1 or 2
+    Unit currUnit = getCurrentUnit();
+    if(Objects.equals(currUnit.getTypeString(), "ufo")){
+      ((UnitImpl) currUnit).setTravelDistace(2);
+    } else {
+      ((UnitImpl) currUnit).setTravelDistace(1);
+    }
   }
 
   // @TODO: check to make sure the following three functions are used/needed by anyone

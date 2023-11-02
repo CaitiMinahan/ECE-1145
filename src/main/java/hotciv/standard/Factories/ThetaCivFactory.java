@@ -17,7 +17,7 @@ public class ThetaCivFactory implements GameFactory {
     }
     @Override
     public UnitAction createUnitAction() {
-        return new GammaCivUnitAction();
+        return new ThetaCivUnitAction();
     }
     @Override
     public PlayerSetup createPlayerSetup() {

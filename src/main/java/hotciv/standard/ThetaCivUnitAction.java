@@ -48,6 +48,14 @@ public class ThetaCivUnitAction implements UnitAction {
     @Override
     public boolean moveUnit( Position from, Position to, GameImpl game) {
         Unit unit_from = game.getUnitAt(from);
+        // set the current unit in game
+        game.setCurrentUnit(unit_from);
+        // test the unit for the allowable moves
+        UnitImpl ui = (UnitImpl) unit_from;
+        int travelMoves = ui.getTravelDistace();
+        if(travelMoves == 0){
+            return false; // unit has no moves left
+        }
             if (unit_from == null) {
                 return false;
             }
@@ -59,7 +67,10 @@ public class ThetaCivUnitAction implements UnitAction {
                 return false;
             else if (unitTypeString.equals("archer") && unitCanMove) {
                 updateUnitMap(from, to, unit_from, game);
+                // unit is moved, remove a travel distance
+                ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
                 return true;
+
             }
             // if the 'to' unit already has a unit there
             if (game.getUnitAt(to) != null) {
@@ -77,12 +88,14 @@ public class ThetaCivUnitAction implements UnitAction {
                     // let the attacking unit remove the defending unit and then successfully move to that tile
                     game.killUnit(to);
                     updateUnitMap(from, to, unit_from, game);
+                    ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
                     return true;
                 }
                 return false; // cannot fortify tiles (move own units to tile with own units)
             }
             // otherwise, move the unit from the original position to the new one
             updateUnitMap(from, to, unit_from, game);
-            return true;
+            ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
+        return true;
     }
 }
