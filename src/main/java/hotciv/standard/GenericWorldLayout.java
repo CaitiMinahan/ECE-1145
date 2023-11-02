@@ -2,10 +2,8 @@ package hotciv.standard;
 import hotciv.framework.*;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
-import hotciv.standard.*;
+import hotciv.standard.Interfaces.WorldLayout;
 // this defines generic world layout for alphaciv, betaciv and gammaciv (assuming deltaciv is the only variant)
 // step 4 - move world layout setup to a class implementing the worldLayout interface
 

@@ -1,24 +1,32 @@
 package hotciv.standard;
 import hotciv.framework.Player;
 import hotciv.framework.Unit;
+
+import java.util.Objects;
 import java.util.UUID;
 import hotciv.standard.*;
 
 public class UnitImpl implements Unit {
     private String unit;
     private Player owner;
-
-    // TODO: added in ID to track specific units in the hashmap
     private UUID ID;
     private int moveCount;
     private int defensiveStrength;
     private int attackingStrength;
+    private int travelDistace = 1;
 
     private boolean canMove = true;
     public UnitImpl(String unit, Player owner){
         this.unit = unit;
         this.owner = owner;
         this.ID = UUID.randomUUID();
+
+        // if the unit is a UFO
+        if(Objects.equals(this.getTypeString(), "ufo")){
+            setDefendingStrength(8);
+            setAttackingStrength(1);
+            setTravelDistace(2);
+        }
     }
     @Override
     public String getTypeString() {
@@ -45,7 +53,10 @@ public class UnitImpl implements Unit {
     void setDefendingStrength(int d) {
         defensiveStrength = d;
     }
+    void setAttackingStrength(int a) {attackingStrength = a;}
     // TODO: had to add toggles for can move property, get and set
+    public void setTravelDistace(int t) {travelDistace = t;}
+    public int getTravelDistace() { return travelDistace;}
     public boolean getCanMove() { return canMove;}
     void setCanMove (boolean can_move) {
         canMove = can_move;

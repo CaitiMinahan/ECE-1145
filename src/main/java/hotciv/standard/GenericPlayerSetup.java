@@ -1,7 +1,8 @@
 package hotciv.standard;
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.PlayerSetup;
 
-public class GenericPlayerSetup implements PlayerSetup{
+public class GenericPlayerSetup implements PlayerSetup {
     @Override
     public void setupPlayer(GameImpl game){
         // setup for two players for now

@@ -1,10 +1,8 @@
 package hotciv.standard;
 import hotciv.framework.*;
-import hotciv.standard.*;
+import hotciv.standard.Interfaces.UnitAction;
+import hotciv.standard.Interfaces.UnitAttacking;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 
 /* The following code is a copy of gamma civ, but now we need
@@ -12,7 +10,7 @@ import java.util.Objects;
  * */
 
 
-public class EpsilonCivUnitAction implements UnitAction{
+public class EpsilonCivUnitAction implements UnitAction {
 
     // create an instance of the generic Unit attacking
     private UnitAttacking unitAttacking;

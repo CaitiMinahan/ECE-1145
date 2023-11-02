@@ -1,6 +1,7 @@
-package hotciv.standard;
+package hotciv.standard.Factories;
 
-
+import hotciv.standard.*;
+import hotciv.standard.Interfaces.*;
 public class AlphaCivFactory implements GameFactory {
 
 //    @Override

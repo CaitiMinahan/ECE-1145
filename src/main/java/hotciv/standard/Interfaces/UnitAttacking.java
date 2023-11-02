@@ -1,5 +1,7 @@
-package hotciv.standard;
+package hotciv.standard.Interfaces;
 import hotciv.framework.*;
+import hotciv.standard.GameImpl;
+import hotciv.standard.UnitImpl;
 
 import java.util.ArrayList;
 import java.util.Iterator;

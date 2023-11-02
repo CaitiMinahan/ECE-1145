@@ -2,10 +2,16 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import hotciv.standard.Factories.ZetaCivFactory;
+import hotciv.standard.Factories.*;
+import hotciv.standard.TestStubs.StrongerAttackerStubEpsilonCiv;
+import hotciv.standard.Interfaces.GameFactory;
+import hotciv.standard.Interfaces.UnitAction;
+import hotciv.standard.Interfaces.WorldAging;
+import hotciv.standard.Interfaces.WorldLayout;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
-import hotciv.standard.*;
 
 public class TestAlternatingWinner {
     private Game game;
