@@ -51,7 +51,6 @@ public class GameImpl implements Game {
 
   // TODO: ask if we still need those private variables (above) after refactoring for abstract factory
   // step 3 in refactoring for abstract factory: modify GameImpl constructor to accept GameFactory as its parameter
-  private GameFactory gameFactory;
 
   // create current player to keep track of
   private Player currentPlayer;

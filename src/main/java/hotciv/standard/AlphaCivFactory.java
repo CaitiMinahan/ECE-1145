@@ -1,8 +1,5 @@
 package hotciv.standard;
 
-import hotciv.framework.*;
-
-import hotciv.standard.*;
 
 public class AlphaCivFactory implements GameFactory {
 
