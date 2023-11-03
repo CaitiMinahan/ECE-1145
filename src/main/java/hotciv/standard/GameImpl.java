@@ -218,7 +218,6 @@ public class GameImpl implements Game {
         ((UnitImpl) currUnit).setTravelDistace(1);
       }
     }
-
   }
 
   public void changeWorkForceFocusInCityAt(Position p, String balance) {

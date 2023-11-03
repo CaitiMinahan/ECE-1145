@@ -1,13 +1,23 @@
 package hotciv.standard;
 
+import hotciv.framework.City;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Unit;
 import hotciv.standard.Interfaces.UnitAction;
+import hotciv.standard.Interfaces.UnitAttacking;
 
 import java.util.Objects;
 
 public class ThetaCivUnitAction implements UnitAction {
+
+    // create an instance of the generic unit attacing
+    private UnitAttacking unitAttacking;
+
+    //create a constructor that can sue the diffent attacking types if not generic
+    public ThetaCivUnitAction(UnitAttacking unitAttacking){
+        this.unitAttacking = unitAttacking; // allows for test stubs
+    }
     @Override
     public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame)
     {
@@ -65,12 +75,11 @@ public class ThetaCivUnitAction implements UnitAction {
             // check to see if the unit to move is a fortified archer
             if (unitTypeString.equals("archer") && !unitCanMove)
                 return false;
-            else if (unitTypeString.equals("archer") && unitCanMove) {
+            else if (unitTypeString.equals("archer") && unitCanMove && game.getUnitAt(to) == null) {
                 updateUnitMap(from, to, unit_from, game);
                 // unit is moved, remove a travel distance
                 ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
                 return true;
-
             }
             // if the 'to' unit already has a unit there
             if (game.getUnitAt(to) != null) {
@@ -84,12 +93,39 @@ public class ThetaCivUnitAction implements UnitAction {
                 if (!game.canUnitAttack(attackingUnit)) {
                     return false;
                 }
+                // check if the unit is an immobilized archer
+                // get the unit impl of attacking unit
+                UnitImpl attackingUnitImpl = (UnitImpl)attackingUnit;
+                if(Objects.equals(attackingUnit.getTypeString(), "archer") && !attackingUnitImpl.getCanMove())
+                {
+                    return false;
+                }
                 if (defendingPlayer != attackingPlayer) {
                     // let the attacking unit remove the defending unit and then successfully move to that tile
-                    game.killUnit(to);
-                    updateUnitMap(from, to, unit_from, game);
-                    ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
-                    return true;
+                    // call the functions
+                    if(unitAttacking.canAttackerBeatDefender((UnitImpl) attackingUnit, (UnitImpl) foundUnit, from, to, game)) {
+                        game.killUnit(to);
+                        updateUnitMap(from, to, unit_from, game);
+                        // update the successful attack map
+                        int currentSuccessfulAttacks = game.playerSuccessfulAttacks.get(attackingPlayer);
+                        game.playerSuccessfulAttacks.put(attackingPlayer, currentSuccessfulAttacks + 1);
+                        ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
+
+                        // if the dead defender was guarding a city, transfer ownership of the city
+                        City capturedCity = game.cities.get(to);
+                        if(capturedCity != null){
+                            // transfer ownership
+                            ((CityImpl) capturedCity).setOwner(attackingPlayer);
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        // remove the attacking unit
+                        game.killUnit(from);
+                        return false; // the defending unit overpowered the attacking unit
+                    }
+
                 }
                 return false; // cannot fortify tiles (move own units to tile with own units)
             }

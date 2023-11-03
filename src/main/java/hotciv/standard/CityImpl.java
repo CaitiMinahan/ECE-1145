@@ -39,4 +39,7 @@ public class CityImpl implements City {
     public String getProduction() { return productionUnit; }
     @Override
     public String getWorkforceFocus() { return focus; }
+
+    // new function to set the owner of a city in case of battle
+    public void setOwner(Player player) { this.owner = player;}
 }

@@ -3,6 +3,16 @@ import hotciv.standard.*;
 import hotciv.standard.Interfaces.*;
 
 public class ThetaCivFactory implements GameFactory {
+
+    public UnitAttacking unitAttacking;
+
+    // default constructor with no params
+    public ThetaCivFactory(){
+        this.unitAttacking = new GenericUnitAttacking();
+    }
+    public ThetaCivFactory(UnitAttacking unitAttacking) {
+        this.unitAttacking = unitAttacking;
+    }
     @Override
     public WorldLayout createWorldLayout() {
         return new GenericWorldLayout();
@@ -17,7 +27,7 @@ public class ThetaCivFactory implements GameFactory {
     }
     @Override
     public UnitAction createUnitAction() {
-        return new ThetaCivUnitAction();
+        return new ThetaCivUnitAction(unitAttacking);
     }
     @Override
     public PlayerSetup createPlayerSetup() {
