@@ -1,32 +1,37 @@
 package hotciv.standard.Factories;
+
 import hotciv.standard.*;
 import hotciv.standard.Interfaces.*;
 
-public class GammaCivFactory implements GameFactory {
+public class SemiCivFactory implements GameFactory {
+
+    public UnitAttacking unitAttacking = new GenericUnitAttacking();
     @Override
     public WorldLayout createWorldLayout() {
-        // GammaCiv = generic layout
-        return new GenericWorldLayout();
+        // SemiCiv = DeltaCiv layout
+        return new DeltaCivWorldLayout();
     }
     @Override
     public WorldAging createWorldAging() {
-        // GammaCiv = generic aging
-        return new GenericWorldAging();
+        // SemiCiv = BetaCiv aging
+        return new BetaCivWorldAging();
     }
     @Override
     public Winner createWinnerStrategy() {
-        // GammaCiv = generic winner
-        return new GenericWinner();
+        // SemiCiv = EpsilonCiv winner
+        return new EpsilonCivWinner();
     }
     @Override
     public UnitAction createUnitAction() {
-        // GammaCiv = GammaCiv unit action
-        return new GammaCivUnitAction();
+        // SemiCiv = Epsilon action
+        return new EpsilonCivUnitAction(unitAttacking);
     }
     @Override
     public PlayerSetup createPlayerSetup() {
         return new GenericPlayerSetup();
     }
+
     @Override
     public ChangeProduction changeProduction() { return new GenericChangeProduction();}
 }
+

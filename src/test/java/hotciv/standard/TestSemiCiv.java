@@ -61,7 +61,7 @@ public class TestSemiCiv {
         attackerHasMoreNeighborsGame = new GameImpl(attackerHasMoreNeighborsStubGameFactory);
         defenderHasMoreNeighborsGame = new GameImpl(defenderHasMoreNeighborsStubGameFactory);
 
-        gameFactory = new ThetaCivFactory.SemiCivFactory();
+        gameFactory = new SemiCivFactory();
         game = new GameImpl(gameFactory);
     }
 

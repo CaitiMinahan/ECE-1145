@@ -100,6 +100,9 @@ public class GameImpl implements Game {
   public Unit getCurrentUnit(){ return currentUnit; }
   public void setCurrentUnit (Unit u) { currentUnit = u; }
 
+  // Getter for the current player
+  public Player getCurrentPlayer() { return currentPlayer;}
+
   public Position getPositionFromUnit(UnitImpl u) {
     // loop through the units map and find the unit with the corresponding ID
     UUID tempId = u.getUnitID();
@@ -205,18 +208,23 @@ public class GameImpl implements Game {
     worldAgingStrategy.gameAging(this);
 
     // reset the current units move counter back to 1 or 2
+
     Unit currUnit = getCurrentUnit();
-    if(Objects.equals(currUnit.getTypeString(), "ufo")){
-      ((UnitImpl) currUnit).setTravelDistace(2);
-    } else {
-      ((UnitImpl) currUnit).setTravelDistace(1);
+    // if the current unit was set
+    if (currUnit != null ){
+      if(Objects.equals(currUnit.getTypeString(), "ufo")){
+        ((UnitImpl) currUnit).setTravelDistace(2);
+      } else {
+        ((UnitImpl) currUnit).setTravelDistace(1);
+      }
     }
+
   }
 
-  // @TODO: check to make sure the following three functions are used/needed by anyone
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
   }
 
+  // @TODO need to implement this with the UFO
   public void changeProductionInCityAt(Position p, String unitType) {
   }
 

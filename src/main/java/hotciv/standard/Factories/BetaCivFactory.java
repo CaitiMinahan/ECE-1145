@@ -27,4 +27,6 @@ public class BetaCivFactory implements GameFactory {
     public PlayerSetup createPlayerSetup() {
         return new GenericPlayerSetup();
     }
+    @Override
+    public ChangeProduction changeProduction() { return new GenericChangeProduction();}
 }
