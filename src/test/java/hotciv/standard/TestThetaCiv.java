@@ -185,4 +185,145 @@ public class TestThetaCiv {
         Player cityOwner = newCity.getOwner();
         assertThat(cityOwner, is(Player.BLUE));
     }
+
+    @Test
+    public void UFOCanAbductCitizenFromCityNonZero(){
+        UnitImpl ufoUnit = new UnitImpl(GameConstants.UFO, Player.RED);
+        // put the ufo on the map
+        Position ufoHomePos = new Position(2,2);
+
+        // make a city with no units in it
+        CityImpl newCity = new CityImpl(Player.BLUE);
+        Position cityPosition = new Position(4,1);
+        // add population to the city
+        newCity.setPopulationSize(100);
+
+        // need to add the unit to the hash map
+        game.units.put(ufoHomePos, ufoUnit);
+        game.cities.put(cityPosition, newCity);
+
+        // allow the UFO to abduct a person
+        boolean didUFOMove = game.moveUnit(ufoHomePos, cityPosition);
+        assertThat(didUFOMove, is(true));
+        // use the ufo's action
+        game.performUnitActionAt(cityPosition);
+        // check the population
+        assertThat(newCity.getPopulationSize(), is(99));
+    }
+
+    @Test
+    public void UFOCanAbductCitizenFromCityWithPopOne(){
+        UnitImpl ufoUnit = new UnitImpl(GameConstants.UFO, Player.RED);
+        // put the ufo on the map
+        Position ufoHomePos = new Position(2,2);
+        // add the unit to the map
+        game.units.put(ufoHomePos, ufoUnit);
+
+        // make a city with no units in it
+        CityImpl newCity = new CityImpl(Player.BLUE);
+        Position cityPosition = new Position(4,1);
+        // add population to the city
+        newCity.setPopulationSize(1);
+        // add the city to the hashmap
+        game.cities.put(cityPosition, newCity);
+
+        // allow the UFO to abduct a person
+        boolean didUFOMove = game.moveUnit(ufoHomePos, cityPosition);
+        assertThat(didUFOMove, is(true));
+        // use the ufo's action
+        game.performUnitActionAt(cityPosition);
+        // check the population
+        boolean getCity = false;
+        City retrievedCity = game.cities.get(cityPosition);
+        if(retrievedCity != null)
+            getCity = true;
+        assertThat(getCity, is(false)); // proves that the city was deleted
+    }
+
+    @Test
+    public void ufoCanChangeForrestToPlains(){
+        // create UFO
+        UnitImpl ufoUnit = new UnitImpl(GameConstants.UFO, Player.RED);
+        // put the ufo on the map
+        Position ufoHomePos = new Position(2,2);
+        // add to the hash map
+        game.units.put(ufoHomePos, ufoUnit);
+
+        // get the position of a forrest
+        Position forrestTilePos = new Position(4,5);
+        TileImpl forrestTile = new TileImpl(GameConstants.FOREST);
+        game.tiles.put(forrestTilePos, (Tile)forrestTile);
+
+        // move the ufo to that tile
+        game.moveUnit(ufoHomePos, forrestTilePos);
+
+        // perform unit action
+        game.performUnitActionAt(forrestTilePos);
+        // notice the terrain type change
+        String terrainType = game.tiles.get(forrestTilePos).getTypeString();
+        assertThat(terrainType, is("plains"));
+    }
+
+    @Test
+    public void ufoCantChangeOtherTerrains(){
+        // create UFO
+        UnitImpl ufoUnit = new UnitImpl(GameConstants.UFO, Player.RED);
+        // put the ufo on the map
+        Position ufoHomePos = new Position(2,2);
+        // add to the units hash map
+        game.units.put(ufoHomePos, ufoUnit);
+
+        // get the positions of different tiles
+        Position plainsTilePos = new Position(4,1);
+        Position oceanTilePos = new Position(4,2);
+        Position hillsTilePos = new Position(4,3);
+        Position mountainTilePos = new Position(4,4);
+
+        TileImpl plainsTile = new TileImpl(GameConstants.PLAINS);
+        TileImpl oceanTile = new TileImpl(GameConstants.OCEANS);
+        TileImpl hillsTile = new TileImpl(GameConstants.HILLS);
+        TileImpl mountainTile = new TileImpl(GameConstants.MOUNTAINS);
+
+        // update the tile hash map
+        game.tiles.put(plainsTilePos, plainsTile);
+        game.tiles.put(oceanTilePos, oceanTile);
+        game.tiles.put(hillsTilePos, hillsTile);
+        game.tiles.put(mountainTilePos, mountainTile);
+
+
+        // move the ufo to that tile
+        game.moveUnit(ufoHomePos, plainsTilePos);
+        // perform unit action
+        game.performUnitActionAt(plainsTilePos);
+        // notice the terrain type change
+        String terrainType = game.tiles.get(plainsTilePos).getTypeString();
+        assertThat(terrainType, is("plains"));
+
+        // move the ufo to that tile
+        game.moveUnit(plainsTilePos, oceanTilePos);
+        // perform unit action
+        game.performUnitActionAt(oceanTilePos);
+        // notice the terrain type change
+        terrainType = game.tiles.get(oceanTilePos).getTypeString();
+        assertThat(terrainType, is("ocean"));
+
+        // UFO cant move more than twice
+        UnitImpl ufo2 = new UnitImpl(GameConstants.UFO, Player.RED);
+        // add to the units hash map
+        game.units.put(hillsTilePos, ufo2);
+
+        // perform unit action
+        game.performUnitActionAt(hillsTilePos);
+        // notice the terrain type change
+        terrainType = game.tiles.get(hillsTilePos).getTypeString();
+        assertThat(terrainType, is("hills"));
+
+        // move the ufo to that tile
+        game.moveUnit(hillsTilePos, mountainTilePos);
+        // perform unit action
+        game.performUnitActionAt(mountainTilePos);
+        // notice the terrain type change
+        terrainType = game.tiles.get(mountainTilePos).getTypeString();
+        assertThat(terrainType, is("mountain"));
+    }
 }

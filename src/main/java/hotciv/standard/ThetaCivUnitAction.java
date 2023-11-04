@@ -1,9 +1,6 @@
 package hotciv.standard;
 
-import hotciv.framework.City;
-import hotciv.framework.Player;
-import hotciv.framework.Position;
-import hotciv.framework.Unit;
+import hotciv.framework.*;
 import hotciv.standard.Interfaces.UnitAction;
 import hotciv.standard.Interfaces.UnitAttacking;
 
@@ -43,6 +40,32 @@ public class ThetaCivUnitAction implements UnitAction {
             // calling the action again will remove its fortification
             currentUnit.setDefendingStrength(currentUnit.getDefensiveStrength() * 2);
             currentUnit.setCanMove(!currentUnit.getCanMove()); // toggles the current move status
+        }
+        // change the population size if the unit is a ufo
+        if(Objects.equals(currentUnit.getTypeString(), "ufo")){
+            // check to see if the position is on a city
+            if(currentGame.cities.get(p) != null)
+            {
+                CityImpl currentCity = (CityImpl) currentGame.cities.get(p);
+                // if the population is greater than 1, remove
+
+                if(currentCity.getPopulationSize() > 1){
+                    currentCity.setPopulationSize(currentCity.getPopulationSize() - 1);
+                }
+                else {
+                    // remove the city
+                    currentGame.cities.remove(p);
+                }
+            }
+            else {
+                // otherwise we don't have a city
+                // if the position contains terrain of Forest then change to Plains otherwise nothing
+                String terrainType = currentGame.tiles.get(p).getTypeString();
+                if (Objects.equals(terrainType, "forest")) {
+                    TileImpl updatedTile = new TileImpl(GameConstants.PLAINS);
+                    currentGame.tiles.put(p, (Tile) updatedTile);
+                }
+            }
         }
     }
     //define a function to move the units since it gets called three times

@@ -46,6 +46,7 @@ public class GameImpl implements Game {
   private GameFactory gameFactory;
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
+  public Map<Position, Tile> tiles = new HashMap<>(); // using a hashmap to store tiles with positions
   public Map<Position, City> cities = new HashMap<>();
   public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
   private int age; // represents current year of the game

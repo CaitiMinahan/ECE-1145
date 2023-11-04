@@ -6,10 +6,9 @@ import hotciv.standard.*;
 public class CityImpl implements City {
     private int size;
     private Player owner;
+    private int populationSize;
 
-    /* productionUnit = type of unit being
-      produced at a certain city
-     */
+    //type of unit being produced at a certain city
     private String productionUnit;
     private String focus;
     /*  treasury = number of money/production in the city's treasury
@@ -29,6 +28,8 @@ public class CityImpl implements City {
     }
 
     public void setSize(int size) { this.size = size;}
+    public void setPopulationSize(int popSize) {this.populationSize = popSize;}
+    public int getPopulationSize() { return this.populationSize;}
     @Override
     public Player getOwner() { return owner; }
     @Override
