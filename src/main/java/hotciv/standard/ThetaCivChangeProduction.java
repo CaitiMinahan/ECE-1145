@@ -12,7 +12,7 @@ public class ThetaCivChangeProduction implements ChangeProduction {
         // the UFO type will cause the position to city to produce a new UFO
         // need to add in the game parameter to access the city
         // can only produce this if the city has >= 60 production
-        if(Objects.equals(unitType, GameConstants.UFO) && game.cities.get(p) != null &&  Integer.parseInt(game.cities.get(p).getProduction()) >= 60 ){
+        if(Objects.equals(unitType, GameConstants.UFO) && game.cities.get(p) != null &&  game.cities.get(p).getTreasury() >= 60 ){
             // produce a new UFO
             UnitImpl newUfo = new UnitImpl(GameConstants.UFO, game.getCurrentPlayer());
             game.units.put(p, newUfo);
