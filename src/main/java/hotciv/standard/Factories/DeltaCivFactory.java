@@ -35,4 +35,7 @@ public class DeltaCivFactory implements GameFactory {
         return new GenericPlayerSetup();
     }
 
+    @Override
+    public ChangeProduction changeProduction() { return new GenericChangeProduction();}
+
 }

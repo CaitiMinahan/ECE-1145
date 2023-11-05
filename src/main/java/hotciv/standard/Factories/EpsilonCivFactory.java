@@ -35,4 +35,6 @@ public class EpsilonCivFactory implements GameFactory {
     public PlayerSetup createPlayerSetup() {
         return new EpsilonCivPlayerSetup();
     }
+    @Override
+    public ChangeProduction changeProduction() { return new GenericChangeProduction();}
 }

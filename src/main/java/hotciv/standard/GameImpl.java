@@ -46,12 +46,14 @@ public class GameImpl implements Game {
   private GameFactory gameFactory;
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
+  public Map<Position, Tile> tiles = new HashMap<>(); // using a hashmap to store tiles with positions
   public Map<Position, City> cities = new HashMap<>();
   public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
   private int age; // represents current year of the game
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
   public CityImpl currentCity;
+  private Unit currentUnit;
   public TileImpl currentTile;
   public GameImpl(GameFactory gameFactory) {
     // use the factory to create the appropriate strategies for the following variant behaviors:
@@ -79,6 +81,7 @@ public class GameImpl implements Game {
     // setup the player based on the hash map
     playerSetup.setupPlayer(this);
   }
+
   // create helper function to set the map according to setupWorld
   // method in WorldLayout interface
   public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
@@ -93,6 +96,13 @@ public class GameImpl implements Game {
     }
     return null;
   }
+
+  // Getter and setter for the current Unit variable
+  public Unit getCurrentUnit(){ return currentUnit; }
+  public void setCurrentUnit (Unit u) { currentUnit = u; }
+
+  // Getter for the current player
+  public Player getCurrentPlayer() { return currentPlayer;}
 
   public Position getPositionFromUnit(UnitImpl u) {
     // loop through the units map and find the unit with the corresponding ID
@@ -185,24 +195,6 @@ public class GameImpl implements Game {
     return false;
   }
 
-  // when unit needs to take action, use this function
-  public void takeUnitAction(Unit u) {
-    // based on the type of game we are playing this will use the different
-    // implementations
-    if (this.unitActionCivType != null) {
-      // get the position based on the unit
-      // convert unit to unit impl
-      UnitImpl ui = (UnitImpl) u;
-      Position p = getPositionFromUnit(ui);
-      // run the action function
-      this.unitActionCivType.performAction(ui, p, this);
-    } else {
-      // for some reason the unitActionCivType is null when it should be generic or
-      // gammaCiv instance
-      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
-    }
-  }
-
   public void endOfTurn() {
 
     // add 6 production (or money) at the end of the turn
@@ -215,18 +207,44 @@ public class GameImpl implements Game {
     // increment the turn count after every player goes
     setTurnCount(getTurnCount() + 1);
     worldAgingStrategy.gameAging(this);
+
+    // reset the current units move counter back to 1 or 2
+
+    Unit currUnit = getCurrentUnit();
+    // if the current unit was set
+    if (currUnit != null ){
+      if(Objects.equals(currUnit.getTypeString(), "ufo")){
+        ((UnitImpl) currUnit).setTravelDistace(2);
+      } else {
+        ((UnitImpl) currUnit).setTravelDistace(1);
+      }
+    }
   }
 
-  // @TODO: check to make sure the following three functions are used/needed by anyone
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
   }
 
+  // @TODO need to implement this with the UFO
   public void changeProductionInCityAt(Position p, String unitType) {
   }
 
+  // TODO: make sure all function calls to take Unit Action are replaced with perform unit action
   public void performUnitActionAt(Position p) {
+    Unit u = getUnitAt(p);
+    // based on the type of game we are playing this will use the different
+    // implementations
+    if (this.unitActionCivType != null) {
+      // get the position based on the unit
+      // convert unit to unit impl
+      UnitImpl ui = (UnitImpl) u;
+      // run the action function
+      this.unitActionCivType.performAction(ui, p, this);
+    } else {
+      // for some reason the unitActionCivType is null when it should be generic or
+      // gammaCiv instance
+      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+    }
   }
-
   public void placeCity(Position position, Player player) {
     if (!cityExistsAt(position)) {
       City newCity = createCity(player);

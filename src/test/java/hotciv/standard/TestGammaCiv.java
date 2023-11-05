@@ -29,7 +29,7 @@ public class TestGammaCiv {
         // Generic map of world has units in places like Iteration 1
         Position redSettlerPos = new Position(1, 1);
         Unit redSettlerUnit = game.getUnitAt(redSettlerPos);
-        game.takeUnitAction(redSettlerUnit);
+        game.performUnitActionAt(redSettlerPos);
         assertThat(game.getCityAt(redSettlerPos).getOwner(), is(game.getPlayerInTurn()));
     }
 
@@ -39,7 +39,7 @@ public class TestGammaCiv {
         Position redArcherPos = new Position(0, 0);
         Unit redArcherUnit = game.getUnitAt(redArcherPos);
         int currentDefensiveStrength = redArcherUnit.getDefensiveStrength();
-        game.takeUnitAction(redArcherUnit);
+        game.performUnitActionAt(redArcherPos);
         assertThat(game.getUnitAt(redArcherPos).getDefensiveStrength(), is(2 * currentDefensiveStrength));
     }
 
@@ -47,7 +47,7 @@ public class TestGammaCiv {
     public void archerThatHasBeenFortifiedCannotMove() {
         Position redArcherPos = new Position(0, 0);
         Unit redArcherUnit = game.getUnitAt(redArcherPos);
-        game.takeUnitAction(redArcherUnit);
+        game.performUnitActionAt(redArcherPos);
         Position redArcherNewPosition = new Position(5, 5);
         // attempt to move unit now
         assertThat(game.moveUnit(redArcherPos, redArcherNewPosition), is(false));
@@ -59,10 +59,10 @@ public class TestGammaCiv {
         Position redArcherPos = new Position(0, 0);
         Unit redArcherUnit = game.getUnitAt(redArcherPos);
         int currentDefensiveStrength = redArcherUnit.getDefensiveStrength();
-        game.takeUnitAction(redArcherUnit);
+        game.performUnitActionAt(redArcherPos);
         // do this again
         assertThat(game.getUnitAt(redArcherPos).getDefensiveStrength(), is(2 * currentDefensiveStrength));
-        game.takeUnitAction(redArcherUnit);
+        game.performUnitActionAt(redArcherPos);
         assertThat(game.getUnitAt(redArcherPos).getDefensiveStrength(), is(currentDefensiveStrength));
     }
 
@@ -73,10 +73,10 @@ public class TestGammaCiv {
         Position redArcherPosNew = new Position(5, 5);
 
         Unit redArcherUnit = game.getUnitAt(redArcherPos);
-        game.takeUnitAction(redArcherUnit);
+        game.performUnitActionAt(redArcherPos);
         // do this again
         assertThat(game.moveUnit(redArcherPos, redArcherPosNew), is(false));
-        game.takeUnitAction(redArcherUnit);
+        game.performUnitActionAt(redArcherPos);
         // attempt to move
         assertThat(game.moveUnit(redArcherPos, redArcherPosNew), is(true));
     }

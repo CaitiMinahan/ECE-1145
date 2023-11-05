@@ -1,13 +1,20 @@
 package hotciv.standard;
 
-import hotciv.framework.Player;
-import hotciv.framework.Position;
-import hotciv.framework.Unit;
+import hotciv.framework.*;
 import hotciv.standard.Interfaces.UnitAction;
+import hotciv.standard.Interfaces.UnitAttacking;
 
 import java.util.Objects;
 
 public class ThetaCivUnitAction implements UnitAction {
+
+    // create an instance of the generic unit attacing
+    private UnitAttacking unitAttacking;
+
+    //create a constructor that can sue the diffent attacking types if not generic
+    public ThetaCivUnitAction(UnitAttacking unitAttacking){
+        this.unitAttacking = unitAttacking; // allows for test stubs
+    }
     @Override
     public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame)
     {
@@ -34,6 +41,32 @@ public class ThetaCivUnitAction implements UnitAction {
             currentUnit.setDefendingStrength(currentUnit.getDefensiveStrength() * 2);
             currentUnit.setCanMove(!currentUnit.getCanMove()); // toggles the current move status
         }
+        // change the population size if the unit is a ufo
+        if(Objects.equals(currentUnit.getTypeString(), "ufo")){
+            // check to see if the position is on a city
+            if(currentGame.cities.get(p) != null)
+            {
+                CityImpl currentCity = (CityImpl) currentGame.cities.get(p);
+                // if the population is greater than 1, remove
+
+                if(currentCity.getPopulationSize() > 1){
+                    currentCity.setPopulationSize(currentCity.getPopulationSize() - 1);
+                }
+                else {
+                    // remove the city
+                    currentGame.cities.remove(p);
+                }
+            }
+            else {
+                // otherwise we don't have a city
+                // if the position contains terrain of Forest then change to Plains otherwise nothing
+                String terrainType = currentGame.tiles.get(p).getTypeString();
+                if (Objects.equals(terrainType, "forest")) {
+                    TileImpl updatedTile = new TileImpl(GameConstants.PLAINS);
+                    currentGame.tiles.put(p, (Tile) updatedTile);
+                }
+            }
+        }
     }
     //define a function to move the units since it gets called three times
     @Override
@@ -48,6 +81,14 @@ public class ThetaCivUnitAction implements UnitAction {
     @Override
     public boolean moveUnit( Position from, Position to, GameImpl game) {
         Unit unit_from = game.getUnitAt(from);
+        // set the current unit in game
+        game.setCurrentUnit(unit_from);
+        // test the unit for the allowable moves
+        UnitImpl ui = (UnitImpl) unit_from;
+        int travelMoves = ui.getTravelDistace();
+        if(travelMoves == 0){
+            return false; // unit has no moves left
+        }
             if (unit_from == null) {
                 return false;
             }
@@ -57,8 +98,10 @@ public class ThetaCivUnitAction implements UnitAction {
             // check to see if the unit to move is a fortified archer
             if (unitTypeString.equals("archer") && !unitCanMove)
                 return false;
-            else if (unitTypeString.equals("archer") && unitCanMove) {
+            else if (unitTypeString.equals("archer") && unitCanMove && game.getUnitAt(to) == null) {
                 updateUnitMap(from, to, unit_from, game);
+                // unit is moved, remove a travel distance
+                ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
                 return true;
             }
             // if the 'to' unit already has a unit there
@@ -73,16 +116,45 @@ public class ThetaCivUnitAction implements UnitAction {
                 if (!game.canUnitAttack(attackingUnit)) {
                     return false;
                 }
+                // check if the unit is an immobilized archer
+                // get the unit impl of attacking unit
+                UnitImpl attackingUnitImpl = (UnitImpl)attackingUnit;
+                if(Objects.equals(attackingUnit.getTypeString(), "archer") && !attackingUnitImpl.getCanMove())
+                {
+                    return false;
+                }
                 if (defendingPlayer != attackingPlayer) {
                     // let the attacking unit remove the defending unit and then successfully move to that tile
-                    game.killUnit(to);
-                    updateUnitMap(from, to, unit_from, game);
-                    return true;
+                    // call the functions
+                    if(unitAttacking.canAttackerBeatDefender((UnitImpl) attackingUnit, (UnitImpl) foundUnit, from, to, game)) {
+                        game.killUnit(to);
+                        updateUnitMap(from, to, unit_from, game);
+                        // update the successful attack map
+                        int currentSuccessfulAttacks = game.playerSuccessfulAttacks.get(attackingPlayer);
+                        game.playerSuccessfulAttacks.put(attackingPlayer, currentSuccessfulAttacks + 1);
+                        ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
+
+                        // if the dead defender was guarding a city, transfer ownership of the city
+                        City capturedCity = game.cities.get(to);
+                        if(capturedCity != null){
+                            // transfer ownership
+                            ((CityImpl) capturedCity).setOwner(attackingPlayer);
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        // remove the attacking unit
+                        game.killUnit(from);
+                        return false; // the defending unit overpowered the attacking unit
+                    }
+
                 }
                 return false; // cannot fortify tiles (move own units to tile with own units)
             }
             // otherwise, move the unit from the original position to the new one
             updateUnitMap(from, to, unit_from, game);
-            return true;
+            ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
+        return true;
     }
 }

@@ -31,4 +31,7 @@ public class AlphaCivFactory implements GameFactory {
 
     @Override
     public PlayerSetup createPlayerSetup() { return new GenericPlayerSetup();}
+
+    @Override
+    public ChangeProduction changeProduction() { return new GenericChangeProduction();}
 }
