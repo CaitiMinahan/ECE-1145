@@ -14,6 +14,7 @@ public class UnitImpl implements Unit {
     private int defensiveStrength;
     private int attackingStrength;
     private int travelDistace = 1;
+    private int productionCost = 0;
 
     private boolean canMove = true;
     public UnitImpl(String unit, Player owner){
@@ -26,6 +27,7 @@ public class UnitImpl implements Unit {
             setDefendingStrength(8);
             setAttackingStrength(1);
             setTravelDistace(2);
+            setProductionCost(60); // UFO cost 60
         }
     }
     @Override
@@ -57,6 +59,8 @@ public class UnitImpl implements Unit {
     // TODO: had to add toggles for can move property, get and set
     public void setTravelDistace(int t) {travelDistace = t;}
     public int getTravelDistace() { return travelDistace;}
+    public int getProductionCost() { return productionCost;}
+    public void setProductionCost(int cost) { productionCost = cost;}
     public boolean getCanMove() { return canMove;}
     void setCanMove (boolean can_move) {
         canMove = can_move;
