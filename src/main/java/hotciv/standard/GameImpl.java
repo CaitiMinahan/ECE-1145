@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID; // TODO: had to add this to track units
-import java.util.logging.*;
 
-import hotciv.standard.WorldAging;
-import hotciv.standard.*;
+import hotciv.standard.Interfaces.*;
 
 /**
  * Skeleton implementation of HotCiv.
@@ -40,51 +38,24 @@ import hotciv.standard.*;
  */
 
 public class GameImpl implements Game {
-
-  // Refactor GameImpl tp use a reference WorldLayout instance for
-  // setting the tiles (Delegate)
   private WorldLayout worldLayoutStrategy;
   private WorldAging worldAgingStrategy;
   private Winner winnerStrategy;
   private UnitAction unitActionCivType;
-  private PlayerSetup playerSetup; // this is the variable for setting up the player attacking wins hashmap
-
-  // TODO: ask if we still need those private variables (above) after refactoring for abstract factory
-  // step 3 in refactoring for abstract factory: modify GameImpl constructor to accept GameFactory as its parameter
+  private PlayerSetup playerSetup;
   private GameFactory gameFactory;
-
-  // create current player to keep track of
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
-
+  public Map<Position, Tile> tiles = new HashMap<>(); // using a hashmap to store tiles with positions
   public Map<Position, City> cities = new HashMap<>();
-
   public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
-
   private int age; // represents current year of the game
-
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
-
   public CityImpl currentCity;
-
-  // TODO: might need to keep track of current tile later
+  private Unit currentUnit;
   public TileImpl currentTile;
-
-  // TODO: remove old implementation
-  // GameImpl constructor
-//  public GameImpl(WorldLayout worldLayoutStrategy, WorldAging worldAging, Winner winnerStrategy,
-//      UnitAction unitActionCivType) {
   public GameImpl(GameFactory gameFactory) {
-
-    // TODO: remove old implementation
-    // refactor GameImpl to use a concrete WorldLayout instance
-//    this.worldLayoutStrategy = worldLayoutStrategy;
-//    this.worldAgingStrategy = worldAging;
-//    this.winnerStrategy = winnerStrategy;
-//    // assign the unit action type as the incoming parameter
-//    this.unitActionCivType = unitActionCivType;
-
     // use the factory to create the appropriate strategies for the following variant behaviors:
     this.worldLayoutStrategy = gameFactory.createWorldLayout();
     this.worldAgingStrategy = gameFactory.createWorldAging();
@@ -101,8 +72,6 @@ public class GameImpl implements Game {
     // initialize the turn count to 0
     setTurnCount(0);
 
-    // TODO: may need to later implement players as a list and index through the
-    // list to keep track of whose turn it is
     // use a HashMap uses key value pairs to store the positions of the units
     units = new HashMap<>();
 
@@ -127,6 +96,13 @@ public class GameImpl implements Game {
     }
     return null;
   }
+
+  // Getter and setter for the current Unit variable
+  public Unit getCurrentUnit(){ return currentUnit; }
+  public void setCurrentUnit (Unit u) { currentUnit = u; }
+
+  // Getter for the current player
+  public Player getCurrentPlayer() { return currentPlayer;}
 
   public Position getPositionFromUnit(UnitImpl u) {
     // loop through the units map and find the unit with the corresponding ID
@@ -219,25 +195,6 @@ public class GameImpl implements Game {
     return false;
   }
 
-
-  // when unit needs to take action, use this function
-  public void takeUnitAction(Unit u) {
-    // based on the type of game we are playing this will use the different
-    // implementations
-    if (this.unitActionCivType != null) {
-      // get the position based on the unit
-      // convert unit to unit impl
-      UnitImpl ui = (UnitImpl) u;
-      Position p = getPositionFromUnit(ui);
-      // run the action function
-      this.unitActionCivType.performAction(ui, p, this);
-    } else {
-      // for some reason the unitActionCivType is null when it should be generic or
-      // gammaCiv instance
-      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
-    }
-  }
-
   public void endOfTurn() {
 
     // add 6 production (or money) at the end of the turn
@@ -249,20 +206,45 @@ public class GameImpl implements Game {
 
     // increment the turn count after every player goes
     setTurnCount(getTurnCount() + 1);
-
     worldAgingStrategy.gameAging(this);
 
+    // reset the current units move counter back to 1 or 2
+
+    Unit currUnit = getCurrentUnit();
+    // if the current unit was set
+    if (currUnit != null ){
+      if(Objects.equals(currUnit.getTypeString(), "ufo")){
+        ((UnitImpl) currUnit).setTravelDistace(2);
+      } else {
+        ((UnitImpl) currUnit).setTravelDistace(1);
+      }
+    }
   }
 
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
   }
 
+  // @TODO need to implement this with the UFO
   public void changeProductionInCityAt(Position p, String unitType) {
   }
 
+  // TODO: make sure all function calls to take Unit Action are replaced with perform unit action
   public void performUnitActionAt(Position p) {
+    Unit u = getUnitAt(p);
+    // based on the type of game we are playing this will use the different
+    // implementations
+    if (this.unitActionCivType != null) {
+      // get the position based on the unit
+      // convert unit to unit impl
+      UnitImpl ui = (UnitImpl) u;
+      // run the action function
+      this.unitActionCivType.performAction(ui, p, this);
+    } else {
+      // for some reason the unitActionCivType is null when it should be generic or
+      // gammaCiv instance
+      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+    }
   }
-
   public void placeCity(Position position, Player player) {
     if (!cityExistsAt(position)) {
       City newCity = createCity(player);

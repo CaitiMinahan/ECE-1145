@@ -1,5 +1,6 @@
 package hotciv.standard;
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.Winner;
 
 import java.util.Map;
 

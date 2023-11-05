@@ -1,10 +1,10 @@
-package hotciv.standard;
-import hotciv.framework.*;
+package hotciv.standard.TestStubs;
+        import hotciv.framework.*;
+        import hotciv.standard.GameImpl;
+        import hotciv.standard.Interfaces.UnitAttacking;
+        import hotciv.standard.UnitImpl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-public class StrongerDefenderStubEpsilonCiv implements UnitAttacking{
+public class DefenderHasMoreNeighborsStubEpsilonCiv implements UnitAttacking {
     @Override
     // Same as before in the generic
     public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, GameImpl game) {
@@ -16,16 +16,20 @@ public class StrongerDefenderStubEpsilonCiv implements UnitAttacking{
     }
 
     @Override
-    // Stub -- Overwrite to be really strong
+    // Stub
     public int getAttackingUnitStrength(UnitImpl attacker, Position from, GameImpl game) {
-        // return a small strength
-        return 1;
+        // return a large strength
+        int terrainAdv = getTerrainMultiplier(attacker);
+        int neighborAdvantage = getNumFriendlyTiles(from, game); // disadvantage
+        return neighborAdvantage + terrainAdv;
     }
 
     @Override
     public int getDefendingUnitStrength(UnitImpl defender, Position to, GameImpl game) {
-        // return a strong defense
-        return 1000;
+        // return a weak defense
+        int terrainAdv = getTerrainMultiplier(defender);
+        int neighborAdvantage = getNumFriendlyTiles(to, game) * 10; // advantage
+        return neighborAdvantage + terrainAdv;
     }
 
     @Override
@@ -37,6 +41,6 @@ public class StrongerDefenderStubEpsilonCiv implements UnitAttacking{
     @Override
     // Doesn't matter, not being tested
     public int getNumFriendlyTiles(Position from, GameImpl game) {
-        return -1;
+        return 3;
     }
 }

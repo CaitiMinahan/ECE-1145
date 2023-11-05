@@ -1,13 +1,13 @@
 package hotciv.standard;
 
-import hotciv.framework.Game;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Unit;
+import hotciv.standard.Interfaces.UnitAction;
 
 import java.util.Objects;
 
-public class GammaCivUnitAction implements UnitAction{
+public class GammaCivUnitAction implements UnitAction {
     @Override
     public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame)
     {

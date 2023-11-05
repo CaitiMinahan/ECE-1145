@@ -1,8 +1,4 @@
-package hotciv.standard;
-
-import hotciv.framework.*;
-
-import hotciv.standard.*;
+package hotciv.standard.Interfaces;
 
 public interface GameFactory {
     // step 1 in refactoring for abstract factory: create an interface for the abstract factory
@@ -15,6 +11,7 @@ public interface GameFactory {
     Winner createWinnerStrategy();
     UnitAction createUnitAction();
     PlayerSetup createPlayerSetup();
+    ChangeProduction changeProduction();
 
     // these call the interfaces created for the variant classes (i.e., interfaces: WorldLayout, WorldAging, Winner, UnitAction)
     // the createX() methods will be called in the GameImpl constructor to reference the factories

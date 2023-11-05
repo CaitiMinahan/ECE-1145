@@ -1,5 +1,6 @@
 package hotciv.standard;
-import hotciv.framework.*;
+import hotciv.standard.Interfaces.WorldAging;
+
 public class BetaCivWorldAging implements WorldAging {
     @Override
     public void gameAging(GameImpl game){

@@ -1,29 +1,31 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
-import hotciv.standard.Factories.EpsilonCivFactory;
-import hotciv.standard.Interfaces.GameFactory;
+import hotciv.standard.*;
+import hotciv.standard.Factories.*;
+import hotciv.standard.Interfaces.*;
 import hotciv.standard.TestStubs.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+public class TestSemiCiv {
 
-/*
-* This file will use Test Stubs to allow the game winner to be determined.
-* */
-public class TestEpsilonCiv {
+    // Game and GameFactory Setup
+    private Game game;
+    private GameFactory gameFactory;
+
+    // Setup: SPECIFIC FOR EPSILONCIV
     private GameImpl strongerAttackerGame; // game object where the epsilonCivFactory has a strongerAttackerStub
     private GameImpl strongerDefenderGame; // game object where the epsilonCivFactory has a strongerDefenderStub
-    private GameImpl genericGame; // generic game object
     private GameImpl attackerHasTerrainAdvantageGame;
     private GameImpl defenderHasTerrainAdvantageGame;
     private GameImpl attackerHasMoreNeighborsGame;
     private GameImpl defenderHasMoreNeighborsGame;
+    private GameImpl genericGame; // generic game object
 
 
     // variables for the generic unitAttack and Stubs
-    // attacking delegate with normal functionality
-    private GenericUnitAttacking genericUnitAttacking;
+
     // StrongerAttacker implementation of UnitAttacking
     private StrongerAttackerStubEpsilonCiv strongerAttackerStubEpsilonCiv = new StrongerAttackerStubEpsilonCiv();
     // StrongerDefender implementation of UnitAttacking
@@ -40,33 +42,126 @@ public class TestEpsilonCiv {
 
     @Before
     public void setUp() {
+
         // for each stub, create a new instantiation
+        //GameFactory genericGameFactory = new EpsilonCivFactory(); // could pass in GenericUnitAttacking or not since constructor
         GameFactory strongerAttackerStubGameFactory = new EpsilonCivFactory(strongerAttackerStubEpsilonCiv);
         GameFactory strongerDefenderStubGameFactory = new EpsilonCivFactory(strongerDefenderStubEpsilonCiv);
-        GameFactory genericGameFactory = new EpsilonCivFactory(); // could pass in GenericUnitAttacking or not since constructor
         GameFactory attackerHasTerrainAdvantageStubGameFactory = new EpsilonCivFactory(attackerHasTerrainAdvantageStubEpsilonCiv);
         GameFactory defenderHasTerrainAdvantageStubGameFactory = new EpsilonCivFactory(defenderHasTerrainAdvantageStubEpsilonCiv);
         GameFactory attackerHasMoreNeighborsStubGameFactory = new EpsilonCivFactory(attackerHasMoreNeighborsStubEpsilonCiv);
         GameFactory defenderHasMoreNeighborsStubGameFactory = new EpsilonCivFactory(defenderHasMoreNeighborsStubEpsilonCiv);
 
         // function is overloaded
-        genericGame = new GameImpl(genericGameFactory); // use for main implementation testing
+        //genericGame = new GameImpl(genericGameFactory); // use for main implementation testing
         strongerAttackerGame = new GameImpl(strongerAttackerStubGameFactory);
         strongerDefenderGame = new GameImpl(strongerDefenderStubGameFactory);
         attackerHasTerrainAdvantageGame = new GameImpl(attackerHasTerrainAdvantageStubGameFactory);
         defenderHasTerrainAdvantageGame = new GameImpl(defenderHasTerrainAdvantageStubGameFactory);
         attackerHasMoreNeighborsGame = new GameImpl(attackerHasMoreNeighborsStubGameFactory);
         defenderHasMoreNeighborsGame = new GameImpl(defenderHasMoreNeighborsStubGameFactory);
+
+        gameFactory = new SemiCivFactory();
+        game = new GameImpl(gameFactory);
     }
 
-    // a test stub for setting the defensive and attacking strengths
-    // test that in a generic game, a winner returns null if nothing happens.
+    // Testing BetaCiv's Aging Algorithm
+    @Test
+    public void shouldBe100BCAfter39Turns() {
+        // Between 4000 BC and 100 BC, age should increase by 100
+        // BC is represented by a negative number
+        for (int i = 0; i < 39; i++){
+            game.endOfTurn();
+            game.endOfTurn();
+        }
+        assertThat(game.getAge(), is(-100));
+    }
+    @Test
+    public void shouldBe1BCAfter100BC() {
+        for (int i = 0; i < 40; i++){
+            game.endOfTurn();
+            game.endOfTurn();
+        }
+        assertThat(game.getAge(), is(-1));
+    }
+    @Test
+    public void shouldBe1ADAfter1BC() {
+        for (int i = 0; i < 41; i++){
+            game.endOfTurn();
+            game.endOfTurn();
+        }
+        assertThat(game.getAge(), is(1));
+    }
+    @Test
+    public void shouldBe50ADAfter1AD() {
+        for (int i = 0; i < 42; i++){
+            game.endOfTurn();
+            game.endOfTurn();
+        }
+        assertThat(game.getAge(), is(50));
+    }
+    @Test
+    public void shouldBe1750After76Rounds() {
+        // After the year 50, age should increase by 50
+        for (int i = 0; i < 76; i++){
+            game.endOfTurn();
+            game.endOfTurn();
+        }
+        assertThat(game.getAge(), is(1750));
+    }
+    @Test
+    public void shouldBe1900After82Rounds() {
+        // After the year 1750, age should increase by 25
+        for (int i = 0; i < 82; i++){
+            game.endOfTurn();
+            game.endOfTurn();
+        }
+        assertThat(game.getAge(), is(1900));
+    }
+    @Test
+    public void shouldBe1970After96Rounds() {
+        // After the year 1900, age should increase by 5
+        for (int i = 0; i < 96; i++){
+            game.endOfTurn();
+            game.endOfTurn();
+        }
+        assertThat(game.getAge(), is(1970));
+    }
+    @Test
+    public void shouldBe1980After106Rounds() {
+        // After the year 1970, age should increase by 1
+        for (int i = 0; i < 106; i++){
+            game.endOfTurn();
+            game.endOfTurn();
+        }
+        assertThat(game.getAge(), is(1980));
+    }
+
+    // Testing DeltaCiv's World Layout
+    @Test
+    public void setDeltaCivWorldLayoutCorrectlyRED() {
+        Position RedPlayerCity = new Position(8, 12);
+        assertThat(game.getCityAt(RedPlayerCity).getOwner(), is(Player.RED));
+    }
+
+    @Test
+    public void setDeltaCivWorldLayoutCorrectlyBLUE() {
+        // End the turn, and it should become BLUE player's turn
+        game.endOfTurn();
+
+        Position BluePlayerCity = new Position(4, 5);
+
+        assertThat(game.getPlayerInTurn(), is(Player.BLUE));
+        assertThat(game.getCityAt(BluePlayerCity).getOwner(), is(Player.BLUE));
+    }
+
+    // EpsilonCiv's Tests
     @Test
     public void NoCurrentWinnerYieldsNullPlayer(){
-        Player winner = genericGame.getWinner();
+        Player winner = game.getWinner();
         assertThat(winner, is(nullValue()));
         // ensure that the successfulPlayerAttacks map is not zero
-        int numRedWins = genericGame.playerSuccessfulAttacks.get(Player.RED);
+        int numRedWins = ((GameImpl)game).playerSuccessfulAttacks.get(Player.RED);
         assertThat(numRedWins, is(0));
     }
 
@@ -175,5 +270,4 @@ public class TestEpsilonCiv {
         boolean didRedWin = defenderHasMoreNeighborsGame.moveUnit(RedArcherPos, BlueLegionPos);
         assertThat(didRedWin, is(false));
     }
-
 }

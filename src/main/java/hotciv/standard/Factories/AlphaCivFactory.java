@@ -1,9 +1,7 @@
-package hotciv.standard;
-
-import hotciv.framework.*;
+package hotciv.standard.Factories;
 
 import hotciv.standard.*;
-
+import hotciv.standard.Interfaces.*;
 public class AlphaCivFactory implements GameFactory {
 
 //    @Override
@@ -33,4 +31,7 @@ public class AlphaCivFactory implements GameFactory {
 
     @Override
     public PlayerSetup createPlayerSetup() { return new GenericPlayerSetup();}
+
+    @Override
+    public ChangeProduction changeProduction() { return new GenericChangeProduction();}
 }

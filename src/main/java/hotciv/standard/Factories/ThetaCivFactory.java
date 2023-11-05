@@ -1,19 +1,18 @@
-package hotciv.standard;
-import hotciv.framework.*;
+package hotciv.standard.Factories;
 import hotciv.standard.*;
+import hotciv.standard.Interfaces.*;
 
-public class EpsilonCivFactory implements GameFactory {
+public class ThetaCivFactory implements GameFactory {
+
     public UnitAttacking unitAttacking;
 
     // default constructor with no params
-    public EpsilonCivFactory(){
+    public ThetaCivFactory(){
         this.unitAttacking = new GenericUnitAttacking();
     }
-    public EpsilonCivFactory(UnitAttacking unitAttacking) {
+    public ThetaCivFactory(UnitAttacking unitAttacking) {
         this.unitAttacking = unitAttacking;
     }
-
-    // this override requires param
     @Override
     public WorldLayout createWorldLayout() {
         return new GenericWorldLayout();
@@ -24,15 +23,18 @@ public class EpsilonCivFactory implements GameFactory {
     }
     @Override
     public Winner createWinnerStrategy() {
-        return new EpsilonCivWinner();
+        return new GenericWinner();
     }
-
     @Override
     public UnitAction createUnitAction() {
-        return new EpsilonCivUnitAction(unitAttacking);
+        return new ThetaCivUnitAction(unitAttacking);
     }
     @Override
     public PlayerSetup createPlayerSetup() {
-        return new EpsilonCivPlayerSetup();
+        return new GenericPlayerSetup();
     }
+    @Override
+    public ChangeProduction changeProduction() { return new GenericChangeProduction();}
+
+
 }

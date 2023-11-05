@@ -1,11 +1,8 @@
 package hotciv.standard;
 import hotciv.framework.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import hotciv.standard.Interfaces.WorldLayout;
 
-import hotciv.standard.*;
 // this is the first variant of the world layout interface: DeltaCiv
 public class DeltaCivWorldLayout implements WorldLayout {
     @Override

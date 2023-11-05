@@ -1,6 +1,6 @@
-package hotciv.standard;
-import hotciv.framework.*;
+package hotciv.standard.Factories;
 import hotciv.standard.*;
+import hotciv.standard.Interfaces.*;
 
 public class ZetaCivFactory implements GameFactory {
     // step 2 in refactoring for abstract factory: create concrete factory classes for each game variant
@@ -33,4 +33,6 @@ public class ZetaCivFactory implements GameFactory {
     public PlayerSetup createPlayerSetup() {
         return new GenericPlayerSetup();
     }
+    @Override
+    public ChangeProduction changeProduction() { return new GenericChangeProduction();}
 }
