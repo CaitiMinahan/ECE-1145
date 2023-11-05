@@ -1,188 +1,280 @@
 package hotciv.standard;
+
 import hotciv.framework.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID; // TODO: had to add this to track units
 
-import hotciv.standard.*;
+import hotciv.standard.Interfaces.*;
 
-/** Skeleton implementation of HotCiv.
- 
-   This source code is from the book 
-     "Flexible, Reliable Software:
-       Using Patterns and Agile Development"
-     published 2010 by CRC Press.
-   Author: 
-     Henrik B Christensen 
-     Department of Computer Science
-     Aarhus University
-   
-   Please visit http://www.baerbak.com/ for further information.
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
- 
-       http://www.apache.org/licenses/LICENSE-2.0
- 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
-*/
+/**
+ * Skeleton implementation of HotCiv.
+ * 
+ * This source code is from the book
+ * "Flexible, Reliable Software:
+ * Using Patterns and Agile Development"
+ * published 2010 by CRC Press.
+ * Author:
+ * Henrik B Christensen
+ * Department of Computer Science
+ * Aarhus University
+ * 
+ * Please visit http://www.baerbak.com/ for further information.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ */
 
 public class GameImpl implements Game {
-  // create current player to keep track of
+  private WorldLayout worldLayoutStrategy;
+  private WorldAging worldAgingStrategy;
+  private Winner winnerStrategy;
+  private UnitAction unitActionCivType;
+  private PlayerSetup playerSetup;
+  private GameFactory gameFactory;
   private Player currentPlayer;
-  private Map<Position, Unit> units; // use a hash map to store the units on the board
-  private int age;
+  public Map<Position, Unit> units; // use a hash map to store the units on the board
+  public Map<Position, Tile> tiles = new HashMap<>(); // using a hashmap to store tiles with positions
+  public Map<Position, City> cities = new HashMap<>();
+  public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
+  private int age; // represents current year of the game
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
-
   public CityImpl currentCity;
-
-  // TODO: might need to keep track of current tile later
+  private Unit currentUnit;
   public TileImpl currentTile;
+  public GameImpl(GameFactory gameFactory) {
+    // use the factory to create the appropriate strategies for the following variant behaviors:
+    this.worldLayoutStrategy = gameFactory.createWorldLayout();
+    this.worldAgingStrategy = gameFactory.createWorldAging();
+    this.winnerStrategy = gameFactory.createWinnerStrategy();
+    this.unitActionCivType = gameFactory.createUnitAction();
+    this.playerSetup = gameFactory.createPlayerSetup();
 
-  // GameImpl constructor
-  public GameImpl(){
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
-    currentCity = new CityImpl();
+    currentCity = new CityImpl(currentPlayer);
+
     // game starts at 4000 BC
-    age = 4000;
+    setAge(-4000);
     // initialize the turn count to 0
-    turnCount = 0;
-    // TODO: may need to later implement players as a list and index through the list to keep track of whose turn it is
-    // use a HashMap uses key value pairs to store the positions of the units (positions = keys and units = values)
+    setTurnCount(0);
+
+    // use a HashMap uses key value pairs to store the positions of the units
     units = new HashMap<>();
-    // initialize units of RED and BLUE players (RES gets archer and settler and BLUE gets legion)
-    units.put(new Position(0,0), new UnitImpl(GameConstants.ARCHER, Player.RED));
-    units.put(new Position(1,1), new UnitImpl(GameConstants.SETTLER, Player.RED));
-    units.put(new Position(1,2), new UnitImpl(GameConstants.LEGION, Player.BLUE));
 
-    // This is the hotfix for release 2.1
-
+    // call helper function to set up the world layout according to
+    // strategy passed
+    setupWorldLayout(worldLayoutStrategy);
+    // setup the player based on the hash map
+    playerSetup.setupPlayer(this);
   }
-  public Unit getUnitAt( Position p ) {
-    // make sure we never return a null unit in the map
-    Unit unit = units.get(p);
-    // if the unit is not found in the map, return it
-    if (unit != null){
-      return unit;
+
+  // create helper function to set the map according to setupWorld
+  // method in WorldLayout interface
+  public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
+    if (worldLayoutStrategy != null) {
+      worldLayoutStrategy.setupWorld(this); // Pass the current game instance to the layout strategy
     }
-    // let's initialize the archer will be placed at position tile (0,0) and the settler at (1,1) for the red player
-    if ((currentPlayer == Player.RED && (p.equals(new Position(0,0)) || p.equals(new Position(1,1))))){
-      if(p.equals(new Position(0,0))){
-        return new UnitImpl(GameConstants.ARCHER, Player.RED);
-      }
-      else{
-        return new UnitImpl(GameConstants.SETTLER, Player.RED);
-      }
-    }
-    // let's also initialize the legion placed at position tile (1,2) for the blue player
-    else if ((currentPlayer == Player.BLUE && (p.equals(new Position(1,2))))){
-      return new UnitImpl(GameConstants.LEGION, Player.BLUE);
+  }
+
+  public Unit getUnitAt(Position p) {
+    if (units.containsKey(p)) {
+      return units.get(p);
     }
     return null;
   }
 
-  public Tile getTileAt( Position p ) {
+  // Getter and setter for the current Unit variable
+  public Unit getCurrentUnit(){ return currentUnit; }
+  public void setCurrentUnit (Unit u) { currentUnit = u; }
+
+  // Getter for the current player
+  public Player getCurrentPlayer() { return currentPlayer;}
+
+  public Position getPositionFromUnit(UnitImpl u) {
+    // loop through the units map and find the unit with the corresponding ID
+    UUID tempId = u.getUnitID();
+    for (Map.Entry<Position, Unit> entry : units.entrySet()) {
+      // get the key (position)
+      // get the unit (value)
+      Position pos = entry.getKey();
+      Unit unit = entry.getValue();
+      UnitImpl ui = (UnitImpl) unit;
+      if (ui.getUnitID() == u.getUnitID()) {
+        // this is the position we want
+        return pos;
+      }
+    }
+    return new Position(-1, -1);
+  }
+
+  public Tile getTileAt(Position p) {
     if ((p.getRow() == 1) && (p.getColumn() == 0)) {
       return new TileImpl("ocean");
     } else if (((p.getRow() == 0) && (p.getColumn() == 1))) {
       return new TileImpl("hills");
     } else if (((p.getRow() == 2) && (p.getColumn() == 2))) {
       return new TileImpl("mountain");
-    }
-    else {
+    } else {
       return new TileImpl("plains");
     }
   }
 
-  public City getCityAt( Position p ) {
-    return currentCity;
-  }
-  public Player getWinner() {
-    if(age == 3000){
-      return Player.RED; // red player wins in 3000 BC
+  public City getCityAt(Position p) {
+    if (cities.containsKey(p)) {
+      return cities.get(p);
     }
     return null;
   }
+
+  public Player getWinner() {
+    return winnerStrategy.gameWinner(this);
+  }
+
   public int getAge() {
     return age;
   }
+
   public Player getPlayerInTurn() {
     return currentPlayer;
   }
-  public void killUnit(Position positionToClear) { units.remove(positionToClear); }
 
+  public void killUnit(Position positionToClear) {
+    units.remove(positionToClear);
+  }
+
+  /**
+   * @param unitToCheck
+   * @return inversion of the check to settler type
+   */
   public boolean canUnitAttack(Unit unitToCheck) {
-      return !Objects.equals(unitToCheck.getTypeString(), "settler");
+    return !Objects.equals(unitToCheck.getTypeString(), "settler");
   }
-  public boolean moveUnit( Position from, Position to ) {
-    // try to move unit and return true if nothing is there
-    // then place the unit at the desired position
-    // check for unit at 'from' position
-    Unit unit_from = getUnitAt(from);
-    boolean isAttacking = false;
 
-    // if there's no unit at the 'from' position (aka, there's nothing to move)
-    if (unit_from == null){
-      return false;
+  // Helper function to retrieve the unit action type and not change the template design
+  String getUnitActionStringType() {
+    if(unitActionCivType instanceof GammaCivUnitAction)
+    {
+      return "GammaCivUnitAction";
     }
-    // if the 'to' unit already has a unit there
-    if (getUnitAt(to) != null) {
-      // check to see if the current player occupies this unit or an enemy does
-      Unit foundUnit = getUnitAt(to);
-      Unit attackingUnit = getUnitAt(from);
-      Player defendingPlayer = foundUnit.getOwner();
-      Player attackingPlayer = attackingUnit.getOwner();
-
-      // check if the attacking unit is capable of attacking
-      // remove this statement to show case breaking
-      if (!canUnitAttack(attackingUnit)) {
-        return false;
-      }
-
-      if(defendingPlayer != attackingPlayer)
-      {
-        // let the attacking unit remove the defending unit and then successfully move to that tile
-          killUnit(to);
-          // update the destination tile with unit
-        units.remove(from);
-        units.put(to, unit_from);
-          return true;
-      }
-      return false; // cannot fortify tiles (move own units to tile with own units)
+    else if(unitActionCivType instanceof GenericUnitAction)
+    {
+      return "GenericUnitAction";
     }
-    // otherwise, move the unit from the original position to the new one
-    units.remove(from);
-    units.put(to, unit_from);
-    return true;
+    return "invalid class type";
   }
+
+  // refactored this to use the different ActionType versions (Delegate)
+  public boolean moveUnit(Position from, Position to) {
+    // get the current unit action type
+    UnitAction UnitActionCivType = unitActionCivType; // from constructor/priv variables
+    // based on the type of game we are playing this will use the different
+    // implementations
+    if (UnitActionCivType != null) {
+      // run the move function
+      return UnitActionCivType.moveUnit(from, to, this);
+    } else {
+      // for some reason the unitActionCivType is null when it should be generic or
+      // gammaCiv instance
+      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+
+    }
+    return false;
+  }
+
   public void endOfTurn() {
-    // create a city with size (population = 1
+
     // add 6 production (or money) at the end of the turn
-    currentCity.setTreasury(currentCity.getTreasury()+6);
+    currentCity.setTreasury(currentCity.getTreasury() + 6);
+
     // later on, we can include all players (after blue, yellow goes, etc.)
-    // switch players when it's the other's turn
+    // switch players when it's turn ends
     currentPlayer = (currentPlayer == Player.RED) ? Player.BLUE : Player.RED;
+
     // increment the turn count after every player goes
-    turnCount++;
-    // check if round is over
-    // if both players have gone, the turnCount should = 2, therefore we can move onto the next round
-    // TODO: the turnCount will be 4 after all players go (RED, BLUE, YELLOW and GREEN)
-    if (turnCount % 2 == 0){
-      // age by 100 years after the round ends
-      age -= 100;
+    setTurnCount(getTurnCount() + 1);
+    worldAgingStrategy.gameAging(this);
+
+    // reset the current units move counter back to 1 or 2
+
+    Unit currUnit = getCurrentUnit();
+    // if the current unit was set
+    if (currUnit != null ){
+      if(Objects.equals(currUnit.getTypeString(), "ufo")){
+        ((UnitImpl) currUnit).setTravelDistace(2);
+      } else {
+        ((UnitImpl) currUnit).setTravelDistace(1);
+      }
     }
   }
-  public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
-  public void changeProductionInCityAt( Position p, String unitType ) {}
-  public void performUnitActionAt( Position p ) {}
 
+  public void changeWorkForceFocusInCityAt(Position p, String balance) {
+  }
+
+  // @TODO need to implement this with the UFO
+  public void changeProductionInCityAt(Position p, String unitType) {
+  }
+
+  // TODO: make sure all function calls to take Unit Action are replaced with perform unit action
+  public void performUnitActionAt(Position p) {
+    Unit u = getUnitAt(p);
+    // based on the type of game we are playing this will use the different
+    // implementations
+    if (this.unitActionCivType != null) {
+      // get the position based on the unit
+      // convert unit to unit impl
+      UnitImpl ui = (UnitImpl) u;
+      // run the action function
+      this.unitActionCivType.performAction(ui, p, this);
+    } else {
+      // for some reason the unitActionCivType is null when it should be generic or
+      // gammaCiv instance
+      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+    }
+  }
+  public void placeCity(Position position, Player player) {
+    if (!cityExistsAt(position)) {
+      City newCity = createCity(player);
+      cities.put(position, newCity);
+      setCurrentCity(newCity);
+    }
+  }
+
+  private boolean cityExistsAt(Position position) {
+    return cities.containsKey(position);
+  }
+
+  private City createCity(Player player) {
+    return new CityImpl(player);
+  }
+
+  private void setCurrentCity(City city) {
+    currentCity = (CityImpl) city;
+  }
+
+  // HELPER FUNCTIONS FOR BETACIV
+  public void setTurnCount(int turnCount) {
+    this.turnCount = turnCount;
+  }
+
+  public int getTurnCount() {
+    return turnCount;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
+  }
 }

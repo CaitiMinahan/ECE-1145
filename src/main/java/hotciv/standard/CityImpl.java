@@ -6,10 +6,9 @@ import hotciv.standard.*;
 public class CityImpl implements City {
     private int size;
     private Player owner;
+    private int populationSize;
 
-    /* productionUnit = type of unit being
-      produced at a certain city
-     */
+    //type of unit being produced at a certain city
     private String productionUnit;
     private String focus;
     /*  treasury = number of money/production in the city's treasury
@@ -18,13 +17,19 @@ public class CityImpl implements City {
      */
     private int treasury;
 
-    public CityImpl() {
+    // TODO: modified CityImpl function so we pass in the owner of the city
+    public CityImpl(Player owner) {
         size = 1;
         treasury = 0;
+        this.owner = owner;
     }
     public void setTreasury(int t){
         this.treasury = t;
     }
+
+    public void setSize(int size) { this.size = size;}
+    public void setPopulationSize(int popSize) {this.populationSize = popSize;}
+    public int getPopulationSize() { return this.populationSize;}
     @Override
     public Player getOwner() { return owner; }
     @Override
@@ -35,4 +40,7 @@ public class CityImpl implements City {
     public String getProduction() { return productionUnit; }
     @Override
     public String getWorkforceFocus() { return focus; }
+
+    // new function to set the owner of a city in case of battle
+    public void setOwner(Player player) { this.owner = player;}
 }
