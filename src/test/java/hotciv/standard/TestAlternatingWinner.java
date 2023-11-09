@@ -12,13 +12,11 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class TestAlternatingWinner {
     private MutableGame game;
-    private GameImpl strongerAttackerGame; // game object where the epsilonCivFactory has a strongerAttackerStub
+    private MutableGame strongerAttackerGame; // game object where the epsilonCivFactory has a strongerAttackerStub
     private StrongerAttackerStubEpsilonCiv strongerAttackerStubEpsilonCiv = new StrongerAttackerStubEpsilonCiv();
-
-    private GameFactory gameFactory;
     @Before
     public void setUp() {
-        gameFactory = new ZetaCivFactory();
+        GameFactory gameFactory = new ZetaCivFactory();
         game = new GameImpl(gameFactory);
         GameFactory strongerAttackerStubGameFactory = new EpsilonCivFactory(strongerAttackerStubEpsilonCiv);
         strongerAttackerGame = new GameImpl(strongerAttackerStubGameFactory);
@@ -46,9 +44,9 @@ public class TestAlternatingWinner {
 
         // there are 5 Red player units on the board now using the
         // use the strongerAttackerWithManyUnitsGame game
-        strongerAttackerGame.units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        strongerAttackerGame.units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        strongerAttackerGame.units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
+        ((GameImpl)strongerAttackerGame).units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        ((GameImpl)strongerAttackerGame).units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        ((GameImpl)strongerAttackerGame).units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
         Position redArcher1Pos = new Position(0,0);
         Position redArcher2Pos = new Position(2,2);
         Position redArcher3Pos = new Position(2,3);
@@ -59,7 +57,7 @@ public class TestAlternatingWinner {
         didBlueWin = strongerAttackerGame.moveUnit(redArcher1Pos, redArcher2Pos);
         didBlueWin = strongerAttackerGame.moveUnit(redArcher2Pos, redArcher3Pos);
 
-        int blueWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.BLUE);
+        int blueWins = ((GameImpl)strongerAttackerGame).playerSuccessfulAttacks.get(Player.BLUE);
         Player winner = strongerAttackerGame.getWinner();
 
         // assert the following

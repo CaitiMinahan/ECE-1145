@@ -11,15 +11,13 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class TestDeltaCiv {
     private MutableGame game;
-    private GameFactory gameFactory;
 
     /** Fixture for deltaciv testing. */
     @Before
     public void setUp() {
-        gameFactory = new DeltaCivFactory();
+        GameFactory gameFactory = new DeltaCivFactory();
         game = new GameImpl(gameFactory);
     }
-
     @Test
     public void shouldBeRedAsStartingPlayer() {
 

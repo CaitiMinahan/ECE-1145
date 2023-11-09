@@ -39,15 +39,12 @@ import static org.hamcrest.CoreMatchers.*;
  */
 public class TestAlphaCiv {
     private MutableGame game;
-    private GameFactory gameFactory;
-
-
     /**
      * Fixture for alphaciv testing.
      */
     @Before
     public void setUp() {
-        gameFactory = new AlphaCivFactory();
+        GameFactory gameFactory = new AlphaCivFactory();
         game = new GameImpl(gameFactory);
     }
 
@@ -197,7 +194,6 @@ public class TestAlphaCiv {
     public void RedUnitCannotAttackRedUnit() {
         // when a red unit attempts to move into a space occupied by another red unit,
         // the original unit should not be able to move (no fortification)
-        Game game = new GameImpl(gameFactory);
         Position redArcherPosition = new Position(0, 0); // position of the red player archer
         Position redSettlerPosition = new Position(1, 1); // position of the red player settler
 

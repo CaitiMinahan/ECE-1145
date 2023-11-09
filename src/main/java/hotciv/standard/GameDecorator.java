@@ -4,7 +4,6 @@ import hotciv.framework.*;
 import hotciv.standard.Interfaces.*;
 
 public class GameDecorator implements MutableGame {
-
     protected MutableGame decoratedGame;
     public GameDecorator(MutableGame mutableGame){
 
@@ -28,22 +27,21 @@ public class GameDecorator implements MutableGame {
     public int getAge(){
         return decoratedGame.getAge();
     }
-
-    public void setupWorldLayout(WorldLayout worldLayoutStrategy){}
+    public void setupWorldLayout(WorldLayout worldLayoutStrategy){ decoratedGame.setupWorldLayout(worldLayoutStrategy);}
     public Unit getCurrentUnit() { return decoratedGame.getCurrentUnit(); }
-    public void setCurrentUnit(Unit u) {}
+    public void setCurrentUnit(Unit u) { decoratedGame.setCurrentUnit(u);}
     public Player getCurrentPlayer(){ return decoratedGame.getCurrentPlayer(); }
     public Position getPositionFromUnit(UnitImpl u) { return decoratedGame.getPositionFromUnit(u); }
-    public void killUnit(Position positionToClear) {}
+    public void killUnit(Position positionToClear) { decoratedGame.killUnit(positionToClear); }
     public boolean canUnitAttack(Unit unitToCheck) { return decoratedGame.canUnitAttack(unitToCheck); }
     public String getUnitActionStringType() { return decoratedGame.getUnitActionStringType(); }
     public void placeCity(Position position, Player player) { decoratedGame.placeCity(position, player);}
     public boolean cityExistsAt(Position position) { return decoratedGame.cityExistsAt(position); }
     public City createCity(Player player) { return decoratedGame.createCity(player); }
-    public void setCurrentCity(City city) {}
-    public void setTurnCount(int turnCount) {}
+    public void setCurrentCity(City city) { decoratedGame.setCurrentCity(city); }
+    public void setTurnCount(int turnCount) { decoratedGame.setTurnCount(turnCount); }
     public int getTurnCount() { return decoratedGame.getTurnCount(); }
-    public void setAge(int age) {}
+    public void setAge(int age) { decoratedGame.setAge(age); }
     @Override
     public boolean moveUnit(Position from, Position to) {
         boolean success = decoratedGame.moveUnit(from, to);
@@ -73,6 +71,7 @@ public class GameDecorator implements MutableGame {
     }
     public void performUnitActionAt( Position p ){
         decoratedGame.performUnitActionAt(p);
+        logAction(String.format("%s performs an action at %s", decoratedGame.getCurrentPlayer(), p));
     }
 
     // New logging function

@@ -9,10 +9,9 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 public class TestThetaCiv {
-    private GameImpl game;
-    private GameImpl strongerAttackerGame; // this is a test stub from last iteration
-    private GameImpl strongerDefenderGame; // this is a test stub from last iteration
-    private GameFactory gameFactory;
+    private MutableGame game;
+    private MutableGame strongerAttackerGame; // this is a test stub from last iteration
+    private MutableGame strongerDefenderGame; // this is a test stub from last iteration
 
     // factories for the attacking stubs
     private StrongerAttackerStubEpsilonCiv strongerAttackerStubThetaCiv = new StrongerAttackerStubEpsilonCiv();
@@ -22,7 +21,7 @@ public class TestThetaCiv {
     @Before
     public void setUp() {
 
-        gameFactory = new ThetaCivFactory();
+        GameFactory gameFactory = new ThetaCivFactory();
         // additional game factories
         GameFactory strongerAttackerStubGameFactory = new ThetaCivFactory(strongerAttackerStubThetaCiv);
         GameFactory strongerDefenderStubGameFactory = new ThetaCivFactory(strongerDefenderStubThetaCiv);
@@ -55,7 +54,7 @@ public class TestThetaCiv {
         Position ufoUnitPos2 = new Position(2,3);
         Position ufoUnitPos3 = new Position(2,4);
 
-        game.units.put(ufoUnitPos1, ufoUnit);
+        ((GameImpl)game).units.put(ufoUnitPos1, ufoUnit);
         game.moveUnit(ufoUnitPos1, ufoUnitPos2);
         assertThat(ufoUnit.getTravelDistace(), is(1));
     }
@@ -71,7 +70,7 @@ public class TestThetaCiv {
         Position ufoUnitPos3 = new Position(2,4);
         Position ufoUnitPos4 = new Position(2,5);
 
-        game.units.put(ufoUnitPos1, ufoUnit);
+        ((GameImpl)game).units.put(ufoUnitPos1, ufoUnit);
         boolean canMove = game.moveUnit(ufoUnitPos1, ufoUnitPos2);
         assertThat(ufoUnit.getTravelDistace(), is(1));
         assertThat(canMove, is(true));
@@ -93,7 +92,7 @@ public class TestThetaCiv {
         Position archerPos2 = new Position(3,2);
         Position archerPos3 = new Position(3,3);
 
-        game.units.put(archerPos, archerUnit);
+        ((GameImpl)game).units.put(archerPos, archerUnit);
 
         // move the archer
         boolean canMove = game.moveUnit(archerPos, archerPos2);
@@ -116,12 +115,12 @@ public class TestThetaCiv {
         UnitImpl ufoUnit = new UnitImpl(GameConstants.UFO, Player.RED);
         // put the ufo on the map
         Position ufoHomePos = new Position(2,2);
-        game.units.put(ufoHomePos, ufoUnit);
+        ((GameImpl)game).units.put(ufoHomePos, ufoUnit);
 
         // make a city with no units in it
         CityImpl emptyCity = new CityImpl(Player.BLUE);
         Position cityPosition = new Position(4,1);
-        game.cities.put(cityPosition, emptyCity);
+        ((GameImpl)game).cities.put(cityPosition, emptyCity);
 
         // city is new city with no units on it
         boolean canMove = game.moveUnit(ufoHomePos, cityPosition);
@@ -138,16 +137,16 @@ public class TestThetaCiv {
         UnitImpl ufoUnit = new UnitImpl(GameConstants.UFO, Player.RED);
         // put the ufo on the map
         Position ufoHomePos = new Position(2,2);
-        strongerAttackerGame.units.put(ufoHomePos, ufoUnit);
+        ((GameImpl)strongerAttackerGame).units.put(ufoHomePos, ufoUnit);
 
         // make a city with no units in it
         CityImpl newCity = new CityImpl(Player.BLUE);
         Position cityPosition = new Position(4,1);
-        strongerAttackerGame.cities.put(cityPosition, newCity);
+        ((GameImpl)strongerAttackerGame).cities.put(cityPosition, newCity);
 
         // add units to the city
         UnitImpl blueLegion = new UnitImpl(GameConstants.LEGION, Player.BLUE);
-        strongerAttackerGame.units.put(cityPosition, blueLegion);
+        ((GameImpl)strongerAttackerGame).units.put(cityPosition, blueLegion);
 
         // city is new city with enemy units on it
         boolean canMove = strongerAttackerGame.moveUnit(ufoHomePos, cityPosition);
@@ -164,16 +163,16 @@ public class TestThetaCiv {
         UnitImpl ufoUnit = new UnitImpl(GameConstants.UFO, Player.RED);
         // put the ufo on the map
         Position ufoHomePos = new Position(2,2);
-        strongerDefenderGame.units.put(ufoHomePos, ufoUnit);
+        ((GameImpl)strongerDefenderGame).units.put(ufoHomePos, ufoUnit);
 
         // make a city with no units in it
         CityImpl newCity = new CityImpl(Player.BLUE);
         Position cityPosition = new Position(4,1);
-        strongerDefenderGame.cities.put(cityPosition, newCity);
+        ((GameImpl)strongerDefenderGame).cities.put(cityPosition, newCity);
 
         // add units to the city
         UnitImpl blueLegion = new UnitImpl(GameConstants.LEGION, Player.BLUE);
-        strongerDefenderGame.units.put(cityPosition, blueLegion);
+        ((GameImpl)strongerDefenderGame).units.put(cityPosition, blueLegion);
 
         // city is new city with enemy units on it
         boolean canMove = strongerDefenderGame.moveUnit(ufoHomePos, cityPosition);
@@ -197,8 +196,8 @@ public class TestThetaCiv {
         newCity.setPopulationSize(100);
 
         // need to add the unit to the hash map
-        game.units.put(ufoHomePos, ufoUnit);
-        game.cities.put(cityPosition, newCity);
+        ((GameImpl)game).units.put(ufoHomePos, ufoUnit);
+        ((GameImpl)game).cities.put(cityPosition, newCity);
 
         // allow the UFO to abduct a person
         boolean didUFOMove = game.moveUnit(ufoHomePos, cityPosition);
@@ -215,7 +214,7 @@ public class TestThetaCiv {
         // put the ufo on the map
         Position ufoHomePos = new Position(2,2);
         // add the unit to the map
-        game.units.put(ufoHomePos, ufoUnit);
+        ((GameImpl)game).units.put(ufoHomePos, ufoUnit);
 
         // make a city with no units in it
         CityImpl newCity = new CityImpl(Player.BLUE);
@@ -223,7 +222,7 @@ public class TestThetaCiv {
         // add population to the city
         newCity.setPopulationSize(1);
         // add the city to the hashmap
-        game.cities.put(cityPosition, newCity);
+        ((GameImpl)game).cities.put(cityPosition, newCity);
 
         // allow the UFO to abduct a person
         boolean didUFOMove = game.moveUnit(ufoHomePos, cityPosition);
@@ -232,7 +231,7 @@ public class TestThetaCiv {
         game.performUnitActionAt(cityPosition);
         // check the population
         boolean getCity = false;
-        City retrievedCity = game.cities.get(cityPosition);
+        City retrievedCity = ((GameImpl)game).cities.get(cityPosition);
         if(retrievedCity != null)
             getCity = true;
         assertThat(getCity, is(false)); // proves that the city was deleted
@@ -245,12 +244,12 @@ public class TestThetaCiv {
         // put the ufo on the map
         Position ufoHomePos = new Position(2,2);
         // add to the hash map
-        game.units.put(ufoHomePos, ufoUnit);
+        ((GameImpl)game).units.put(ufoHomePos, ufoUnit);
 
         // get the position of a forrest
         Position forrestTilePos = new Position(4,5);
         TileImpl forrestTile = new TileImpl(GameConstants.FOREST);
-        game.tiles.put(forrestTilePos, (Tile)forrestTile);
+        ((GameImpl)game).tiles.put(forrestTilePos, (Tile)forrestTile);
 
         // move the ufo to that tile
         game.moveUnit(ufoHomePos, forrestTilePos);
@@ -258,7 +257,7 @@ public class TestThetaCiv {
         // perform unit action
         game.performUnitActionAt(forrestTilePos);
         // notice the terrain type change
-        String terrainType = game.tiles.get(forrestTilePos).getTypeString();
+        String terrainType = ((GameImpl)game).tiles.get(forrestTilePos).getTypeString();
         assertThat(terrainType, is("plains"));
     }
 
@@ -269,7 +268,7 @@ public class TestThetaCiv {
         // put the ufo on the map
         Position ufoHomePos = new Position(2,2);
         // add to the units hash map
-        game.units.put(ufoHomePos, ufoUnit);
+        ((GameImpl)game).units.put(ufoHomePos, ufoUnit);
 
         // get the positions of different tiles
         Position plainsTilePos = new Position(4,1);
@@ -283,10 +282,10 @@ public class TestThetaCiv {
         TileImpl mountainTile = new TileImpl(GameConstants.MOUNTAINS);
 
         // update the tile hash map
-        game.tiles.put(plainsTilePos, plainsTile);
-        game.tiles.put(oceanTilePos, oceanTile);
-        game.tiles.put(hillsTilePos, hillsTile);
-        game.tiles.put(mountainTilePos, mountainTile);
+        ((GameImpl)game).tiles.put(plainsTilePos, plainsTile);
+        ((GameImpl)game).tiles.put(oceanTilePos, oceanTile);
+        ((GameImpl)game).tiles.put(hillsTilePos, hillsTile);
+        ((GameImpl)game).tiles.put(mountainTilePos, mountainTile);
 
 
         // move the ufo to that tile
@@ -294,7 +293,7 @@ public class TestThetaCiv {
         // perform unit action
         game.performUnitActionAt(plainsTilePos);
         // notice the terrain type change
-        String terrainType = game.tiles.get(plainsTilePos).getTypeString();
+        String terrainType = ((GameImpl)game).tiles.get(plainsTilePos).getTypeString();
         assertThat(terrainType, is("plains"));
 
         // move the ufo to that tile
@@ -302,18 +301,18 @@ public class TestThetaCiv {
         // perform unit action
         game.performUnitActionAt(oceanTilePos);
         // notice the terrain type change
-        terrainType = game.tiles.get(oceanTilePos).getTypeString();
+        terrainType = ((GameImpl)game).tiles.get(oceanTilePos).getTypeString();
         assertThat(terrainType, is("ocean"));
 
         // UFO cant move more than twice
         UnitImpl ufo2 = new UnitImpl(GameConstants.UFO, Player.RED);
         // add to the units hash map
-        game.units.put(hillsTilePos, ufo2);
+        ((GameImpl)game).units.put(hillsTilePos, ufo2);
 
         // perform unit action
         game.performUnitActionAt(hillsTilePos);
         // notice the terrain type change
-        terrainType = game.tiles.get(hillsTilePos).getTypeString();
+        terrainType = ((GameImpl)game).tiles.get(hillsTilePos).getTypeString();
         assertThat(terrainType, is("hills"));
 
         // move the ufo to that tile
@@ -321,7 +320,7 @@ public class TestThetaCiv {
         // perform unit action
         game.performUnitActionAt(mountainTilePos);
         // notice the terrain type change
-        terrainType = game.tiles.get(mountainTilePos).getTypeString();
+        terrainType = ((GameImpl)game).tiles.get(mountainTilePos).getTypeString();
         assertThat(terrainType, is("mountain"));
     }
 }

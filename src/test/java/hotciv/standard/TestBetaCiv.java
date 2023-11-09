@@ -9,11 +9,9 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 public class TestBetaCiv {
     private MutableGame game;
-    private GameFactory gameFactory;
-
     @Before
     public void setUp() {
-        gameFactory = new BetaCivFactory();
+        GameFactory gameFactory = new BetaCivFactory();
         game = new GameImpl(gameFactory);
     }
     @Test

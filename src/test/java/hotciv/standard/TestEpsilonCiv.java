@@ -13,13 +13,13 @@ import static org.hamcrest.CoreMatchers.*;
 * This file will use Test Stubs to allow the game winner to be determined.
 * */
 public class TestEpsilonCiv {
-    private GameImpl strongerAttackerGame; // game object where the epsilonCivFactory has a strongerAttackerStub
-    private GameImpl strongerDefenderGame; // game object where the epsilonCivFactory has a strongerDefenderStub
-    private GameImpl genericGame; // generic game object
-    private GameImpl attackerHasTerrainAdvantageGame;
-    private GameImpl defenderHasTerrainAdvantageGame;
-    private GameImpl attackerHasMoreNeighborsGame;
-    private GameImpl defenderHasMoreNeighborsGame;
+    private MutableGame strongerAttackerGame; // game object where the epsilonCivFactory has a strongerAttackerStub
+    private MutableGame strongerDefenderGame; // game object where the epsilonCivFactory has a strongerDefenderStub
+    private MutableGame genericGame; // generic game object
+    private MutableGame attackerHasTerrainAdvantageGame;
+    private MutableGame defenderHasTerrainAdvantageGame;
+    private MutableGame attackerHasMoreNeighborsGame;
+    private MutableGame defenderHasMoreNeighborsGame;
 
     // variables for the generic unitAttack and Stubs
     // attacking delegate with normal functionality
@@ -66,7 +66,7 @@ public class TestEpsilonCiv {
         Player winner = genericGame.getWinner();
         assertThat(winner, is(nullValue()));
         // ensure that the successfulPlayerAttacks map is not zero
-        int numRedWins = genericGame.playerSuccessfulAttacks.get(Player.RED);
+        int numRedWins = ((GameImpl)genericGame).playerSuccessfulAttacks.get(Player.RED);
         assertThat(numRedWins, is(0));
     }
 
@@ -80,12 +80,12 @@ public class TestEpsilonCiv {
         Position blueLegionPos = new Position(1,2);
 
         // get the status of the win for Red player
-        int numRedWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.RED);
+        int numRedWins = ((GameImpl)strongerAttackerGame).playerSuccessfulAttacks.get(Player.RED);
         // fight
         boolean didRedWin = strongerAttackerGame.moveUnit(redArcherPos, blueLegionPos);
         assertThat(didRedWin, is(true));
         // test that the hash map has incremented
-        int updatedNumRedWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.RED);
+        int updatedNumRedWins = ((GameImpl)strongerAttackerGame).playerSuccessfulAttacks.get(Player.RED);
         assertThat(updatedNumRedWins > numRedWins, is(true));
     }
 
@@ -94,10 +94,10 @@ public class TestEpsilonCiv {
     public void ThreeSuccessfulAttacksYieldsWin(){
         // there are 5 Red player units on the board now using the
         // use the strongerAttackerWithManyUnitsGame game
-        strongerAttackerGame.units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        strongerAttackerGame.units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        strongerDefenderGame.units.put(new Position(2,4), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        strongerAttackerGame.units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
+        ((GameImpl)strongerAttackerGame).units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        ((GameImpl)strongerAttackerGame).units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        ((GameImpl)strongerAttackerGame).units.put(new Position(2,4), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        ((GameImpl)strongerAttackerGame).units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
         Position redArcher1Pos = new Position(0,0);
         Position redArcher2Pos = new Position(2,2);
         Position redArcher3Pos = new Position(2,3);
@@ -108,7 +108,7 @@ public class TestEpsilonCiv {
         didBlueWin = strongerAttackerGame.moveUnit(redArcher1Pos, redArcher2Pos);
         didBlueWin = strongerAttackerGame.moveUnit(redArcher2Pos, redArcher3Pos);
 
-        int blueWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.BLUE);
+        int blueWins = ((GameImpl)strongerAttackerGame).playerSuccessfulAttacks.get(Player.BLUE);
         Player winner = strongerAttackerGame.getWinner();
 
         // assert the following

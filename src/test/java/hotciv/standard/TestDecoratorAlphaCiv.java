@@ -16,13 +16,11 @@ import static org.junit.Assert.assertThat;
 
 public class TestDecoratorAlphaCiv {
     private MutableGame transcribedGame; // new game object for producing a transcript for the game
-    private GameFactory gameFactory;
-
 
     /** Fixture for alphaciv testing. **/
     @Before
     public void setUp() {
-        gameFactory = new AlphaCivFactory();
+        GameFactory gameFactory = new AlphaCivFactory();
         transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
     @Test
