@@ -5,22 +5,18 @@ import hotciv.framework.*;
 import hotciv.standard.Factories.GammaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
 import hotciv.standard.Interfaces.MutableGame;
-import hotciv.standard.Interfaces.UnitAction;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 public class TestGammaCiv {
     private GameImpl game;
-    private MutableGame transcribedGame;
     private GameFactory gameFactory;
 
     @Before
     public void setUp() {
         gameFactory = new GammaCivFactory();
         game = new GameImpl(gameFactory);
-        // Add in new transcription method
-        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
 
     // ---- INTEGRATION TESTS ----- //

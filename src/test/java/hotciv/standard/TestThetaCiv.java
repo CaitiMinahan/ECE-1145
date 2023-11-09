@@ -1,10 +1,8 @@
 package hotciv.standard;
 import hotciv.framework.*;
-import hotciv.standard.Factories.EpsilonCivFactory;
 import hotciv.standard.Factories.ThetaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
 import hotciv.standard.Interfaces.MutableGame;
-import hotciv.standard.Interfaces.UnitAction;
 import hotciv.standard.TestStubs.StrongerAttackerStubEpsilonCiv;
 import hotciv.standard.TestStubs.StrongerDefenderStubEpsilonCiv;
 import org.junit.*;
@@ -12,10 +10,8 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 public class TestThetaCiv {
     private GameImpl game;
-    private MutableGame transcribedGame;
     private GameImpl strongerAttackerGame; // this is a test stub from last iteration
     private GameImpl strongerDefenderGame; // this is a test stub from last iteration
-    private UnitAction thetaUnitAction;
     private GameFactory gameFactory;
 
     // factories for the attacking stubs
@@ -35,8 +31,6 @@ public class TestThetaCiv {
         // additional game modes
         strongerAttackerGame = new GameImpl(strongerAttackerStubGameFactory);
         strongerDefenderGame = new GameImpl(strongerDefenderStubGameFactory);
-        // Add in new transcription method
-        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
 
     @Test

@@ -11,7 +11,6 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class TestDeltaCiv {
     private MutableGame game;
-    private MutableGame transcribedGame;
     private GameFactory gameFactory;
 
     /** Fixture for deltaciv testing. */
@@ -19,8 +18,6 @@ public class TestDeltaCiv {
     public void setUp() {
         gameFactory = new DeltaCivFactory();
         game = new GameImpl(gameFactory);
-        // Add in new transcription method
-        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
 
     @Test

@@ -21,10 +21,6 @@ public class TestEpsilonCiv {
     private GameImpl attackerHasMoreNeighborsGame;
     private GameImpl defenderHasMoreNeighborsGame;
 
-    private MutableGame game;
-    private MutableGame transcribedGame;
-
-
     // variables for the generic unitAttack and Stubs
     // attacking delegate with normal functionality
     private GenericUnitAttacking genericUnitAttacking;
@@ -61,8 +57,6 @@ public class TestEpsilonCiv {
         defenderHasTerrainAdvantageGame = new GameImpl(defenderHasTerrainAdvantageStubGameFactory);
         attackerHasMoreNeighborsGame = new GameImpl(attackerHasMoreNeighborsStubGameFactory);
         defenderHasMoreNeighborsGame = new GameImpl(defenderHasMoreNeighborsStubGameFactory);
-        // Add in new transcription method
-        transcribedGame = new GameDecorator(new GameImpl(genericGameFactory));
     }
 
     // a test stub for setting the defensive and attacking strengths

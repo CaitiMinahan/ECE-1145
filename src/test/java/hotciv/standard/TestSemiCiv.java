@@ -1,7 +1,6 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
-import hotciv.standard.*;
 import hotciv.standard.Factories.*;
 import hotciv.standard.Interfaces.*;
 import hotciv.standard.TestStubs.*;
@@ -12,7 +11,6 @@ public class TestSemiCiv {
 
     // Game and GameFactory Setup
     private MutableGame game;
-    private MutableGame transcribedGame;
     private GameFactory gameFactory;
 
     // Setup: SPECIFIC FOR EPSILONCIV
@@ -22,7 +20,6 @@ public class TestSemiCiv {
     private GameImpl defenderHasTerrainAdvantageGame;
     private GameImpl attackerHasMoreNeighborsGame;
     private GameImpl defenderHasMoreNeighborsGame;
-    private GameImpl genericGame; // generic game object
 
 
     // variables for the generic unitAttack and Stubs
@@ -64,8 +61,6 @@ public class TestSemiCiv {
 
         gameFactory = new SemiCivFactory();
         game = new GameImpl(gameFactory);
-        // Add in new transcription method
-        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
 
     // Testing BetaCiv's Aging Algorithm

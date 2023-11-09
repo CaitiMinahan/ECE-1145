@@ -9,15 +9,12 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 public class TestBetaCiv {
     private MutableGame game;
-    private MutableGame transcribedGame;
     private GameFactory gameFactory;
 
     @Before
     public void setUp() {
         gameFactory = new BetaCivFactory();
         game = new GameImpl(gameFactory);
-        // Add in new transcription method
-        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
     @Test
     public void blueWinsFromOwningAllCities() {

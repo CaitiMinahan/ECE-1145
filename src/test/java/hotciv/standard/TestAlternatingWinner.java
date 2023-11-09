@@ -12,13 +12,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class TestAlternatingWinner {
     private MutableGame game;
-    private MutableGame transcribedGame;
-    private WorldLayout worldLayout;
-    private UnitAction genericUnitAction;
-    private WorldAging worldAging;
-    private AlternatingWinnerStrategy alternatingWinnerStrategy;
     private GameImpl strongerAttackerGame; // game object where the epsilonCivFactory has a strongerAttackerStub
-
     private StrongerAttackerStubEpsilonCiv strongerAttackerStubEpsilonCiv = new StrongerAttackerStubEpsilonCiv();
 
     private GameFactory gameFactory;
@@ -28,8 +22,6 @@ public class TestAlternatingWinner {
         game = new GameImpl(gameFactory);
         GameFactory strongerAttackerStubGameFactory = new EpsilonCivFactory(strongerAttackerStubEpsilonCiv);
         strongerAttackerGame = new GameImpl(strongerAttackerStubGameFactory);
-        // Add in new transcription method
-        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
     @Test
     public void testBetaCivWinner(){
