@@ -249,7 +249,7 @@ public class TestThetaCiv {
         // get the position of a forrest
         Position forrestTilePos = new Position(4,5);
         TileImpl forrestTile = new TileImpl(GameConstants.FOREST);
-        ((GameImpl)game).tiles.put(forrestTilePos, (Tile)forrestTile);
+        ((GameImpl)game).tiles.put(forrestTilePos, forrestTile);
 
         // move the ufo to that tile
         game.moveUnit(ufoHomePos, forrestTilePos);
