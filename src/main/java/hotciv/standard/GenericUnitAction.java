@@ -30,13 +30,6 @@ public class GenericUnitAction implements UnitAction {
         if (unit_from == null){
             return false;
         }
-
-        // added this to be able to move units into cities
-//        if (game.getCityAt(to) != null){
-//            City cityTo = game.getCityAt(to);
-//            Player cityOwner = cityTo.getOwner();
-//            return true;
-//        }
         // if the 'to' unit already has a unit there
         if (game.getUnitAt(to) != null) {
             // check to see if the current player occupies this unit or an enemy does
@@ -68,7 +61,4 @@ public class GenericUnitAction implements UnitAction {
         }
         return true;
     }
-
-
-
 }

@@ -168,8 +168,8 @@ public class TestAlphaCiv {
     assertThat(game.moveUnit(moveFrom, moveTo), is(true)); // confirm that we can move our unit from (0,0) to (0,1)
 
     // added this to try and move unit to an occupied tile
-    Position moveFromNewSpot = new Position(1, 0);
-    assertThat(game.moveUnit(moveFromNewSpot, moveTo), is(false)); // confirm we cannot move unit to occupied tile at (0,1)
+    Position moveToNewSpot = new Position(1,1); // we know a settler is here
+    assertThat(game.moveUnit(moveTo, moveToNewSpot), is(false)); // confirm we cannot move unit to occupied tile at (1,1)
 
   }
 
@@ -251,28 +251,28 @@ public class TestAlphaCiv {
   // test moving units to a tile located at a city
   @Test
   public void successfulMoveIntoCityAndCityOwnerBecomesUnitOwner(){
-    Position redPlayerCityPosition = new Position(7, 11);
+    Position bluePlayerCityPosition = new Position(7, 11);
     Position redPlayerUnitPositionFrom = new Position(0,0);
     Unit unit = game.getUnitAt(redPlayerUnitPositionFrom);
-    Player player = Player.RED;
+    Player player1 = Player.RED;
+    Player player2 = Player.BLUE;
 
     // Call the method to place the city
-    ((GameImpl) game).placeCity(redPlayerCityPosition, player);
+    ((GameImpl) game).placeCity(bluePlayerCityPosition, player2);
 
     // Retrieve the city at the specified position
-    City placedCity = game.getCityAt(redPlayerCityPosition);
+    City placedCity = game.getCityAt(bluePlayerCityPosition);
 
     // Check that the placedCity is not null, indicating a city was successfully placed
     assertThat(placedCity, is(notNullValue()));
 
     // call moveUnit method to move unit into a city
-    assertThat(game.moveUnit(redPlayerUnitPositionFrom, redPlayerCityPosition), is(true));
+    assertThat(game.moveUnit(redPlayerUnitPositionFrom, bluePlayerCityPosition), is(true));
 
     // assert that the owner of the city is the owner of the unit
-    assertThat(placedCity.getOwner(), is(player));
-    assertThat(unit.getOwner(), is(player));
+    assertThat(placedCity.getOwner(), is(player1));
+    assertThat(unit.getOwner(), is(player1));
 
   }
-
 }
 
