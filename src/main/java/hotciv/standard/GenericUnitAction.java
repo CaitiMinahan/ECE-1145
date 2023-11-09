@@ -5,6 +5,7 @@ import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Unit;
 import hotciv.standard.Interfaces.UnitAction;
+import hotciv.framework.*;
 
 public class GenericUnitAction implements UnitAction {
     @Override
@@ -60,7 +61,4 @@ public class GenericUnitAction implements UnitAction {
         }
         return true;
     }
-
-
-
 }

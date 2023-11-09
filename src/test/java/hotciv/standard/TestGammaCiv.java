@@ -100,4 +100,21 @@ public class TestGammaCiv {
         // check that the specific unit exists there now
         assertThat(oldUnit, is(newUnit));
     }
+
+    // added test case for iteration 7
+    // test invalid move for canMove == false
+    @Test
+    public void invalidMoveForCanMoveIsFalse(){
+        Position newArcherPos = new Position(4,4);
+        Position redArcherPos = new Position(0,0);
+        Unit redArcher = game.getUnitAt(redArcherPos); // as per game setup
+
+        ((UnitImpl) redArcher).setCanMove(false);
+
+        assertThat(((UnitImpl) redArcher).getCanMove(), is(false));
+
+        // should be unable to move since canMove = false
+        assertThat(game.moveUnit(redArcherPos, newArcherPos), is(false));
+
+    }
 }

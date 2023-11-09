@@ -161,7 +161,9 @@ public class ThetaCivUnitAction implements UnitAction {
             City currentCity = game.cities.get(to);
             if(currentCity != null){
                 // transfer ownership
-                ((CityImpl) currentCity).setOwner(unit_from.getOwner());
+                if(unit_from.getTypeString() != GameConstants.UFO){
+                    ((CityImpl) currentCity).setOwner(unit_from.getOwner());
+                }
             }
         return true;
     }

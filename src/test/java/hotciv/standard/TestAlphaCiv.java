@@ -159,11 +159,18 @@ public class TestAlphaCiv {
     assertThat(game.getUnitAt(BluePlayerPositionLeigon).getTypeString(), is(GameConstants.LEGION));
   }
 
+  // modified test case for moveUnit method for iteration 7
   @Test
   public void OnlyOneUnitAllowedOnATile() {
     Position moveFrom = new Position(0, 0);
     Position moveTo = new Position(0, 1);
+    assertThat(game.getUnitAt(moveTo), is(nullValue()));  // modified this to make sure we can only move units to empty tiles
     assertThat(game.moveUnit(moveFrom, moveTo), is(true)); // confirm that we can move our unit from (0,0) to (0,1)
+
+    // added this to try and move unit to an occupied tile
+    Position moveToNewSpot = new Position(1,1); // we know a settler is here
+    assertThat(game.moveUnit(moveTo, moveToNewSpot), is(false)); // confirm we cannot move unit to occupied tile at (1,1)
+
   }
 
   @Test
@@ -227,7 +234,6 @@ public class TestAlphaCiv {
     assertThat(game.moveUnit(redArcherPosition, redSettlerPosition), is(false));
   }
 
-
   @Test
   public void NonAttackingUnitCannotAttack() {
     /*
@@ -241,4 +247,32 @@ public class TestAlphaCiv {
     assertThat(game.moveUnit(redSettlerPosition, blueLegionPosition), is(false));
   }
 
+  // test added for moveUnit method for iteration 7
+  // test moving units to a tile located at a city
+  @Test
+  public void successfulMoveIntoCityAndCityOwnerBecomesUnitOwner(){
+    Position bluePlayerCityPosition = new Position(7, 11);
+    Position redPlayerUnitPositionFrom = new Position(0,0);
+    Unit unit = game.getUnitAt(redPlayerUnitPositionFrom);
+    Player player1 = Player.RED;
+    Player player2 = Player.BLUE;
+
+    // Call the method to place the city
+    ((GameImpl) game).placeCity(bluePlayerCityPosition, player2);
+
+    // Retrieve the city at the specified position
+    City placedCity = game.getCityAt(bluePlayerCityPosition);
+
+    // Check that the placedCity is not null, indicating a city was successfully placed
+    assertThat(placedCity, is(notNullValue()));
+
+    // call moveUnit method to move unit into a city
+    assertThat(game.moveUnit(redPlayerUnitPositionFrom, bluePlayerCityPosition), is(true));
+
+    // assert that the owner of the city is the owner of the unit
+    assertThat(placedCity.getOwner(), is(player1));
+    assertThat(unit.getOwner(), is(player1));
+
+  }
 }
+
