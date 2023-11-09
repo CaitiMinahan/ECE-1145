@@ -3,6 +3,7 @@ package hotciv.standard;
 import hotciv.framework.*;
 import hotciv.standard.Factories.EpsilonCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.TestStubs.*;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -19,6 +20,9 @@ public class TestEpsilonCiv {
     private GameImpl defenderHasTerrainAdvantageGame;
     private GameImpl attackerHasMoreNeighborsGame;
     private GameImpl defenderHasMoreNeighborsGame;
+
+    private MutableGame game;
+    private MutableGame transcribedGame;
 
 
     // variables for the generic unitAttack and Stubs
@@ -57,6 +61,8 @@ public class TestEpsilonCiv {
         defenderHasTerrainAdvantageGame = new GameImpl(defenderHasTerrainAdvantageStubGameFactory);
         attackerHasMoreNeighborsGame = new GameImpl(attackerHasMoreNeighborsStubGameFactory);
         defenderHasMoreNeighborsGame = new GameImpl(defenderHasMoreNeighborsStubGameFactory);
+        // Add in new transcription method
+        transcribedGame = new GameDecorator(new GameImpl(genericGameFactory));
     }
 
     // a test stub for setting the defensive and attacking strengths

@@ -3,36 +3,40 @@ package hotciv.standard;
 import hotciv.framework.*;
 import hotciv.standard.Factories.BetaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
+import hotciv.standard.Interfaces.MutableGame;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 public class TestBetaCiv {
-    private Game game;
+    private MutableGame game;
+    private MutableGame transcribedGame;
     private GameFactory gameFactory;
 
     @Before
     public void setUp() {
         gameFactory = new BetaCivFactory();
         game = new GameImpl(gameFactory);
+        // Add in new transcription method
+        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
     @Test
     public void blueWinsFromOwningAllCities() {
-        ((GameImpl) game).placeCity(new Position(5,5), Player.BLUE);
-        ((GameImpl) game).placeCity(new Position(7,4), Player.BLUE);
+        game.placeCity(new Position(5,5), Player.BLUE);
+        game.placeCity(new Position(7,4), Player.BLUE);
 
         assertThat(game.getWinner(), is(Player.BLUE));
     }
     @Test
     public void redWinsFromOwningAllCities() {
-        ((GameImpl) game).placeCity(new Position(2,5), Player.RED);
-        ((GameImpl) game).placeCity(new Position(6,1), Player.RED);
+        game.placeCity(new Position(2,5), Player.RED);
+        game.placeCity(new Position(6,1), Player.RED);
 
         assertThat(game.getWinner(), is(Player.RED));
     }
     @Test
     public void shouldReturnNullForMultiplePlayersOwningCities() {
-        ((GameImpl) game).placeCity(new Position(2,5), Player.RED);
-        ((GameImpl) game).placeCity(new Position(6,1), Player.BLUE);
+        game.placeCity(new Position(2,5), Player.RED);
+        game.placeCity(new Position(6,1), Player.BLUE);
 
         assertNull(game.getWinner());
     }
@@ -108,18 +112,18 @@ public class TestBetaCiv {
     }
     @Test
     public void shouldSetAge() {
-        ((GameImpl) game).setAge(1950);
+        game.setAge(1950);
         assertThat(game.getAge(), is(1950));
     }
     @Test
     public void shouldSetTurnCount() {
-        ((GameImpl) game).setTurnCount(2);
-        assertThat(((GameImpl) game).getTurnCount(), is(2));
+        game.setTurnCount(2);
+        assertThat(game.getTurnCount(), is(2));
     }
     @Test
     public void shouldGetTurnCount() {
-        ((GameImpl) game).setTurnCount(10);
-        int testAge = ((GameImpl) game).getTurnCount();
+        game.setTurnCount(10);
+        int testAge = game.getTurnCount();
 
         assertThat(testAge, is(10));
     }

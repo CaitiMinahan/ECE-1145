@@ -37,13 +37,12 @@ import hotciv.standard.Interfaces.*;
  * 
  */
 
-public class GameImpl implements Game {
+public class GameImpl implements MutableGame {
   private WorldLayout worldLayoutStrategy;
   private WorldAging worldAgingStrategy;
   private Winner winnerStrategy;
   private UnitAction unitActionCivType;
   private PlayerSetup playerSetup;
-  private GameFactory gameFactory;
   private Player currentPlayer;
   public Map<Position, Unit> units; // use a hash map to store the units on the board
   public Map<Position, Tile> tiles = new HashMap<>(); // using a hashmap to store tiles with positions
@@ -165,7 +164,7 @@ public class GameImpl implements Game {
   }
 
   // Helper function to retrieve the unit action type and not change the template design
-  String getUnitActionStringType() {
+  public String getUnitActionStringType() {
     if(unitActionCivType instanceof GammaCivUnitAction)
     {
       return "GammaCivUnitAction";
@@ -253,15 +252,15 @@ public class GameImpl implements Game {
     }
   }
 
-  private boolean cityExistsAt(Position position) {
+  public boolean cityExistsAt(Position position) {
     return cities.containsKey(position);
   }
 
-  private City createCity(Player player) {
+  public City createCity(Player player) {
     return new CityImpl(player);
   }
 
-  private void setCurrentCity(City city) {
+  public void setCurrentCity(City city) {
     currentCity = (CityImpl) city;
   }
 

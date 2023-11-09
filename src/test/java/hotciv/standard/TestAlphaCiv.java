@@ -38,16 +38,8 @@ import static org.hamcrest.CoreMatchers.*;
  * 
  */
 public class TestAlphaCiv {
-  private Game game;
-  private WorldLayout worldLayout;
-  private UnitAction genericUnitAction;
-
-  private Winner genericWinner;
-  private WorldAging worldAging;
-
-  private Winner winner;
-
-  // int initialTreasury = 0; // Set the initial treasury value as needed
+  private MutableGame game;
+  private MutableGame transcribedGame; // new game object for producing a transcript for the game
 
   private GameFactory gameFactory;
 
@@ -55,18 +47,10 @@ public class TestAlphaCiv {
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-    // TODO: remove old implementation
-//    worldLayout = new GenericWorldLayout(); // layout for AlphaCiv as specified in GenericWorldLayout
-//    genericUnitAction = new GenericUnitAction();
-//    // int initialTreasury = 0;
-//    worldAging = new GenericWorldAging();
-//    genericWinner = new GenericWinner();
-    // int initialTreasury = 0;
-//    game = new GameImpl(worldLayout, worldAging, genericWinner, genericUnitAction);
-
-    // step 4 in refactoring for abstract factory: create an instance of the concrete factory for the appropriate game variant:
     gameFactory = new AlphaCivFactory();
     game = new GameImpl(gameFactory);
+    // Add in new transcription method
+    transcribedGame = new GameDecorator(new GameImpl(gameFactory));
   }
 
     // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -104,13 +88,13 @@ public class TestAlphaCiv {
   @Test
   public void citiesShouldEndWith60Production() {
     Position cityPosition = new Position(3, 2);
-    ((GameImpl) game).placeCity(cityPosition, Player.RED);
+    transcribedGame.placeCity(cityPosition, Player.RED);
 
     for (int i = 0; i < 10; i++) {
-      game.endOfTurn();
+      transcribedGame.endOfTurn();
     }
     // 10 rounds, 6 production each round = 60 production
-    assertThat(game.getCityAt(cityPosition).getTreasury(), is(60));
+    assertThat(transcribedGame.getCityAt(cityPosition).getTreasury(), is(60));
   }
 
   @Test
@@ -134,15 +118,15 @@ public class TestAlphaCiv {
   @Test
   public void shouldAlternateBetweenRedAndBluePlayers() {
     // Check that the game starts with RED player
-    assertThat(game.getPlayerInTurn(), is(Player.RED));
+    assertThat(transcribedGame.getPlayerInTurn(), is(Player.RED));
 
     // End the turn, and it should become BLUE player's turn
-    game.endOfTurn();
-    assertThat(game.getPlayerInTurn(), is(Player.BLUE));
+    transcribedGame.endOfTurn();
+    assertThat(transcribedGame.getPlayerInTurn(), is(Player.BLUE));
 
     // End the turn again, it should become RED player's turn
-    game.endOfTurn();
-    assertThat(game.getPlayerInTurn(), is(Player.RED));
+    transcribedGame.endOfTurn();
+    assertThat(transcribedGame.getPlayerInTurn(), is(Player.RED));
   }
 
   @Test
@@ -163,7 +147,7 @@ public class TestAlphaCiv {
   public void OnlyOneUnitAllowedOnATile() {
     Position moveFrom = new Position(0, 0);
     Position moveTo = new Position(0, 1);
-    assertThat(game.moveUnit(moveFrom, moveTo), is(true)); // confirm that we can move our unit from (0,0) to (0,1)
+    assertThat(transcribedGame.moveUnit(moveFrom, moveTo), is(true)); // confirm that we can move our unit from (0,0) to (0,1)
   }
 
   @Test

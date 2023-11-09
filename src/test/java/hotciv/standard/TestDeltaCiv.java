@@ -4,34 +4,23 @@ import hotciv.framework.*;
 
 import hotciv.standard.Factories.DeltaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
-import hotciv.standard.Interfaces.UnitAction;
-import hotciv.standard.Interfaces.WorldLayout;
+import hotciv.standard.Interfaces.MutableGame;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 public class TestDeltaCiv {
-    private Game game;
-    private WorldLayout deltaCivWorldLayout;
-    private UnitAction unitActionType;
-
+    private MutableGame game;
+    private MutableGame transcribedGame;
     private GameFactory gameFactory;
 
     /** Fixture for deltaciv testing. */
     @Before
     public void setUp() {
-        // TODO: remove old implementation
-        // layout for DeltaCiv as specified in DeltaCivWorldLayout
-//        WorldLayout deltaCivWorldLayout = new DeltaCivWorldLayout();
-//        unitActionType = new GenericUnitAction();
-//        GenericWorldAging genericWorldAging = new GenericWorldAging();
-//        Winner genericWinner = new GenericWinner();
-//        game = new GameImpl(deltaCivWorldLayout, genericWorldAging, genericWinner, unitActionType);
-
-        // step 4 in refactoring for abstract factory: create an instance of the concrete factory for the appropriate game variant:
         gameFactory = new DeltaCivFactory();
         game = new GameImpl(gameFactory);
-
+        // Add in new transcription method
+        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
 
     @Test
@@ -72,7 +61,7 @@ public class TestDeltaCiv {
 
         // Call the method to place the city
         // try casting the method instead:
-        ((GameImpl) game).placeCity(redCityPosition, player);
+        game.placeCity(redCityPosition, player);
 
         // Retrieve the city at the specified position
         City placedCity = game.getCityAt(redCityPosition);
@@ -91,7 +80,7 @@ public class TestDeltaCiv {
         Player player = Player.BLUE;
 
         // Call the method to place the city
-        ((GameImpl) game).placeCity(blueCityPosition, player);
+        game.placeCity(blueCityPosition, player);
 
         // Retrieve the city at the specified position
         City placedCity = game.getCityAt(blueCityPosition);

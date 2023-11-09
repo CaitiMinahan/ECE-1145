@@ -11,7 +11,8 @@ import static org.hamcrest.CoreMatchers.*;
 public class TestSemiCiv {
 
     // Game and GameFactory Setup
-    private Game game;
+    private MutableGame game;
+    private MutableGame transcribedGame;
     private GameFactory gameFactory;
 
     // Setup: SPECIFIC FOR EPSILONCIV
@@ -63,6 +64,8 @@ public class TestSemiCiv {
 
         gameFactory = new SemiCivFactory();
         game = new GameImpl(gameFactory);
+        // Add in new transcription method
+        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
 
     // Testing BetaCiv's Aging Algorithm
