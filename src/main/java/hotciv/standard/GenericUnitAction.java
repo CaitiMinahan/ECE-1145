@@ -1,9 +1,11 @@
 package hotciv.standard;
 
+import hotciv.framework.City;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Unit;
 import hotciv.standard.Interfaces.UnitAction;
+import hotciv.framework.*;
 
 public class GenericUnitAction implements UnitAction {
     @Override
@@ -50,9 +52,13 @@ public class GenericUnitAction implements UnitAction {
         }
         // otherwise, move the unit from the original position to the new one
         updateUnitMap(from, to, unit_from, game);
+        // check for city
+        // if there is a city, transfer ownership of the city
+        City currentCity = game.cities.get(to);
+        if(currentCity != null){
+            // transfer ownership
+            ((CityImpl) currentCity).setOwner(unit_from.getOwner());
+        }
         return true;
     }
-
-
-
 }

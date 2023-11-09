@@ -87,4 +87,6 @@ public class TestDeltaCiv {
         // Check that the owner of the placed city is the expected player
         assertThat(placedCity.getOwner(), is(player));
     }
+
 }
+

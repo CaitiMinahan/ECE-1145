@@ -155,6 +155,16 @@ public class ThetaCivUnitAction implements UnitAction {
             // otherwise, move the unit from the original position to the new one
             updateUnitMap(from, to, unit_from, game);
             ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
+            // here we have no units in the to position - safe to move
+            // check for city
+            // if there is a city, transfer ownership of the city
+            City currentCity = game.cities.get(to);
+            if(currentCity != null){
+                // transfer ownership
+                if(unit_from.getTypeString() != GameConstants.UFO){
+                    ((CityImpl) currentCity).setOwner(unit_from.getOwner());
+                }
+            }
         return true;
     }
 }
