@@ -4,7 +4,16 @@ import hotciv.framework.Game;
 import hotciv.framework.*;
 import hotciv.standard.UnitImpl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public interface MutableGame extends Game {
+
+    Map<Position, Unit> units = new HashMap<>(); // use a hash map to store the units on the board
+    Map<Position, Tile> tiles = new HashMap<>(); // using a hashmap to store tiles with positions
+
+    Map<Position, City> cities = new HashMap<>();
+    Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
     void setupWorldLayout(WorldLayout worldLayout);
     Unit getCurrentUnit();
     void setCurrentUnit(Unit u);

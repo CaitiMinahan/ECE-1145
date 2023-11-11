@@ -1,13 +1,14 @@
 package hotciv.standard.TestStubs;
         import hotciv.framework.*;
         import hotciv.standard.GameImpl;
+        import hotciv.standard.Interfaces.MutableGame;
         import hotciv.standard.Interfaces.UnitAttacking;
         import hotciv.standard.UnitImpl;
 
 public class AttackerHasMoreNeighborsStubEpsilonCiv implements UnitAttacking {
     @Override
     // Same as before in the generic
-    public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, GameImpl game) {
+    public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, MutableGame game) {
         // get attacking strength and defensive strength
         // scale by terrain
         int attackStrength = getAttackingUnitStrength(attacker, from, game) * getTerrainMultiplier(attacker);
@@ -17,7 +18,7 @@ public class AttackerHasMoreNeighborsStubEpsilonCiv implements UnitAttacking {
 
     @Override
     // Stub
-    public int getAttackingUnitStrength(UnitImpl attacker, Position from, GameImpl game) {
+    public int getAttackingUnitStrength(UnitImpl attacker, Position from, MutableGame game) {
         // return a large strength
         int terrainAdv = getTerrainMultiplier(attacker);
         int neighborAdvantage = getNumFriendlyTiles(from, game) * 3; // advantage
@@ -25,7 +26,7 @@ public class AttackerHasMoreNeighborsStubEpsilonCiv implements UnitAttacking {
     }
 
     @Override
-    public int getDefendingUnitStrength(UnitImpl defender, Position to, GameImpl game) {
+    public int getDefendingUnitStrength(UnitImpl defender, Position to, MutableGame game) {
         // return a weak defense
         int terrainAdv = getTerrainMultiplier(defender);
         int neighborAdvantage = getNumFriendlyTiles(to, game); // disadvantage
@@ -40,7 +41,7 @@ public class AttackerHasMoreNeighborsStubEpsilonCiv implements UnitAttacking {
 
     @Override
     // Doesn't matter, not being tested
-    public int getNumFriendlyTiles(Position from, GameImpl game) {
+    public int getNumFriendlyTiles(Position from, MutableGame game) {
         return 3;
     }
 }

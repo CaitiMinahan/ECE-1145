@@ -1,10 +1,11 @@
 package hotciv.standard;
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.Interfaces.UnitAttacking;
 
 public class GenericUnitAttacking implements UnitAttacking {
     @Override
-    public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, GameImpl game) {
+    public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, MutableGame game) {
         // get attacking strength and defensive strength
         // scale by terrain
         int attackStrength = getAttackingUnitStrength(attacker, from, game) * getTerrainMultiplier(attacker);
@@ -13,14 +14,14 @@ public class GenericUnitAttacking implements UnitAttacking {
     }
 
     @Override
-    public int getAttackingUnitStrength(UnitImpl attacker, Position from, GameImpl game) {
+    public int getAttackingUnitStrength(UnitImpl attacker, Position from, MutableGame game) {
         // look at the surrounding 8 tiles and get the unit's attacking strength as well as the friendly count
         int numSupporters = getNumFriendlyTiles(from, game);
         return attacker.getAttackingStrength() + numSupporters;
     }
 
     @Override
-    public int getDefendingUnitStrength(UnitImpl defender, Position to, GameImpl game) {
+    public int getDefendingUnitStrength(UnitImpl defender, Position to, MutableGame game) {
         // look at the surrounding 8 tiles and get the unit's defending strength as well as the friendly count
         int numSupporters = getNumFriendlyTiles(to, game);
         return defender.getDefensiveStrength() + numSupporters;
@@ -41,7 +42,7 @@ public class GenericUnitAttacking implements UnitAttacking {
     }
 
     @Override
-    public int getNumFriendlyTiles(Position from, GameImpl game) {
+    public int getNumFriendlyTiles(Position from, MutableGame game) {
         // want the logic from the Utility code provided
         Iterable<Position> neighborIterator = UnitAttacking.get8neighborhoodOf(from);
         int countFriendlyUnits = 0;

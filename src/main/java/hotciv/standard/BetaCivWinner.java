@@ -1,10 +1,11 @@
 package hotciv.standard;
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.Interfaces.Winner;
 
 public class BetaCivWinner implements Winner {
     @Override
-    public Player gameWinner(GameImpl game){
+    public Player gameWinner(MutableGame game){
         Player owner = null;
 
         for (City city: game.cities.values()){

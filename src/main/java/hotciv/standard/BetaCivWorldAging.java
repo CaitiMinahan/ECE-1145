@@ -1,9 +1,10 @@
 package hotciv.standard;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.Interfaces.WorldAging;
 
 public class BetaCivWorldAging implements WorldAging {
     @Override
-    public void gameAging(GameImpl game){
+    public void gameAging(MutableGame game){
         if(game.getTurnCount() % 2 == 0){
             if((game.getAge() >= -4000) && (game.getAge() < -100)){
                 game.setAge(game.getAge() + 100);

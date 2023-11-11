@@ -3,5 +3,5 @@ import hotciv.framework.*;
 import hotciv.standard.GameImpl;
 
 public interface PlayerSetup {
-    void setupPlayer(GameImpl game);
+    void setupPlayer(MutableGame game);
 }

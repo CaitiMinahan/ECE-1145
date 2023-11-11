@@ -3,12 +3,13 @@ package hotciv.standard;
 import hotciv.standard.Interfaces.ChangeProduction;
 import hotciv.framework.*;
 import hotciv.standard.GameImpl;
+import hotciv.standard.Interfaces.MutableGame;
 
 import java.util.Objects;
 
 public class ThetaCivChangeProduction implements ChangeProduction {
     @Override
-    public void changeProduction(Position p, String unitType, GameImpl game) {
+    public void changeProduction(Position p, String unitType, MutableGame game) {
         // the UFO type will cause the position to city to produce a new UFO
         // need to add in the game parameter to access the city
         // can only produce this if the city has >= 60 production

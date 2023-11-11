@@ -1,12 +1,13 @@
 package hotciv.standard;
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.Interfaces.Winner;
 
 import java.util.Map;
 
 public class EpsilonCivWinner implements Winner {
     @Override
-    public Player gameWinner(GameImpl game){
+    public Player gameWinner(MutableGame game){
         // TODO: need to find all the players and their win count. Find the first player with 3 successful attacks
         for(Map.Entry<Player, Integer> entry: game.playerSuccessfulAttacks.entrySet())
         {

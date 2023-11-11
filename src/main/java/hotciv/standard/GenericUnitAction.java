@@ -4,19 +4,20 @@ import hotciv.framework.City;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Unit;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.Interfaces.UnitAction;
 import hotciv.framework.*;
 
 public class GenericUnitAction implements UnitAction {
     @Override
-    public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame)
+    public void performAction(UnitImpl currentUnit, Position p, MutableGame currentGame)
     {
         // based on the selected unit, make the unit do something
         // generic doesn't take action yet
     }
 
     @Override
-    public void updateUnitMap(Position from, Position to, Unit unit_from, GameImpl game){
+    public void updateUnitMap(Position from, Position to, Unit unit_from, MutableGame game){
         game.units.remove(from);
         game.units.put(to, unit_from);
     }
@@ -25,7 +26,7 @@ public class GenericUnitAction implements UnitAction {
     // then place the unit at the desired position
     // check for unit at 'from' position
     @Override
-    public boolean moveUnit( Position from, Position to, GameImpl game ) {
+    public boolean moveUnit( Position from, Position to, MutableGame game ) {
         Unit unit_from = game.getUnitAt(from);
         if (unit_from == null){
             return false;

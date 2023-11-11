@@ -44,10 +44,6 @@ public class GameImpl implements MutableGame {
   private UnitAction unitActionCivType;
   private PlayerSetup playerSetup;
   private Player currentPlayer;
-  public Map<Position, Unit> units; // use a hash map to store the units on the board
-  public Map<Position, Tile> tiles = new HashMap<>(); // using a hashmap to store tiles with positions
-  public Map<Position, City> cities = new HashMap<>();
-  public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
   private int age; // represents current year of the game
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
@@ -71,13 +67,10 @@ public class GameImpl implements MutableGame {
     // initialize the turn count to 0
     setTurnCount(0);
 
-    // use a HashMap uses key value pairs to store the positions of the units
-    units = new HashMap<>();
-
     // call helper function to set up the world layout according to
     // strategy passed
     setupWorldLayout(worldLayoutStrategy);
-    // setup the player based on the hash map
+    // set up the player based on the hash map
     playerSetup.setupPlayer(this);
   }
 

@@ -5,6 +5,6 @@ import hotciv.standard.GameImpl;
 
 // TODO: step 1 - introduce WorldLayout interface
 public interface WorldLayout {
-    void setupWorld(GameImpl game);
+    void setupWorld(MutableGame game);
 }
 

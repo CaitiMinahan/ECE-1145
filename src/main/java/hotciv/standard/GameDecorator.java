@@ -8,9 +8,6 @@ import java.util.Map;
 
 public class GameDecorator implements MutableGame {
     protected MutableGame decoratedGame;
-    public Map<Position, Unit> units; // use a hash map to store the units on the board
-    public Map<Position, City> cities = new HashMap<>();
-    public Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
     public GameDecorator(MutableGame mutableGame){
 
         this.decoratedGame = mutableGame;
