@@ -25,6 +25,7 @@ public class TestDecoratorAlphaCiv {
     }
     @Test
     public void citiesShouldEndWith60Production() {
+        System.out.println("Start of Test 1 \n");
         Position cityPosition = new Position(3, 2);
         transcribedGame.placeCity(cityPosition, Player.RED);
 
@@ -33,9 +34,11 @@ public class TestDecoratorAlphaCiv {
         }
         // 10 rounds, 6 production each round = 60 production
         assertThat(transcribedGame.getCityAt(cityPosition).getTreasury(), is(60));
+        System.out.println("End of Test 1 \n");
     }
     @Test
     public void cityShouldHaveSizeOne() {
+        System.out.println("Start of Test 2 \n");
         Position cityPosition = new Position(3, 2);
         transcribedGame.placeCity(cityPosition, Player.RED);
 
@@ -49,9 +52,11 @@ public class TestDecoratorAlphaCiv {
         // placed
         assertThat(city, is(notNullValue()));
         assertThat(transcribedGame.getCityAt(cityPosition).getSize(), is(1));
+        System.out.println("End of Test 2 \n");
     }
     @Test
     public void shouldAlternateBetweenRedAndBluePlayers() {
+        System.out.println("Start of Test 3 \n");
         // Check that the game starts with RED player
         assertThat(transcribedGame.getPlayerInTurn(), is(Player.RED));
 
@@ -62,17 +67,19 @@ public class TestDecoratorAlphaCiv {
         // End the turn again, it should become RED player's turn
         transcribedGame.endOfTurn();
         assertThat(transcribedGame.getPlayerInTurn(), is(Player.RED));
+        System.out.println("End of Test 3 \n");
     }
     @Test
     public void OnlyOneUnitAllowedOnATile() {
+        System.out.println("Start of Test 4 \n");
         Position moveFrom = new Position(0, 0);
         Position moveTo = new Position(0, 1);
         assertThat(transcribedGame.moveUnit(moveFrom, moveTo), is(true)); // confirm that we can move our unit from (0,0) to (0,1)
+        System.out.println("End of Test 4 \n");
     }
     @Test
     public void GameStartsAt4000BCAndAges100EachRound() {
-        // create a new game instance
-        // TODO: update GameImp constructor
+        System.out.println("Start of Test 5 \n");
         // make sure we initially start the game at year 4000 BC
         assertEquals(transcribedGame.getAge(), -4000);
         // perform one round of turns (RED then BLUE)
@@ -80,18 +87,22 @@ public class TestDecoratorAlphaCiv {
         transcribedGame.endOfTurn();
         // verify the age has increased by 100
         assertEquals(transcribedGame.getAge(), -3900);
+        System.out.println("End of Test 5 \n");
     }
     @Test
     public void RedWinsIn3000BC() {
+        System.out.println("Start of Test 6 \n");
         // simulate going through the rounds before we each year 3000 BC
         while (transcribedGame.getAge() < -3000) {
             transcribedGame.endOfTurn();
         }
         assertThat(transcribedGame.getAge(), is(-3000));
         assertThat(transcribedGame.getWinner(), is(Player.RED));
+        System.out.println("End of Test 6 \n");
     }
     @Test
     public void AttackingUnitShouldAlwaysWin() {
+        System.out.println("Start of Test 7 \n");
         // when a unit moves into an occupied space, the battle begins. Attacking unit
         // should always win
         // initialize the location of the red player
@@ -110,9 +121,11 @@ public class TestDecoratorAlphaCiv {
 
         // check that there are now two units
         assertThat(transcribedGame.getUnitAt(bluePlayerPosition).getOwner(), is(Player.RED));
+        System.out.println("End of Test 7 \n");
     }
     @Test
     public void RedUnitCannotAttackRedUnit() {
+        System.out.println("Start of Test 8 \n");
         // when a red unit attempts to move into a space occupied by another red unit,
         // the original unit should not be able to move (no fortification)
         Position redArcherPosition = new Position(0, 0); // position of the red player archer
@@ -122,9 +135,11 @@ public class TestDecoratorAlphaCiv {
         // another of their own
         // units occupies that tile
         assertThat(transcribedGame.moveUnit(redArcherPosition, redSettlerPosition), is(false));
+        System.out.println("End of Test 8 \n");
     }
     @Test
     public void NonAttackingUnitCannotAttack() {
+        System.out.println("Start of Test 9 \n");
         /*
          * when a unit of non-attacking type attempts to move into
          * a space occupied by another unit, it cannot attack and should
@@ -134,5 +149,6 @@ public class TestDecoratorAlphaCiv {
         Position blueLegionPosition = new Position(1, 2);
         // attempt to move the red settler into the blue occupied tile
         assertThat(transcribedGame.moveUnit(redSettlerPosition, blueLegionPosition), is(false));
+        System.out.println("End of Test 9 \n");
     }
 }
