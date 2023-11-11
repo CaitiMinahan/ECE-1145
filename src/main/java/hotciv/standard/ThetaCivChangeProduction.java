@@ -19,8 +19,8 @@ public class ThetaCivChangeProduction implements ChangeProduction {
             game.units.put(p, newUfo);
             // need to reduce the city treasury by 60
             City currCity = game.cities.get(p);
-            int currentTreasurey = currCity.getTreasury();
-            ((CityImpl) currCity).setTreasury(currentTreasurey - 60);
+            int currentTreasury = currCity.getTreasury();
+            ((CityImpl) currCity).setTreasury(currentTreasury - 60);
         }
     }
 }
