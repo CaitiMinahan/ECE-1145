@@ -18,6 +18,12 @@ public class TestDeltaCiv {
         GameFactory gameFactory = new DeltaCivFactory();
         game = new GameImpl(gameFactory);
     }
+    @After
+    public void breakDown() {
+        game.cities.clear();
+        game.tiles.clear();
+        game.units.clear();
+    }
     @Test
     public void shouldBeRedAsStartingPlayer() {
 

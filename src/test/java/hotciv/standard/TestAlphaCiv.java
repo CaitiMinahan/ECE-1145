@@ -46,6 +46,13 @@ public class TestAlphaCiv {
     public void setUp() {
         GameFactory gameFactory = new AlphaCivFactory();
         game = new GameImpl(gameFactory);
+
+    }
+    @After
+    public void breakDown() {
+        game.cities.clear();
+        game.tiles.clear();
+        game.units.clear();
     }
 
     // FRS p. 455 states that 'Red is the first player to take a turn'.

@@ -17,6 +17,12 @@ public class TestGammaCiv {
         GameFactory gameFactory = new GammaCivFactory();
         game = new GameImpl(gameFactory);
     }
+    @After
+    public void breakDown() {
+        game.cities.clear();
+        game.tiles.clear();
+        game.units.clear();
+    }
 
     // ---- INTEGRATION TESTS ----- //
     // This test shows what happens to a settler when unit action is taken in delta

@@ -25,8 +25,11 @@ public class GameDecorator implements MutableGame {
         return decoratedGame.getPlayerInTurn();
     }
     public Player getWinner() {
-        logAction(String.format("%s has won the game!", decoratedGame.getWinner()));
-        return decoratedGame.getWinner();
+        Player winner = decoratedGame.getWinner();
+        if (winner != null) {
+            logAction(String.format("%s has won the game!", winner));
+        }
+        return winner;
     }
     public int getAge(){
         return decoratedGame.getAge();

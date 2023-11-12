@@ -6,6 +6,7 @@ import hotciv.framework.Position;
 import hotciv.standard.Factories.AlphaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
 import hotciv.standard.Interfaces.MutableGame;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +23,14 @@ public class TestDecoratorAlphaCiv {
     public void setUp() {
         GameFactory gameFactory = new AlphaCivFactory();
         transcribedGame = new GameDecorator(new GameImpl(gameFactory));
+
+        //transcribedGame.tiles.clear();
+    }
+    @After
+    public void breakDown() {
+        transcribedGame.cities.clear();
+        transcribedGame.tiles.clear();
+        transcribedGame.units.clear();
     }
     @Test
     public void citiesShouldEndWith60Production() {

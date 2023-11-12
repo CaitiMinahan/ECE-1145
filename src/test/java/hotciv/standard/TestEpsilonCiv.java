@@ -58,6 +58,12 @@ public class TestEpsilonCiv {
         attackerHasMoreNeighborsGame = new GameImpl(attackerHasMoreNeighborsStubGameFactory);
         defenderHasMoreNeighborsGame = new GameImpl(defenderHasMoreNeighborsStubGameFactory);
     }
+    @After
+    public void breakDown() {
+        genericGame.cities.clear();
+        genericGame.tiles.clear();
+        genericGame.units.clear();
+    }
 
     // a test stub for setting the defensive and attacking strengths
     // test that in a generic game, a winner returns null if nothing happens.
@@ -66,7 +72,7 @@ public class TestEpsilonCiv {
         Player winner = genericGame.getWinner();
         assertThat(winner, is(nullValue()));
         // ensure that the successfulPlayerAttacks map is not zero
-        int numRedWins = ((GameImpl)genericGame).playerSuccessfulAttacks.get(Player.RED);
+        int numRedWins = genericGame.playerSuccessfulAttacks.get(Player.RED);
         assertThat(numRedWins, is(0));
     }
 
@@ -80,12 +86,12 @@ public class TestEpsilonCiv {
         Position blueLegionPos = new Position(1,2);
 
         // get the status of the win for Red player
-        int numRedWins = ((GameImpl)strongerAttackerGame).playerSuccessfulAttacks.get(Player.RED);
+        int numRedWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.RED);
         // fight
         boolean didRedWin = strongerAttackerGame.moveUnit(redArcherPos, blueLegionPos);
         assertThat(didRedWin, is(true));
         // test that the hash map has incremented
-        int updatedNumRedWins = ((GameImpl)strongerAttackerGame).playerSuccessfulAttacks.get(Player.RED);
+        int updatedNumRedWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.RED);
         assertThat(updatedNumRedWins > numRedWins, is(true));
     }
 
@@ -94,10 +100,10 @@ public class TestEpsilonCiv {
     public void ThreeSuccessfulAttacksYieldsWin(){
         // there are 5 Red player units on the board now using the
         // use the strongerAttackerWithManyUnitsGame game
-        ((GameImpl)strongerAttackerGame).units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        ((GameImpl)strongerAttackerGame).units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        ((GameImpl)strongerAttackerGame).units.put(new Position(2,4), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        ((GameImpl)strongerAttackerGame).units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
+        strongerAttackerGame.units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerAttackerGame.units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerAttackerGame.units.put(new Position(2,4), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerAttackerGame.units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
         Position redArcher1Pos = new Position(0,0);
         Position redArcher2Pos = new Position(2,2);
         Position redArcher3Pos = new Position(2,3);

@@ -6,6 +6,7 @@ import hotciv.framework.Position;
 import hotciv.standard.Factories.DeltaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
 import hotciv.standard.Interfaces.MutableGame;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +20,12 @@ public class TestDecoratorDeltaCiv {
     public void setUp() {
         GameFactory gameFactory = new DeltaCivFactory();
         transcribedGame = new GameDecorator(new GameImpl(gameFactory));
+    }
+    @After
+    public void breakDown() {
+        transcribedGame.cities.clear();
+        transcribedGame.tiles.clear();
+        transcribedGame.units.clear();
     }
     @Test
     public void setDeltaCivWorldLayoutCorrectlyBLUE() {

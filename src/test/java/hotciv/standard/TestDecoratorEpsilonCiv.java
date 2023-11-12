@@ -7,6 +7,7 @@ import hotciv.standard.Factories.EpsilonCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
 import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.TestStubs.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,12 +68,12 @@ public class TestDecoratorEpsilonCiv {
         Position blueLegionPos = new Position(1,2);
 
         // get the status of the win for Red player
-        int numRedWins = ((GameDecorator)strongerAttackerGame).playerSuccessfulAttacks.get(Player.RED);
+        int numRedWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.RED);
         // fight
         boolean didRedWin = strongerAttackerGame.moveUnit(redArcherPos, blueLegionPos);
         assertThat(didRedWin, is(true));
         // test that the hash map has incremented
-        int updatedNumRedWins = ((GameDecorator)strongerAttackerGame).playerSuccessfulAttacks.get(Player.RED);
+        int updatedNumRedWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.RED);
         assertThat(updatedNumRedWins > numRedWins, is(true));
         System.out.println("\n End of Test 1 \n");
     }
@@ -82,10 +83,10 @@ public class TestDecoratorEpsilonCiv {
         System.out.println("Start of Test 2 \n");
         // there are 5 Red player units on the board now using the
         // use the strongerAttackerWithManyUnitsGame game
-        ((GameDecorator)strongerAttackerGame).units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        ((GameDecorator)strongerAttackerGame).units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        ((GameDecorator)strongerAttackerGame).units.put(new Position(2,4), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        ((GameDecorator)strongerAttackerGame).units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
+        strongerAttackerGame.units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerAttackerGame.units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerAttackerGame.units.put(new Position(2,4), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerAttackerGame.units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
         Position redArcher1Pos = new Position(0,0);
         Position redArcher2Pos = new Position(2,2);
         Position redArcher3Pos = new Position(2,3);
@@ -96,7 +97,7 @@ public class TestDecoratorEpsilonCiv {
         didBlueWin = strongerAttackerGame.moveUnit(redArcher1Pos, redArcher2Pos);
         didBlueWin = strongerAttackerGame.moveUnit(redArcher2Pos, redArcher3Pos);
 
-        int blueWins = ((GameDecorator)strongerAttackerGame).playerSuccessfulAttacks.get(Player.BLUE);
+        int blueWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.BLUE);
         Player winner = strongerAttackerGame.getWinner();
 
         // assert the following

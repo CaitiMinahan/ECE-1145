@@ -13,6 +13,14 @@ public class TestBetaCiv {
     public void setUp() {
         GameFactory gameFactory = new BetaCivFactory();
         game = new GameImpl(gameFactory);
+
+        //game.cities.clear();
+    }
+    @After
+    public void breakDown() {
+        game.cities.clear();
+        game.tiles.clear();
+        game.units.clear();
     }
     @Test
     public void blueWinsFromOwningAllCities() {

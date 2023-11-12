@@ -1,32 +1,38 @@
 package hotciv.standard;
 
-import hotciv.framework.*;
-
+import hotciv.framework.GameConstants;
+import hotciv.framework.Player;
+import hotciv.framework.Position;
+import hotciv.standard.Factories.EpsilonCivFactory;
 import hotciv.standard.Factories.ZetaCivFactory;
-import hotciv.standard.Factories.*;
-import hotciv.standard.Interfaces.*;
+import hotciv.standard.Interfaces.GameFactory;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.TestStubs.StrongerAttackerStubEpsilonCiv;
-import org.junit.*;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TestAlternatingWinner {
-    private MutableGame game;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+
+public class TestDecoratorAlternatingWinner {
+    private MutableGame transcribedGame;
     private MutableGame strongerAttackerGame; // game object where the epsilonCivFactory has a strongerAttackerStub
     private StrongerAttackerStubEpsilonCiv strongerAttackerStubEpsilonCiv = new StrongerAttackerStubEpsilonCiv();
     @Before
     public void setUp() {
         GameFactory gameFactory = new ZetaCivFactory();
-        game = new GameImpl(gameFactory);
+        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
         GameFactory strongerAttackerStubGameFactory = new EpsilonCivFactory(strongerAttackerStubEpsilonCiv);
-        strongerAttackerGame = new GameImpl(strongerAttackerStubGameFactory);
-
+        strongerAttackerGame = new GameDecorator(new GameImpl(strongerAttackerStubGameFactory));
     }
     @After
     public void breakDown() {
-        game.cities.clear();
-        game.tiles.clear();
-        game.units.clear();
+        transcribedGame.cities.clear();
+        transcribedGame.tiles.clear();
+        transcribedGame.units.clear();
         strongerAttackerGame.cities.clear();
         strongerAttackerGame.tiles.clear();
         strongerAttackerGame.units.clear();
@@ -34,20 +40,20 @@ public class TestAlternatingWinner {
     @Test
     public void testBetaCivWinner(){
         // initially, no player has won
-        game.cities.clear();
-        assertNull(game.getWinner());
+        transcribedGame.cities.clear();
+        assertNull(transcribedGame.getWinner());
 
         // simulate BetaCivWinner's winner method
         // where we will make sure the blue player wins after conquering all cities
-        game.placeCity(new Position(5,5), Player.BLUE);
-        game.placeCity(new Position(7,4), Player.BLUE);
+        transcribedGame.placeCity(new Position(5,5), Player.BLUE);
+        transcribedGame.placeCity(new Position(7,4), Player.BLUE);
 
-        assertThat(game.getWinner(), is(Player.BLUE));
+        assertThat(transcribedGame.getWinner(), is(Player.BLUE));
     }
     @Test
     public void testEpsilonCivWinner(){
         // initially, no player has won
-        assertNull(game.getWinner());
+        assertNull(transcribedGame.getWinner());
 
         // TODO: EpsilonCivWinner needs to have a winner method implemented
         // simulate EpsilonCivWinner's winner method
@@ -79,21 +85,22 @@ public class TestAlternatingWinner {
     @Test
     public void testTransitionToEpsilonCivWinner() {
         // initially, no player has won
-        assertNull(game.getWinner());
+        transcribedGame.cities.clear();
+        assertNull(transcribedGame.getWinner());
 
         // simulate BetaCivWinner's winner method
         // where we will make sure the red player wins after conquering all cities
-        game.placeCity(new Position(1, 1), Player.RED);
-        game.placeCity(new Position(2, 2), Player.RED);
+        transcribedGame.placeCity(new Position(1, 1), Player.RED);
+        transcribedGame.placeCity(new Position(2, 2), Player.RED);
 
-        assertEquals(Player.RED, game.getWinner());
+        assertEquals(Player.RED, transcribedGame.getWinner());
 
 
         // Now, play more rounds to transition to EpsilonCiv's winning condition
         for (int i = 0; i < 21; i++) {
-            game.endOfTurn();
+            transcribedGame.endOfTurn();
         }
-        Player playerWin = game.getWinner(); // create new player, which is initially null
+        Player playerWin = transcribedGame.getWinner(); // create new player, which is initially null
         assertThat(playerWin, is(nullValue())); // switches to EpsilonCiv's winner strategy after 20 rounds
     }
 }

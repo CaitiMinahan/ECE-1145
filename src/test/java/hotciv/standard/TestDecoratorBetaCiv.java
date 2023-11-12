@@ -5,6 +5,7 @@ import hotciv.framework.Position;
 import hotciv.standard.Factories.BetaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
 import hotciv.standard.Interfaces.MutableGame;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +19,14 @@ public class TestDecoratorBetaCiv {
     public void setUp() {
         GameFactory gameFactory = new BetaCivFactory();
         transcribedGame = new GameDecorator(new GameImpl(gameFactory));
+
+        //transcribedGame.cities.clear();
+    }
+    @After
+    public void breakDown() {
+        transcribedGame.cities.clear();
+        transcribedGame.tiles.clear();
+        transcribedGame.units.clear();
     }
     @Test
     public void blueWinsFromOwningAllCities() {
