@@ -1,5 +1,6 @@
 package hotciv.standard;
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.Interfaces.Winner;
 
 public class AlternatingWinnerStrategy implements Winner {
@@ -9,7 +10,7 @@ public class AlternatingWinnerStrategy implements Winner {
     }
 
     @Override
-    public Player gameWinner(GameImpl game) {
+    public Player gameWinner(MutableGame game) {
 
         if (game.getTurnCount() <= 20) {
             return currentWinnerState.gameWinner(game);

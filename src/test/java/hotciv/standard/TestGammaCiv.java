@@ -4,20 +4,24 @@ import hotciv.framework.*;
 
 import hotciv.standard.Factories.GammaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
-import hotciv.standard.Interfaces.UnitAction;
+import hotciv.standard.Interfaces.MutableGame;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 public class TestGammaCiv {
-    private GameImpl game;
-    private UnitAction gammaUnitAction;
-    private GameFactory gameFactory;
+    private MutableGame game;
 
     @Before
     public void setUp() {
-        gameFactory = new GammaCivFactory();
+        GameFactory gameFactory = new GammaCivFactory();
         game = new GameImpl(gameFactory);
+    }
+    @After
+    public void breakDown() {
+        game.cities.clear();
+        game.tiles.clear();
+        game.units.clear();
     }
 
     // ---- INTEGRATION TESTS ----- //
@@ -99,5 +103,22 @@ public class TestGammaCiv {
         newUnit = game.getUnitAt(toPos);
         // check that the specific unit exists there now
         assertThat(oldUnit, is(newUnit));
+    }
+
+    // added test case for iteration 7
+    // test invalid move for canMove == false
+    @Test
+    public void invalidMoveForCanMoveIsFalse(){
+        Position newArcherPos = new Position(4,4);
+        Position redArcherPos = new Position(0,0);
+        Unit redArcher = game.getUnitAt(redArcherPos); // as per game setup
+
+        ((UnitImpl) redArcher).setCanMove(false);
+
+        assertThat(((UnitImpl) redArcher).getCanMove(), is(false));
+
+        // should be unable to move since canMove = false
+        assertThat(game.moveUnit(redArcherPos, newArcherPos), is(false));
+
     }
 }

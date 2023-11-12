@@ -1,6 +1,7 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.Interfaces.UnitAction;
 import hotciv.standard.Interfaces.UnitAttacking;
 
@@ -16,7 +17,7 @@ public class ThetaCivUnitAction implements UnitAction {
         this.unitAttacking = unitAttacking; // allows for test stubs
     }
     @Override
-    public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame)
+    public void performAction(UnitImpl currentUnit, Position p, MutableGame currentGame)
     {
         // if the current unit is a settler
         // build a city
@@ -70,7 +71,7 @@ public class ThetaCivUnitAction implements UnitAction {
     }
     //define a function to move the units since it gets called three times
     @Override
-    public void updateUnitMap(Position from, Position to, Unit unit_from, GameImpl game){
+    public void updateUnitMap(Position from, Position to, Unit unit_from, MutableGame game){
         game.units.remove(from);
         game.units.put(to, unit_from);
     }
@@ -79,7 +80,7 @@ public class ThetaCivUnitAction implements UnitAction {
     // then place the unit at the desired position
     // check for unit at 'from' position
     @Override
-    public boolean moveUnit( Position from, Position to, GameImpl game) {
+    public boolean moveUnit( Position from, Position to, MutableGame game) {
         Unit unit_from = game.getUnitAt(from);
         // set the current unit in game
         game.setCurrentUnit(unit_from);
@@ -155,6 +156,16 @@ public class ThetaCivUnitAction implements UnitAction {
             // otherwise, move the unit from the original position to the new one
             updateUnitMap(from, to, unit_from, game);
             ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
+            // here we have no units in the to position - safe to move
+            // check for city
+            // if there is a city, transfer ownership of the city
+            City currentCity = game.cities.get(to);
+            if(currentCity != null){
+                // transfer ownership
+                if(unit_from.getTypeString() != GameConstants.UFO){
+                    ((CityImpl) currentCity).setOwner(unit_from.getOwner());
+                }
+            }
         return true;
     }
 }

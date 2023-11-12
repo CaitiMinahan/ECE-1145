@@ -3,6 +3,7 @@ package hotciv.standard;
 import hotciv.framework.*;
 import hotciv.standard.Factories.EpsilonCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.TestStubs.*;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -12,14 +13,13 @@ import static org.hamcrest.CoreMatchers.*;
 * This file will use Test Stubs to allow the game winner to be determined.
 * */
 public class TestEpsilonCiv {
-    private GameImpl strongerAttackerGame; // game object where the epsilonCivFactory has a strongerAttackerStub
-    private GameImpl strongerDefenderGame; // game object where the epsilonCivFactory has a strongerDefenderStub
-    private GameImpl genericGame; // generic game object
-    private GameImpl attackerHasTerrainAdvantageGame;
-    private GameImpl defenderHasTerrainAdvantageGame;
-    private GameImpl attackerHasMoreNeighborsGame;
-    private GameImpl defenderHasMoreNeighborsGame;
-
+    private MutableGame strongerAttackerGame; // game object where the epsilonCivFactory has a strongerAttackerStub
+    private MutableGame strongerDefenderGame; // game object where the epsilonCivFactory has a strongerDefenderStub
+    private MutableGame genericGame; // generic game object
+    private MutableGame attackerHasTerrainAdvantageGame;
+    private MutableGame defenderHasTerrainAdvantageGame;
+    private MutableGame attackerHasMoreNeighborsGame;
+    private MutableGame defenderHasMoreNeighborsGame;
 
     // variables for the generic unitAttack and Stubs
     // attacking delegate with normal functionality
@@ -57,6 +57,12 @@ public class TestEpsilonCiv {
         defenderHasTerrainAdvantageGame = new GameImpl(defenderHasTerrainAdvantageStubGameFactory);
         attackerHasMoreNeighborsGame = new GameImpl(attackerHasMoreNeighborsStubGameFactory);
         defenderHasMoreNeighborsGame = new GameImpl(defenderHasMoreNeighborsStubGameFactory);
+    }
+    @After
+    public void breakDown() {
+        genericGame.cities.clear();
+        genericGame.tiles.clear();
+        genericGame.units.clear();
     }
 
     // a test stub for setting the defensive and attacking strengths
@@ -96,7 +102,7 @@ public class TestEpsilonCiv {
         // use the strongerAttackerWithManyUnitsGame game
         strongerAttackerGame.units.put(new Position(2,2), new UnitImpl((GameConstants.ARCHER), Player.RED));
         strongerAttackerGame.units.put(new Position(2,3), new UnitImpl((GameConstants.ARCHER), Player.RED));
-        strongerDefenderGame.units.put(new Position(2,4), new UnitImpl((GameConstants.ARCHER), Player.RED));
+        strongerAttackerGame.units.put(new Position(2,4), new UnitImpl((GameConstants.ARCHER), Player.RED));
         strongerAttackerGame.units.put(new Position(3,0), new UnitImpl((GameConstants.ARCHER), Player.BLUE));
         Position redArcher1Pos = new Position(0,0);
         Position redArcher2Pos = new Position(2,2);
@@ -108,7 +114,7 @@ public class TestEpsilonCiv {
         didBlueWin = strongerAttackerGame.moveUnit(redArcher1Pos, redArcher2Pos);
         didBlueWin = strongerAttackerGame.moveUnit(redArcher2Pos, redArcher3Pos);
 
-        int blueWins = strongerAttackerGame.playerSuccessfulAttacks.get(Player.BLUE);
+        int blueWins = ((GameImpl)strongerAttackerGame).playerSuccessfulAttacks.get(Player.BLUE);
         Player winner = strongerAttackerGame.getWinner();
 
         // assert the following
