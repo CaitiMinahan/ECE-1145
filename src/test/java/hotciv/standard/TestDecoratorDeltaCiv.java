@@ -1,71 +1,56 @@
 package hotciv.standard;
 
-import hotciv.framework.*;
-
+import hotciv.framework.City;
+import hotciv.framework.Player;
+import hotciv.framework.Position;
 import hotciv.standard.Factories.DeltaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
 import hotciv.standard.Interfaces.MutableGame;
-import org.junit.*;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TestDeltaCiv {
-    private MutableGame game;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
-    /** Fixture for deltaciv testing. */
+public class TestDecoratorDeltaCiv {
+    private MutableGame transcribedGame;
     @Before
     public void setUp() {
         GameFactory gameFactory = new DeltaCivFactory();
-        game = new GameImpl(gameFactory);
+        transcribedGame = new GameDecorator(new GameImpl(gameFactory));
     }
     @After
     public void breakDown() {
-        game.cities.clear();
-        game.tiles.clear();
-        game.units.clear();
+        transcribedGame.cities.clear();
+        transcribedGame.tiles.clear();
+        transcribedGame.units.clear();
     }
-    @Test
-    public void shouldBeRedAsStartingPlayer() {
-
-        assertThat(game, is(notNullValue()));
-        assertThat(game.getPlayerInTurn(), is(Player.RED));
-    }
-
-    // TODO: integration test for testing if DeltaCiv world layout was set up
-    // properly
-    // TODO: this is an integration test b/c it tests the game logic's interaction
-    // w/ the world layout methods
-    @Test
-    public void setDeltaCivWorldLayoutCorrectlyRED() {
-        Position RedPlayerCity = new Position(8, 12);
-        assertThat(game.getCityAt(RedPlayerCity).getOwner(), is(Player.RED));
-    }
-
     @Test
     public void setDeltaCivWorldLayoutCorrectlyBLUE() {
+        System.out.println("Start of Test 1 \n");
         // End the turn, and it should become BLUE player's turn
-        game.endOfTurn();
+        transcribedGame.endOfTurn();
 
         Position BluePlayerCity = new Position(4, 5);
 
-        assertThat(game.getPlayerInTurn(), is(Player.BLUE));
-        assertThat(game.getCityAt(BluePlayerCity).getOwner(), is(Player.BLUE));
+        assertThat(transcribedGame.getPlayerInTurn(), is(Player.BLUE));
+        assertThat(transcribedGame.getCityAt(BluePlayerCity).getOwner(), is(Player.BLUE));
+        System.out.println("\n End of Test 1 \n");
     }
-
-    // TODO: unit test for testing the placeCity() method in GameImpl
-    // TODO: this is a unit test b/c it isolates the placeCity() method to ensure
-    // its functionality
     @Test
     public void placeCityForRedPlayer() {
+        System.out.println("Start of Test 2 \n");
         Position redCityPosition = new Position(8, 12);
         Player player = Player.RED;
 
         // Call the method to place the city
         // try casting the method instead:
-        game.placeCity(redCityPosition, player);
+        transcribedGame.placeCity(redCityPosition, player);
 
         // Retrieve the city at the specified position
-        City placedCity = game.getCityAt(redCityPosition);
+        City placedCity = transcribedGame.getCityAt(redCityPosition);
 
         // Check that the placedCity is not null, indicating a city was successfully
         // placed
@@ -73,18 +58,20 @@ public class TestDeltaCiv {
 
         // Check that the owner of the placed city is the expected player
         assertThat(placedCity.getOwner(), is(player));
+        System.out.println("\n End of Test 2 \n");
     }
 
     @Test
     public void placeCityForBluePlayer() {
+        System.out.println("Start of Test 3 \n");
         Position blueCityPosition = new Position(4, 5);
         Player player = Player.BLUE;
 
         // Call the method to place the city
-        game.placeCity(blueCityPosition, player);
+        transcribedGame.placeCity(blueCityPosition, player);
 
         // Retrieve the city at the specified position
-        City placedCity = game.getCityAt(blueCityPosition);
+        City placedCity = transcribedGame.getCityAt(blueCityPosition);
 
         // Check that the placedCity is not null, indicating a city was successfully
         // placed
@@ -92,7 +79,6 @@ public class TestDeltaCiv {
 
         // Check that the owner of the placed city is the expected player
         assertThat(placedCity.getOwner(), is(player));
+        System.out.println("\n End of Test 3 \n");
     }
-
 }
-

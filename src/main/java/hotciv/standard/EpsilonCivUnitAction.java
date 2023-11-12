@@ -1,5 +1,6 @@
 package hotciv.standard;
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.Interfaces.UnitAction;
 import hotciv.standard.Interfaces.UnitAttacking;
 
@@ -20,7 +21,7 @@ public class EpsilonCivUnitAction implements UnitAction {
         this.unitAttacking = unitAttacking; // this is important for testing
     }
     @Override
-    public void performAction(UnitImpl currentUnit, Position p, GameImpl currentGame)
+    public void performAction(UnitImpl currentUnit, Position p, MutableGame currentGame)
     {
         // if the current unit is a settler
         // build a city
@@ -48,7 +49,7 @@ public class EpsilonCivUnitAction implements UnitAction {
     }
     //define a function to move the units since it gets called three times
     @Override
-    public void updateUnitMap(Position from, Position to, Unit unit_from, GameImpl game){
+    public void updateUnitMap(Position from, Position to, Unit unit_from, MutableGame game){
         game.units.remove(from);
         game.units.put(to, unit_from);
     }
@@ -58,7 +59,7 @@ public class EpsilonCivUnitAction implements UnitAction {
     // check for unit at 'from' position
     // Need to update the successful attacks here
     @Override
-    public boolean moveUnit( Position from, Position to, GameImpl game) {
+    public boolean moveUnit( Position from, Position to, MutableGame game) {
         Unit unit_from = game.getUnitAt(from);
         if (unit_from == null){
             return false;

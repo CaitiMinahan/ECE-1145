@@ -8,11 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public interface UnitAttacking {
-    public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, GameImpl game);
-    public int getAttackingUnitStrength(UnitImpl attacker, Position from, GameImpl game);
-    public int getDefendingUnitStrength(UnitImpl defender, Position to, GameImpl game);
+    public boolean canAttackerBeatDefender(UnitImpl attacker, UnitImpl defender, Position from, Position to, MutableGame game);
+    public int getAttackingUnitStrength(UnitImpl attacker, Position from, MutableGame game);
+    public int getDefendingUnitStrength(UnitImpl defender, Position to, MutableGame game);
     public int getTerrainMultiplier(UnitImpl unit);
-    public int getNumFriendlyTiles(Position from, GameImpl game);
+    public int getNumFriendlyTiles(Position from, MutableGame game);
     public static Iterator<Position> get8neighborhoodIterator(Position center){
         List<Position> list = new ArrayList<>();
         // Define the 'delta' to add to the row for the 8 positions

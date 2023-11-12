@@ -4,20 +4,24 @@ import hotciv.framework.*;
 
 import hotciv.standard.Factories.GammaCivFactory;
 import hotciv.standard.Interfaces.GameFactory;
-import hotciv.standard.Interfaces.UnitAction;
+import hotciv.standard.Interfaces.MutableGame;
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 public class TestGammaCiv {
-    private GameImpl game;
-    private UnitAction gammaUnitAction;
-    private GameFactory gameFactory;
+    private MutableGame game;
 
     @Before
     public void setUp() {
-        gameFactory = new GammaCivFactory();
+        GameFactory gameFactory = new GammaCivFactory();
         game = new GameImpl(gameFactory);
+    }
+    @After
+    public void breakDown() {
+        game.cities.clear();
+        game.tiles.clear();
+        game.units.clear();
     }
 
     // ---- INTEGRATION TESTS ----- //
