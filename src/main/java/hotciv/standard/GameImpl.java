@@ -1,13 +1,11 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.*;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID; // TODO: had to add this to track units
-
-import hotciv.standard.Interfaces.*;
+import java.util.UUID;
 
 /**
  * Skeleton implementation of HotCiv.
@@ -237,6 +235,18 @@ public class GameImpl implements MutableGame {
       System.out.println("The UnitAction type was null, should be generic or GammaCiv");
     }
   }
+
+  // empty stubs to make the failing tests pass
+  @Override
+  public void addObserver(GameObserver observer) {
+    //  TODO: fill this in
+  }
+
+  @Override
+  public void setTileFocus(Position position) {
+    //  TODO: fill this in
+  }
+
   public void placeCity(Position position, Player player) {
     if (!cityExistsAt(position)) {
       City newCity = createCity(player);
