@@ -1,10 +1,8 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
-import hotciv.standard.Interfaces.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import hotciv.standard.Interfaces.MutableGame;
+import hotciv.standard.Interfaces.WorldLayout;
 
 public class GameDecorator implements MutableGame {
     protected MutableGame decoratedGame;
@@ -83,6 +81,18 @@ public class GameDecorator implements MutableGame {
         decoratedGame.performUnitActionAt(p);
         logAction(String.format("%s performs an action at %s", decoratedGame.getCurrentPlayer(), p));
     }
+
+    // empty stubs to make the failing tests pass
+    @Override
+    public void addObserver(GameObserver observer) {
+        // TODO: fill this in
+    }
+
+    @Override
+    public void setTileFocus(Position position) {
+        // TODO: fill this in
+    }
+
     // New logging function
     private void logAction(String message) {
         System.out.println(message);
