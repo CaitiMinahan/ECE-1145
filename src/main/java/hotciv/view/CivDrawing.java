@@ -60,6 +60,10 @@ public class CivDrawing
     this.game = game;
     this.unitFigureMap = new HashMap<>();
 
+    // Initialize ageText to see if this resolves it from being null when turnEnds is called
+    ageText = new TextFigure("", new Point(GfxConstants.AGE_TEXT_X, GfxConstants.AGE_TEXT_Y));
+    delegate.add(ageText);  // Add ageText to the delegate for rendering
+
     // register this unit drawing as listener to any game state
     // changes...
     game.addObserver(this);
@@ -212,7 +216,7 @@ public class CivDrawing
 
   // added this for completing turnEnds TODO for age output:
   // Initialize the age text figure
-  protected TextFigure ageText;
+  public TextFigure ageText;
 
   public void turnEnds(Player nextPlayer, int age) {
     // TODO: Remove system.out debugging output
