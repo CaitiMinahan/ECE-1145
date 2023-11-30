@@ -137,16 +137,44 @@ public class CivDrawing
 
   protected ImageFigure turnShieldIcon;
   protected void defineIcons() {
-    // TODO: Further development to include rest of figures needed
-    turnShieldIcon = 
+    turnShieldIcon =
       new ImageFigure( "redshield",
                        new Point( GfxConstants.TURN_SHIELD_X,
                                   GfxConstants.TURN_SHIELD_Y ) ); 
     // insert in delegate figure list to ensure graphical
     // rendering.
     delegate.add(turnShieldIcon);
+
+    // TODO: Further development to include rest of figures needed
+    defineCityIcons();
   }
- 
+
+  // added method for create city figures for defineIcons() method
+  protected void defineCityIcons() {
+    Position p;
+    for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
+      for (int c = 0; c < GameConstants.WORLDSIZE; c++) {
+        p = new Position(r, c);
+        City city = game.getCityAt(p);
+        if (city != null) {
+          // Convert the city's Position to (x, y) coordinates
+          Point point = new Point(GfxConstants.getXFromColumn(p.getColumn()),
+                  GfxConstants.getYFromRow(p.getRow()));
+
+          // Use a single city image for all cities
+          String cityImageName = GfxConstants.CITY_ICON;
+
+          // Create a city icon using ImageFigure
+          ImageFigure cityIcon = new ImageFigure(cityImageName, point);
+          cityIcon.addFigureChangeListener(this);
+
+          // Insert in delegate list
+          delegate.add(cityIcon);
+        }
+      }
+    }
+  }
+
   // === Observer Methods ===
 
   public void worldChangedAt(Position pos) {
@@ -157,7 +185,34 @@ public class CivDrawing
     defineUnitMap();
 
     // TODO: Cities may change on position as well
+    defineCityMap();
   }
+
+  // added method to define the city figures
+  public void defineCityMap() {
+    // Iterate over the game world and create city figures
+    Position p;
+    for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
+      for (int c = 0; c < GameConstants.WORLDSIZE; c++) {
+        p = new Position(r, c);
+        City city = game.getCityAt(p);
+        if (city != null) {
+          // convert the city's Position to (x,y) coordinates
+          Point point = new Point(GfxConstants.getXFromColumn(p.getColumn()),
+                  GfxConstants.getYFromRow(p.getRow()));
+          CityFigure cityFigure = new CityFigure(city, point);
+          cityFigure.addFigureChangeListener(this);
+
+          // also insert in delegate list
+          delegate.add(cityFigure);
+        }
+      }
+    }
+  }
+
+  // added this for completing turnEnds TODO for age output:
+  // Initialize the age text figure
+  protected TextFigure ageText;
 
   public void turnEnds(Player nextPlayer, int age) {
     // TODO: Remove system.out debugging output
@@ -168,11 +223,53 @@ public class CivDrawing
                         new Point( GfxConstants.TURN_SHIELD_X,
                                    GfxConstants.TURN_SHIELD_Y ) );
     // TODO: Age output pending
+    // Update age text in the graphical view
+    ageText.setText("Age: " + age);
+    ageText.setFont(new Font("SansSerif", Font.PLAIN, 16));  // Example font customization
+    ageText.setTextColor(Color.YELLOW);  // Example text color customization
   }
 
   public void tileFocusChangedAt(Position position) {
     // TODO: Implementation pending
-    System.out.println( "Fake it: tileFocusChangedAt "+position );
+    System.out.println("Fake it: tileFocusChangedAt " + position);
+
+    // Clear the existing selection by deselecting all figures
+    delegate.clearSelection();
+
+    // Use an iterator to iterate over the figures and find the one corresponding to the focused tile
+    Iterator<Figure> iterator = delegate.iterator();
+    while (iterator.hasNext()) {
+      Figure figure = iterator.next();
+
+      // Implement the logic to determine if the figure corresponds to the focused tile
+      if (figureIsAtPosition(figure, position)) {
+        // Add the figure to the selection to highlight or interact with it
+        delegate.addToSelection(figure);
+        break; // No need to continue iterating
+      }
+    }
+  }
+
+  // added figureIsAtPosition and getPointFromPosition to implement tileFocusChangedAt() TODO
+  // Replace this method with the actual logic to determine if a figure is at a specific position
+  private boolean figureIsAtPosition(Figure figure, Position position) {
+    // Implement the logic to check if the figure is at the specified position
+    // This might involve checking the bounding box or other figure attributes.
+    // Replace this with your actual logic.
+    // Example:
+    Rectangle figureBounds = figure.displayBox();
+    Point figurePosition = new Point(figureBounds.x, figureBounds.y);
+    return figurePosition.equals(getPointFromPosition(position));
+  }
+
+  // Replace this method with the logic to convert a Position to a Point
+  private Point getPointFromPosition(Position position) {
+    // Implement the logic to convert a game Position to a graphical Point
+    // Replace this with your actual logic.
+    // Example:
+    int x = GfxConstants.getXFromColumn(position.getColumn());
+    int y = GfxConstants.getYFromRow(position.getRow());
+    return new Point(x, y);
   }
 
   @Override
@@ -183,6 +280,7 @@ public class CivDrawing
     defineUnitMap();
     defineIcons();
     // TODO: Cities pending
+    defineCityMap();
   }
 
   @Override
