@@ -1,9 +1,17 @@
 package hotciv.stub;
 
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.MutableGame;
+import hotciv.standard.Interfaces.UnitAction;
+import hotciv.standard.Interfaces.Winner;
+import hotciv.standard.UnitImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static hotciv.standard.Interfaces.MutableGame.cities;
 
 /** Test stub for game for visual testing of
  * minidraw based graphics.
@@ -43,6 +51,11 @@ public class StubGame2 implements Game {
   private Position pos_ufo_red;
 
   private Unit red_archer;
+
+  private Winner winnerStrategy;
+  private int age; // represents current year of the game
+  private UnitAction unitActionCivType;
+  private List<GameObserver> observers = new ArrayList<>();
 
   public Unit getUnitAt(Position p) {
     if ( p.equals(pos_archer_red) ) {
@@ -126,17 +139,51 @@ public class StubGame2 implements Game {
   }
 
   // TODO: Add more stub behaviour to test MiniDraw updating
-  public City getCityAt( Position p ) { return null; }
-  public Player getWinner() { return null; }
-  public int getAge() { return 0; }  
+  // added in the GameImpl methods for the above todo 
+  public City getCityAt(Position p) {
+    if (cities.containsKey(p)) {
+      return cities.get(p);
+    }
+    return null;
+  }
+  public Player getWinner() {
+    return winnerStrategy.gameWinner((MutableGame) this);
+  }
+  public int getAge() {
+    return age;
+  }
+
+  // TODO: need to fill in the two methods below (they are empty in GameImpl)
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
-  public void performUnitActionAt( Position p ) {}  
+  public void performUnitActionAt(Position p) {
+    Unit u = getUnitAt(p);
+    // based on the type of game we are playing this will use the different
+    // implementations
+    if (this.unitActionCivType != null) {
+      // get the position based on the unit
+      // convert unit to unit impl
+      UnitImpl ui = (UnitImpl) u;
+      // run the action function
+      this.unitActionCivType.performAction(ui, p, (MutableGame) this);
+    } else {
+      // for some reason the unitActionCivType is null when it should be generic or
+      // gammaCiv instance
+      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+    }
+  }
 
+  // added setTileFocus from GameImpl into here to satisfy todo
   public void setTileFocus(Position position) {
     // TODO: setTileFocus implementation pending.
     System.out.println("-- StubGame2 / setTileFocus called.");
     System.out.println(" *** IMPLEMENTATION PENDING ***");
+    // Implement logic to set tile focus
+    // Notify observers about the tile focus change
+    for (GameObserver observer : observers) {
+      observer.tileFocusChangedAt(position);
+    }
+
   }
 
 }
