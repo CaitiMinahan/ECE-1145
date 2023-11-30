@@ -56,6 +56,8 @@ class UpdateTool extends NullTool {
     this.game = game;
   }
   private int count = 0;
+
+  // TODO: add more mouse events ??
   public void mouseDown(MouseEvent e, int x, int y) {
     switch(count) {
     case 0: {
