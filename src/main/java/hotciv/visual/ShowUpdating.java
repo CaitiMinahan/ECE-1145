@@ -1,10 +1,12 @@
 package hotciv.visual;
 
+import hotciv.framework.City;
 import hotciv.framework.Game;
 import hotciv.framework.Position;
 import hotciv.stub.StubGame2;
-import minidraw.framework.*;
-import minidraw.standard.*;
+import minidraw.framework.DrawingEditor;
+import minidraw.standard.MiniDrawApplication;
+import minidraw.standard.NullTool;
 
 import java.awt.event.MouseEvent;
 
@@ -85,7 +87,26 @@ class UpdateTool extends NullTool {
       game.setTileFocus(new Position(4,3));
       break;
     }
-      // TODO: Add more state changes for other things to test
+    case 5: {
+      editor.showStatus("State change: Inspect City at (5,5)");
+      Position cityPosition = new Position(5, 5);
+      City city = game.getCityAt(cityPosition);
+      if (city != null) {
+        System.out.println("City found at position " + cityPosition);
+        System.out.println("City owner: " + city.getOwner());
+        System.out.println("City size: " + city.getSize());
+        // Add more information as needed
+      } else {
+        System.out.println("No city found at position " + cityPosition);
+      }
+      break;
+    }
+    case 6: {
+      editor.showStatus( "State change: Moving legion to (5,5)");
+      game.moveUnit( new Position(3,2), new Position(5,5) );
+      break;
+    }
+    // TODO: Add more state changes for other things to test
     default: {
       editor.showStatus("No more changes in my list...");
     }

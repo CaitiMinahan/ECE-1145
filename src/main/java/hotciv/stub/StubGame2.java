@@ -1,6 +1,7 @@
 package hotciv.stub;
 
 import hotciv.framework.*;
+import hotciv.standard.CityImpl;
 import hotciv.standard.Interfaces.MutableGame;
 import hotciv.standard.Interfaces.UnitAction;
 import hotciv.standard.Interfaces.Winner;
@@ -55,7 +56,22 @@ public class StubGame2 implements Game {
   private Winner winnerStrategy;
   private int age; // represents current year of the game
   private UnitAction unitActionCivType;
+
+  public CityImpl currentCity;
   private List<GameObserver> observers = new ArrayList<>();
+
+
+  public boolean cityExistsAt(Position position) {
+    return cities.containsKey(position);
+  }
+
+  public City createCity(Player player) {
+    return new CityImpl(player);
+  }
+
+  public void setCurrentCity(City city) {
+    currentCity = (CityImpl) city;
+  }
 
   public Unit getUnitAt(Position p) {
     if ( p.equals(pos_archer_red) ) {
@@ -79,9 +95,20 @@ public class StubGame2 implements Game {
     if ( from.equals(pos_archer_red) ) {
       pos_archer_red = to;
     }
+    else if (from.equals((pos_legion_blue))){
+      pos_legion_blue = to;
+    }
+    else if (from.equals((pos_settler_red))){
+      pos_settler_red = to;
+    }
+    else if (from.equals((pos_ufo_red))){
+      pos_ufo_red = to;
+    }
     // notify our observer(s) about the changes on the tiles
     gameObserver.worldChangedAt(from);
     gameObserver.worldChangedAt(to);
+
+
     return true; 
   }
 
@@ -95,8 +122,8 @@ public class StubGame2 implements Game {
     // no age increments
     gameObserver.turnEnds(inTurn, -4000);
   }
+
   public Player getPlayerInTurn() { return inTurn; }
-  
 
   // === Observer handling ===
   protected GameObserver gameObserver;
@@ -134,6 +161,8 @@ public class StubGame2 implements Game {
       for ( int c = 0; c < GameConstants.WORLDSIZE; c++ ) {
         Position p = new Position(r,c);
         world.put( p, new StubTile(GameConstants.PLAINS));
+
+        // todo: do we need to adjust the world to look the same as what the GUI looks like when gradle show is ran?
       }
     }
   }
@@ -175,16 +204,29 @@ public class StubGame2 implements Game {
 
   // added setTileFocus from GameImpl into here to satisfy todo
   public void setTileFocus(Position position) {
-    // TODO: setTileFocus implementation pending.
     System.out.println("-- StubGame2 / setTileFocus called.");
-    System.out.println(" *** IMPLEMENTATION PENDING ***");
+//    System.out.println(" *** IMPLEMENTATION PENDING ***");
+
     // Implement logic to set tile focus
     // Notify observers about the tile focus change
     for (GameObserver observer : observers) {
       observer.tileFocusChangedAt(position);
     }
 
-  }
+    // Handle different tile types
+    Tile tile = getTileAt(position);
+    if (tile != null) {
+      String tileType = tile.getTypeString();
+
+      // todo: Update the GUI to display tile type in the right side bar
+      System.out.println("Tile focused: " + tileType);
+
+      // Implement additional logic based on the tile type if needed
+    }  }
+
+  // todo: test placing a city ??
+
+  // todo: test placing a unit ??
 
 }
 
