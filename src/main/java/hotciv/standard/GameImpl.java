@@ -253,18 +253,6 @@ public class GameImpl implements MutableGame {
     }
   }
 
-  // empty stubs to make the failing tests pass
-//  @Override
-//  public void addObserver(GameObserver observer) {
-//    //  TODO: fill this in
-//    observers.add(observer);
-//  }
-//
-//  @Override
-//  public void setTileFocus(Position position) {
-//    //  TODO: fill this in
-//  }
-
   @Override
   public void addObserver(GameObserver observer) {
     observers.add(observer);

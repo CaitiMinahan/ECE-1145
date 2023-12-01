@@ -75,6 +75,11 @@ public class GfxConstants {
   public static final String NOTHING = "black";
   public static final String REFRESH_BUTTON = "refresh";
 
+  // added these for further developing the rest of the figures in CivDrawing defineIcons():
+  public static final int CITY_ICON_WIDTH = 30;
+  public static final int CITY_ICON_HEIGHT = 30;
+  public static final String CITY_ICON = "cityicon";
+
   /** return the x pixel position on the graphical display
    * for a tile's column position
    * @param column the position of the tile

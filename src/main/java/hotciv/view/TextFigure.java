@@ -35,18 +35,30 @@ public class TextFigure extends AbstractFigure {
   private Point position;
   private String text;
   private Font fFont;
+  // added this for CivDrawing to output age
+  private Color textColor;
   FontMetrics metrics = null;
 
   public TextFigure(String text, Point position) {
     this.position = position;
     this.text = text;
     fFont = new Font("Serif", Font.BOLD, 20);
+    // added this for CivDrawing to output age
+    this.textColor = Color.WHITE;
   }
 
   public void setText(String newText) {
     willChange();
     text = newText;
     changed();
+  }
+
+  public void setFont(Font newFont) {
+    fFont = newFont;
+  }
+
+  public void setTextColor(Color newColor) {
+    textColor = newColor;
   }
 
   protected void basicMoveBy(int dx, int dy) {

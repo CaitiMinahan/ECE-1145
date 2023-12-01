@@ -1,9 +1,18 @@
 package hotciv.stub;
 
 import hotciv.framework.*;
+import hotciv.standard.CityImpl;
+import hotciv.standard.Interfaces.MutableGame;
+import hotciv.standard.Interfaces.UnitAction;
+import hotciv.standard.Interfaces.Winner;
+import hotciv.standard.UnitImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static hotciv.standard.Interfaces.MutableGame.cities;
 
 /** Test stub for game for visual testing of
  * minidraw based graphics.
@@ -44,6 +53,26 @@ public class StubGame2 implements Game {
 
   private Unit red_archer;
 
+  private Winner winnerStrategy;
+  private int age; // represents current year of the game
+  private UnitAction unitActionCivType;
+
+  public CityImpl currentCity;
+  private List<GameObserver> observers = new ArrayList<>();
+
+
+  public boolean cityExistsAt(Position position) {
+    return cities.containsKey(position);
+  }
+
+  public City createCity(Player player) {
+    return new CityImpl(player);
+  }
+
+  public void setCurrentCity(City city) {
+    currentCity = (CityImpl) city;
+  }
+
   public Unit getUnitAt(Position p) {
     if ( p.equals(pos_archer_red) ) {
       return red_archer;
@@ -66,9 +95,20 @@ public class StubGame2 implements Game {
     if ( from.equals(pos_archer_red) ) {
       pos_archer_red = to;
     }
+    else if (from.equals((pos_legion_blue))){
+      pos_legion_blue = to;
+    }
+    else if (from.equals((pos_settler_red))){
+      pos_settler_red = to;
+    }
+    else if (from.equals((pos_ufo_red))){
+      pos_ufo_red = to;
+    }
     // notify our observer(s) about the changes on the tiles
     gameObserver.worldChangedAt(from);
     gameObserver.worldChangedAt(to);
+
+
     return true; 
   }
 
@@ -82,8 +122,8 @@ public class StubGame2 implements Game {
     // no age increments
     gameObserver.turnEnds(inTurn, -4000);
   }
+
   public Player getPlayerInTurn() { return inTurn; }
-  
 
   // === Observer handling ===
   protected GameObserver gameObserver;
@@ -121,23 +161,72 @@ public class StubGame2 implements Game {
       for ( int c = 0; c < GameConstants.WORLDSIZE; c++ ) {
         Position p = new Position(r,c);
         world.put( p, new StubTile(GameConstants.PLAINS));
+
+        // todo: do we need to adjust the world to look the same as what the GUI looks like when gradle show is ran?
       }
     }
   }
 
   // TODO: Add more stub behaviour to test MiniDraw updating
-  public City getCityAt( Position p ) { return null; }
-  public Player getWinner() { return null; }
-  public int getAge() { return 0; }  
+  // added in the GameImpl methods for the above todo 
+  public City getCityAt(Position p) {
+    if (cities.containsKey(p)) {
+      return cities.get(p);
+    }
+    return null;
+  }
+  public Player getWinner() {
+    return winnerStrategy.gameWinner((MutableGame) this);
+  }
+  public int getAge() {
+    return age;
+  }
+
+  // TODO: need to fill in the two methods below (they are empty in GameImpl)
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
-  public void performUnitActionAt( Position p ) {}  
-
-  public void setTileFocus(Position position) {
-    // TODO: setTileFocus implementation pending.
-    System.out.println("-- StubGame2 / setTileFocus called.");
-    System.out.println(" *** IMPLEMENTATION PENDING ***");
+  public void performUnitActionAt(Position p) {
+    Unit u = getUnitAt(p);
+    // based on the type of game we are playing this will use the different
+    // implementations
+    if (this.unitActionCivType != null) {
+      // get the position based on the unit
+      // convert unit to unit impl
+      UnitImpl ui = (UnitImpl) u;
+      // run the action function
+      this.unitActionCivType.performAction(ui, p, (MutableGame) this);
+    } else {
+      // for some reason the unitActionCivType is null when it should be generic or
+      // gammaCiv instance
+      System.out.println("The UnitAction type was null, should be generic or GammaCiv");
+    }
   }
+
+  // added setTileFocus from GameImpl into here to satisfy todo
+  public void setTileFocus(Position position) {
+    System.out.println("-- StubGame2 / setTileFocus called.");
+//    System.out.println(" *** IMPLEMENTATION PENDING ***");
+
+    // Implement logic to set tile focus
+    // Notify observers about the tile focus change
+    for (GameObserver observer : observers) {
+      observer.tileFocusChangedAt(position);
+    }
+
+    // Handle different tile types
+    Tile tile = getTileAt(position);
+    if (tile != null) {
+      String tileType = tile.getTypeString();
+
+      // todo: Update the GUI to display tile type in the right side bar
+      System.out.println("Tile focused: " + tileType);
+
+      // Implement additional logic based on the tile type if needed
+    }  }
+
+  // todo: test placing a city ??
+
+  // todo: test placing a unit ??
 
 }
 
