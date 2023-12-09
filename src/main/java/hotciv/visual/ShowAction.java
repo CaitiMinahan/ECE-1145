@@ -1,9 +1,14 @@
 package hotciv.visual;
 
 import hotciv.framework.Game;
+import hotciv.framework.Position;
+import hotciv.standard.Factories.SemiCivFactory;
 import hotciv.stub.StubGame2;
+import hotciv.view.GfxConstants;
 import minidraw.framework.*;
 import minidraw.standard.*;
+
+import java.awt.event.MouseEvent;
 
 /** Template code for exercise FRS 36.43.
 
@@ -32,7 +37,30 @@ public class ShowAction {
     editor.open();
     editor.showStatus("Shift-Click on unit to see Game's performAction method being called.");
 
-    // TODO: Replace the setting of the tool with your ActionTool implementation.
-    editor.setTool( new NullTool() );
+    // Add the ActionTool
+    ActionTool actionTool = new ActionTool(editor, game);
+    editor.setTool(actionTool);
+  }
+}
+
+class ActionTool extends NullTool {
+  private Game game;
+  private DrawingEditor editor;
+
+  public ActionTool(DrawingEditor editor, Game game) {
+    this.editor = editor;
+    this.game = game;
+  }
+  public void mouseDown(MouseEvent e, int x, int y) {
+    // Check if the shift key is down
+    if (e.isShiftDown()) {
+      // Convert the x and y coordinates to a game position
+      Position pos = GfxConstants.getPositionFromXY(x, y);
+
+      // Invoke the action of the unit at the position, if any
+      if (game.getUnitAt(pos) != null) {
+        game.performUnitActionAt(pos);
+      }
+    }
   }
 }

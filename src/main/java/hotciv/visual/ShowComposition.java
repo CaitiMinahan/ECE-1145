@@ -4,6 +4,9 @@ import hotciv.framework.Game;
 import hotciv.stub.StubGame2;
 import minidraw.framework.*;
 import minidraw.standard.*;
+import java.awt.event.MouseEvent;
+import hotciv.view.GfxConstants;
+import java.awt.Rectangle;
 
 /** Template code for exercise FRS 36.44.
 
