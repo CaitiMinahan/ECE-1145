@@ -148,7 +148,7 @@ public class StubGame2 implements MutableGame {
   public boolean canUnitAttack(Unit unitToCheck) {
     return !Objects.equals(unitToCheck.getTypeString(), "settler");
   }
-  public Position getPositionFromUnit(UnitImpl u) {
+  public Position getPositionFromUnit(MutableUnit u) {
     // loop through the units map and find the unit with the corresponding ID
     UUID tempId = u.getUnitID();
     for (Map.Entry<Position, Unit> entry : units.entrySet()) {
@@ -206,7 +206,7 @@ public class StubGame2 implements MutableGame {
   }
   // Getter and setter for the current Unit variable
   public Unit getCurrentUnit(){ return currentUnit; }
-  public void setCurrentUnit (Unit u) { currentUnit = u; }
+  public void setCurrentUnit (MutableUnit u) { currentUnit = u; }
   // Getter for the current player
   public Player getCurrentPlayer() { return currentPlayer;}
 
@@ -260,7 +260,7 @@ public class StubGame2 implements MutableGame {
     return null;
   }
   public Player getWinner() {
-    return winnerStrategy.gameWinner((MutableGame) this);
+    return winnerStrategy.gameWinner(this);
   }
   public int getAge() {
     return age;
@@ -276,10 +276,11 @@ public class StubGame2 implements MutableGame {
     // implementations
     if (this.unitActionCivType != null) {
       // get the position based on the unit
-      // convert unit to unit impl
-      UnitImpl ui = (UnitImpl) u;
+      // convert unit to mutable unit
+      MutableUnit mu = (MutableUnit) u;
       // run the action function
-      this.unitActionCivType.performAction(ui, p, this);
+      System.out.println("-- StubGame2 / SemiCiv unit action is active");
+      this.unitActionCivType.performAction(mu, p, this);
     } else {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance

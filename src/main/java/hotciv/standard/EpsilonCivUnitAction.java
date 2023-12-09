@@ -1,6 +1,7 @@
 package hotciv.standard;
 import hotciv.framework.*;
 import hotciv.standard.Interfaces.MutableGame;
+import hotciv.standard.Interfaces.MutableUnit;
 import hotciv.standard.Interfaces.UnitAction;
 import hotciv.standard.Interfaces.UnitAttacking;
 
@@ -21,7 +22,7 @@ public class EpsilonCivUnitAction implements UnitAction {
         this.unitAttacking = unitAttacking; // this is important for testing
     }
     @Override
-    public void performAction(UnitImpl currentUnit, Position p, MutableGame currentGame)
+    public void performAction(MutableUnit currentUnit, Position p, MutableGame currentGame)
     {
         // if the current unit is a settler
         // build a city
@@ -49,7 +50,7 @@ public class EpsilonCivUnitAction implements UnitAction {
     }
     //define a function to move the units since it gets called three times
     @Override
-    public void updateUnitMap(Position from, Position to, Unit unit_from, MutableGame game){
+    public void updateUnitMap(Position from, Position to, MutableUnit unit_from, MutableGame game){
         game.units.remove(from);
         game.units.put(to, unit_from);
     }
@@ -59,8 +60,9 @@ public class EpsilonCivUnitAction implements UnitAction {
     // check for unit at 'from' position
     // Need to update the successful attacks here
     @Override
-    public boolean moveUnit( Position from, Position to, MutableGame game) {
+    public boolean moveUnit(Position from, Position to, MutableGame game) {
         Unit unit_from = game.getUnitAt(from);
+        MutableUnit mUnit_from = (MutableUnit) unit_from;
         if (unit_from == null){
             return false;
         }
@@ -73,7 +75,7 @@ public class EpsilonCivUnitAction implements UnitAction {
         // @TODO need to update the generic with this too
         else if (unitTypeString.equals("archer") && unitCanMove && game.getUnitAt(to) == null)
         {
-            updateUnitMap(from, to, unit_from, game);
+            updateUnitMap(from, to, mUnit_from, game);
             return true;
         }
         // if the 'to' unit already has a unit there
@@ -102,7 +104,7 @@ public class EpsilonCivUnitAction implements UnitAction {
                 // call the functions
                 if(unitAttacking.canAttackerBeatDefender((UnitImpl) attackingUnit, (UnitImpl) foundUnit, from, to, game)) {
                     game.killUnit(to);
-                    updateUnitMap(from, to, unit_from, game);
+                    updateUnitMap(from, to, mUnit_from, game);
                     // update the successful attack map
                     int currentSuccessfulAttacks = game.playerSuccessfulAttacks.get(attackingPlayer);
                     game.playerSuccessfulAttacks.put(attackingPlayer, currentSuccessfulAttacks + 1);
@@ -126,7 +128,7 @@ public class EpsilonCivUnitAction implements UnitAction {
             return false; // cannot fortify tiles (move own units to tile with own units)
         }
         // otherwise, move the unit from the original position to the new one
-        updateUnitMap(from, to, unit_from, game);
+        updateUnitMap(from, to, mUnit_from, game);
         return true;
     }
 }

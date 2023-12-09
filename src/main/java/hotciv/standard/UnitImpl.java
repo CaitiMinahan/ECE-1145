@@ -5,8 +5,9 @@ import hotciv.framework.Unit;
 import java.util.Objects;
 import java.util.UUID;
 import hotciv.standard.*;
+import hotciv.standard.Interfaces.MutableUnit;
 
-public class UnitImpl implements Unit {
+public class UnitImpl implements MutableUnit {
     private String unit;
     private Player owner;
     private UUID ID;
@@ -52,17 +53,17 @@ public class UnitImpl implements Unit {
     }
 
     // TODO: had to add a setter for the unit action to work
-    void setDefendingStrength(int d) {
+    public void setDefendingStrength(int d) {
         defensiveStrength = d;
     }
-    void setAttackingStrength(int a) {attackingStrength = a;}
+    public void setAttackingStrength(int a) {attackingStrength = a;}
     // TODO: had to add toggles for can move property, get and set
     public void setTravelDistace(int t) {travelDistace = t;}
     public int getTravelDistace() { return travelDistace;}
     public int getProductionCost() { return productionCost;}
     public void setProductionCost(int cost) { productionCost = cost;}
     public boolean getCanMove() { return canMove;}
-    void setCanMove (boolean can_move) {
+    public void setCanMove (boolean can_move) {
         canMove = can_move;
     }
     // TODO needed to add this to get unique IDs
