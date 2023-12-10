@@ -139,15 +139,44 @@ public class CivDrawing
     unitFigureMap.clear();
   }
 
+  // Add in more icons
   protected ImageFigure turnShieldIcon;
+  protected ImageFigure productionIcon;
+  protected ImageFigure workForceFocusIcon;
+  protected ImageFigure cityShieldIcon;
+  protected ImageFigure unitShieldIcon;
+  protected TextFigure moveUnitText;
+
   protected void defineIcons() {
     turnShieldIcon =
       new ImageFigure( "redshield",
                        new Point( GfxConstants.TURN_SHIELD_X,
-                                  GfxConstants.TURN_SHIELD_Y ) ); 
+                                  GfxConstants.TURN_SHIELD_Y ) );
+    unitShieldIcon =
+            new ImageFigure (GfxConstants.NOTHING,
+                    new Point(GfxConstants.UNIT_SHIELD_X, GfxConstants.UNIT_SHIELD_Y));
+    cityShieldIcon =
+            new ImageFigure (GfxConstants.NOTHING,
+                    new Point(GfxConstants.CITY_SHIELD_X, GfxConstants.CITY_SHIELD_Y));
+    productionIcon =
+            new ImageFigure (GfxConstants.NOTHING,
+                    new Point(GfxConstants.CITY_PRODUCTION_X, GfxConstants.CITY_PRODUCTION_Y));
+    workForceFocusIcon =
+            new ImageFigure (GfxConstants.NOTHING,
+                    new Point(GfxConstants.WORKFORCEFOCUS_X, GfxConstants.WORKFORCEFOCUS_Y));
+    ageText =
+            new TextFigure(Integer.toString(game.getAge()), new Point(GfxConstants.AGE_TEXT_X, GfxConstants.AGE_TEXT_Y));
+    moveUnitText =
+            new TextFigure("", new Point(GfxConstants.UNIT_COUNT_X, GfxConstants.UNIT_COUNT_Y));
     // insert in delegate figure list to ensure graphical
     // rendering.
     delegate.add(turnShieldIcon);
+    delegate.add(unitShieldIcon);
+    delegate.add(cityShieldIcon);
+    delegate.add(productionIcon);
+    delegate.add(workForceFocusIcon);
+    delegate.add(ageText);
+    delegate.add(moveUnitText);
 
     // TODO: Further development to include rest of figures needed
     defineCityIcons();
