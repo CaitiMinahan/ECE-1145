@@ -63,12 +63,12 @@ public class EpsilonCivUnitAction implements UnitAction {
     public boolean moveUnit(Position from, Position to, MutableGame game) {
         Unit unit_from = game.getUnitAt(from);
         MutableUnit mUnit_from = (MutableUnit) unit_from;
-        if (unit_from == null){
+        if (mUnit_from == null){
             return false;
         }
         // get the current unit type once
-        String unitTypeString = unit_from.getTypeString();
-        boolean unitCanMove = ((UnitImpl) unit_from).getCanMove();
+        String unitTypeString = mUnit_from.getTypeString();
+        boolean unitCanMove = mUnit_from.getCanMove();
         // check to see if the unit to move is a fortified archer
         if(unitTypeString.equals("archer") && !unitCanMove)
             return false;

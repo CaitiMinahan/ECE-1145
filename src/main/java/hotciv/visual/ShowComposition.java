@@ -1,6 +1,7 @@
 package hotciv.visual;
 
 import hotciv.framework.Game;
+import hotciv.framework.Position;
 import hotciv.stub.StubGame2;
 import minidraw.framework.*;
 import minidraw.standard.*;
@@ -37,5 +38,88 @@ public class ShowComposition {
 
     // TODO: Replace the setting of the tool with your CompositionTool implementation.
     editor.setTool( new NullTool() );
+  }
+}
+class CompositionTool extends NullTool {
+  private Game game;
+  private DrawingEditor editor;
+
+  private boolean drag = false;
+
+  // Tools
+  // private MoveTool moveTool;
+  // private EndOfTurnTool endOfTurnTool;
+  private ActionTool actionTool;
+  // private SetFocusTool setFocusTool;
+
+  public CompositionTool(DrawingEditor editor, Game game){
+    this.editor = editor;
+    this.game = game;
+
+    // Initialize the tools
+    // this.moveTool = new MoveTool(this.editor, this.game);
+    // this.endOfTurnTool = new EndOfTurnTool(this.game);
+    this.actionTool = new ActionTool(this.editor, this.game);
+    // this.setFocusTool = new SetFocusTool(this.editor, this.game);
+  }
+
+  // Mouse Events
+  public void mouseUp(MouseEvent e, int x, int y){
+    // Convert the x and y coordinates to a game position
+    Position pos = GfxConstants.getPositionFromXY(x, y);
+
+    // If the player is dragging the mouse
+    if(drag) {
+      // moveTool.mouseUp(e, x, y);
+      drag = false;
+    }
+    // If mouse ends up on a unit
+    else if(game.getUnitAt(pos) != null){
+      // Select the box of where that unit is
+      System.out.println("Using SetFocusTool to set focus on the unit");
+      // setFocusTool.mouseUp(e, x, y);
+    }
+    // If mouse ends up on a city
+    else if(game.getCityAt(pos) != null){
+      // Select the box of where that city is
+      System.out.println("Using SetFocusTool to set focus on the city");
+      // setFocusTool.mouseUp(e, x, y);
+    }
+  }
+  public void mouseDown(MouseEvent e, int x, int y){
+    // Convert the x and y coordinates to a game position
+    Position pos = GfxConstants.getPositionFromXY(x, y);
+
+    // Set x and y range to determine what tool to use
+    boolean y_ShieldRange = (y <= 104) && (y >= 65);
+    boolean x_ShieldRange = (x <= 588) && (x >= 560);
+
+    // If both coordinates are in the range
+    // That means you're on the EndOfTurnTool
+    if(y_ShieldRange && x_ShieldRange){
+      System.out.println("Calling EndOfTurnTool");
+      // endOfTurnTool.mouseDown(e, x, y);
+    }
+    // If the player clicks on a unit
+    else if(game.getUnitAt(pos) != null){
+      // If the player is pressing shift while clicking
+      // ActionTool should be called
+      if(e.isShiftDown()){
+        System.out.println("Calling ActionTool");
+        actionTool.mouseDown(e, x, y);
+      }
+      // If the player isn't pressing shift while clicking
+      // MoveTool should be called
+      else{
+        System.out.println("Calling MoveTool");
+        // moveTool.mouseDown(e, x, y);
+      }
+    }
+  }
+  public void mouseDrag(MouseEvent e, int x, int y){
+    // If this function is called, the mouse is being dragged
+    // Update boolean
+    drag = true;
+    // moveTool.mouseDrag(e, x, y);
   }
 }

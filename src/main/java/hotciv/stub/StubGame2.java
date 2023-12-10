@@ -132,8 +132,10 @@ public class StubGame2 implements MutableGame {
       pos_ufo_red = to;
     }
     // notify our observer(s) about the changes on the tiles
-    gameObserver.worldChangedAt(from);
-    gameObserver.worldChangedAt(to);
+    for (GameObserver observer : observers) {
+      observer.worldChangedAt(from);
+      observer.worldChangedAt(to);
+    }
 
 
     return true; 
@@ -246,7 +248,9 @@ public class StubGame2 implements MutableGame {
         Position p = new Position(r,c);
         world.put( p, new StubTile(GameConstants.PLAINS));
 
-        // todo: do we need to adjust the world to look the same as what the GUI looks like when gradle show is ran?
+        for (GameObserver observer : observers) {
+          observer.worldChangedAt(new Position(0, 0));
+        }
       }
     }
   }
@@ -281,6 +285,9 @@ public class StubGame2 implements MutableGame {
       // run the action function
       System.out.println("-- StubGame2 / SemiCiv unit action is active");
       this.unitActionCivType.performAction(mu, p, this);
+      for (GameObserver observer : observers) {
+        observer.worldChangedAt(p);
+      }
     } else {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance
