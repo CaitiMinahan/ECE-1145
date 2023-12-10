@@ -234,22 +234,56 @@ public class CivDrawing
   }
 
   public void tileFocusChangedAt(Position position) {
-    // TODO: Implementation pending
-    System.out.println("Fake it: tileFocusChangedAt " + position);
+//    // TODO: Implementation pending
+//    // System.out.println("Fake it: tileFocusChangedAt " + position);
+//
+//    // Clear the existing selection by deselecting all figures
+//    delegate.clearSelection();
+//
+//    // Use an iterator to iterate over the figures and find the one corresponding to the focused tile
+//    Iterator<Figure> iterator = delegate.iterator();
+//    while (iterator.hasNext()) {
+//      Figure figure = iterator.next();
+//
+//      // Implement the logic to determine if the figure corresponds to the focused tile
+//      if (figureIsAtPosition(figure, position)) {
+//        // Add the figure to the selection to highlight or interact with it
+//        delegate.addToSelection(figure);
+//        break; // No need to continue iterating
+//      }
+//    }
 
-    // Clear the existing selection by deselecting all figures
-    delegate.clearSelection();
+    // update the color of the unit or the city that corresponds to the player
+    City city = game.getCityAt(position);
+    Unit unit = game.getUnitAt(position);
 
-    // Use an iterator to iterate over the figures and find the one corresponding to the focused tile
-    Iterator<Figure> iterator = delegate.iterator();
-    while (iterator.hasNext()) {
-      Figure figure = iterator.next();
+    if(city != null){
+      // update the city shield color
+      // get the player that owns that city
+      Player owner = city.getOwner();
+      switch(owner){
+        case RED:
+          // update the shield color
+          ImageFigure cityShield = new ImageFigure(GfxConstants.NOTHING, new Point (GfxConstants.CITY_SHIELD_X,GfxConstants.CITY_SHIELD_Y));
+          cityShield.set(GfxConstants.RED_SHIELD  ,new Point (GfxConstants.CITY_SHIELD_X,GfxConstants.CITY_SHIELD_Y));
+          break;
+        default:
+          System.out.println("default");
+      }
 
-      // Implement the logic to determine if the figure corresponds to the focused tile
-      if (figureIsAtPosition(figure, position)) {
-        // Add the figure to the selection to highlight or interact with it
-        delegate.addToSelection(figure);
-        break; // No need to continue iterating
+    }
+    if (unit != null){
+      // update the unit shield color
+      // get the player that owns that unit
+      Player owner = unit.getOwner();
+      switch(owner){
+        case RED:
+          // update the shield color
+          ImageFigure unitShield = new ImageFigure(GfxConstants.NOTHING, new Point (GfxConstants.UNIT_SHIELD_X,GfxConstants.UNIT_SHIELD_Y));
+          unitShield.set(GfxConstants.RED_SHIELD  ,new Point (GfxConstants.UNIT_SHIELD_X,GfxConstants.UNIT_SHIELD_Y));
+          break;
+        default:
+          System.out.println("default");
       }
     }
   }

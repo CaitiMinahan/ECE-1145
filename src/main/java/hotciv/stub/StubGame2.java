@@ -141,7 +141,10 @@ public class StubGame2 implements Game {
     pos_ufo_red = new Position( 6, 4);
 
     // the only one I need to store for this stub
-    red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );   
+    red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );
+
+    // create new game observer
+    addObserver(gameObserver);
 
     inTurn = Player.RED;
   }
@@ -204,23 +207,32 @@ public class StubGame2 implements Game {
 
   // added setTileFocus from GameImpl into here to satisfy todo
   public void setTileFocus(Position position) {
-    System.out.println("-- StubGame2 / setTileFocus called.");
-//    System.out.println(" *** IMPLEMENTATION PENDING ***");
+    System.out.println("StubGame2 -- setTileFocus called.");
+    System.out.println(" Position: " + position);
 
     // Implement logic to set tile focus
     // Notify observers about the tile focus change
-    for (GameObserver observer : observers) {
-      observer.tileFocusChangedAt(position);
-    }
+//    for (GameObserver observer : observers) {
+//      observer.tileFocusChangedAt(position);
+//    }
+    gameObserver.tileFocusChangedAt(position);
 
     // Handle different tile types
     Tile tile = getTileAt(position);
     if (tile != null) {
       String tileType = tile.getTypeString();
 
-      // todo: Update the GUI to display tile type in the right side bar
       System.out.println("Tile focused: " + tileType);
+      // check for city or unit on the tile
+      City newCity = getCityAt(position);
+      Unit newUnit = getUnitAt(position);
 
+      if(newCity != null){
+        System.out.println("City on this position");
+      }
+      if(newUnit != null){
+        System.out.println("Unit on this position of type " + newUnit.getTypeString());
+      }
       // Implement additional logic based on the tile type if needed
     }  }
 
