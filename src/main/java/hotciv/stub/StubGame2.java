@@ -299,7 +299,7 @@ class StubCity implements City {
     size = 1;
     treasury = 0;
     this.owner = owner;
-    productionUnit = GameConstants.productionFocus;
+    productionUnit = GameConstants.ARCHER;
     focus = GameConstants.foodFocus;
   }
   public void setTreasury(int t){
