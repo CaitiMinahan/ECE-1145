@@ -4,13 +4,14 @@ import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Unit;
 import hotciv.standard.Interfaces.MutableGame;
+import hotciv.standard.Interfaces.MutableUnit;
 import hotciv.standard.Interfaces.UnitAction;
 
 import java.util.Objects;
 
 public class GammaCivUnitAction implements UnitAction {
     @Override
-    public void performAction(UnitImpl currentUnit, Position p, MutableGame currentGame)
+    public void performAction(MutableUnit currentUnit, Position p, MutableGame currentGame)
     {
         // if the current unit is a settler
         // build a city
@@ -38,7 +39,7 @@ public class GammaCivUnitAction implements UnitAction {
     }
     //define a function to move the units since it gets called three times
     @Override
-    public void updateUnitMap(Position from, Position to, Unit unit_from, MutableGame game){
+    public void updateUnitMap(Position from, Position to, MutableUnit unit_from, MutableGame game){
         game.units.remove(from);
         game.units.put(to, unit_from);
     }
@@ -47,20 +48,21 @@ public class GammaCivUnitAction implements UnitAction {
     // then place the unit at the desired position
     // check for unit at 'from' position
     @Override
-    public boolean moveUnit( Position from, Position to, MutableGame game) {
+    public boolean moveUnit(Position from, Position to, MutableGame game) {
         Unit unit_from = game.getUnitAt(from);
-        if (unit_from == null){
+        MutableUnit mUnit_from = (MutableUnit) unit_from;
+        if (mUnit_from == null){
             return false;
         }
         // get the current unit type once
-        String unitTypeString = unit_from.getTypeString();
-        boolean unitCanMove = ((UnitImpl) unit_from).getCanMove();
+        String unitTypeString = mUnit_from.getTypeString();
+        boolean unitCanMove = mUnit_from.getCanMove();
         // check to see if the unit to move is a fortified archer
         if(unitTypeString.equals("archer") && !unitCanMove)
             return false;
         else if (unitTypeString.equals("archer") && unitCanMove)
         {
-            updateUnitMap(from, to, unit_from, game);
+            updateUnitMap(from, to, mUnit_from, game);
             return true;
         }
         // if the 'to' unit already has a unit there
@@ -79,13 +81,13 @@ public class GammaCivUnitAction implements UnitAction {
             {
                 // let the attacking unit remove the defending unit and then successfully move to that tile
                 game.killUnit(to);
-                updateUnitMap(from, to, unit_from, game);
+                updateUnitMap(from, to, mUnit_from, game);
                 return true;
             }
             return false; // cannot fortify tiles (move own units to tile with own units)
         }
         // otherwise, move the unit from the original position to the new one
-        updateUnitMap(from, to, unit_from, game);
+        updateUnitMap(from, to, mUnit_from, game);
         return true;
     }
 

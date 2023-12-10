@@ -48,7 +48,7 @@ public class GameImpl implements MutableGame {
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
   public CityImpl currentCity;
-  private Unit currentUnit;
+  private MutableUnit currentUnit;
   public TileImpl currentTile;
 
   // adding this to implement GameObserver
@@ -94,13 +94,13 @@ public class GameImpl implements MutableGame {
   }
 
   // Getter and setter for the current Unit variable
-  public Unit getCurrentUnit(){ return currentUnit; }
-  public void setCurrentUnit (Unit u) { currentUnit = u; }
+  public MutableUnit getCurrentUnit(){ return currentUnit; }
+  public void setCurrentUnit (MutableUnit u) { currentUnit = u; }
 
   // Getter for the current player
   public Player getCurrentPlayer() { return currentPlayer;}
 
-  public Position getPositionFromUnit(UnitImpl u) {
+  public Position getPositionFromUnit(MutableUnit u) {
     // loop through the units map and find the unit with the corresponding ID
     UUID tempId = u.getUnitID();
     for (Map.Entry<Position, Unit> entry : units.entrySet()) {
@@ -242,10 +242,10 @@ public class GameImpl implements MutableGame {
     // implementations
     if (this.unitActionCivType != null) {
       // get the position based on the unit
-      // convert unit to unit impl
-      UnitImpl ui = (UnitImpl) u;
+      // convert unit to mutable unit
+      MutableUnit mu = (MutableUnit) u;
       // run the action function
-      this.unitActionCivType.performAction(ui, p, this);
+      this.unitActionCivType.performAction(mu, p, this);
     } else {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance

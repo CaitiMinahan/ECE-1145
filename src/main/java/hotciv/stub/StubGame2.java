@@ -2,15 +2,13 @@ package hotciv.stub;
 
 import hotciv.framework.*;
 import hotciv.standard.CityImpl;
-import hotciv.standard.Interfaces.MutableGame;
-import hotciv.standard.Interfaces.UnitAction;
-import hotciv.standard.Interfaces.Winner;
+import hotciv.standard.Factories.SemiCivFactory;
+import hotciv.standard.GammaCivUnitAction;
+import hotciv.standard.GenericUnitAction;
+import hotciv.standard.Interfaces.*;
 import hotciv.standard.UnitImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static hotciv.standard.Interfaces.MutableGame.cities;
 
@@ -43,7 +41,7 @@ import static hotciv.standard.Interfaces.MutableGame.cities;
    limitations under the License.
 */
 
-public class StubGame2 implements Game {
+public class StubGame2 implements MutableGame {
 
   // === Unit handling ===
   private Position pos_archer_red;
@@ -52,10 +50,16 @@ public class StubGame2 implements Game {
   private Position pos_ufo_red;
 
   private Unit red_archer;
+  private Unit currentUnit;
+  private Player currentPlayer;
+  private int turnCount;
 
+  private WorldLayout worldLayoutStrategy;
+  private WorldAging worldAgingStrategy;
   private Winner winnerStrategy;
-  private int age; // represents current year of the game
+  private PlayerSetup playerSetup;
   private UnitAction unitActionCivType;
+  private int age; // represents current year of the game
 
   public CityImpl currentCity;
   private List<GameObserver> observers = new ArrayList<>();
@@ -71,6 +75,29 @@ public class StubGame2 implements Game {
 
   public void setCurrentCity(City city) {
     currentCity = (CityImpl) city;
+  }
+
+  public StubGame2() {
+    defineWorld(1);
+
+    // Hardcode Semi-Civ into constructor
+    GameFactory gameFactory = new SemiCivFactory();
+    this.worldLayoutStrategy = gameFactory.createWorldLayout();
+    this.worldAgingStrategy = gameFactory.createWorldAging();
+    this.winnerStrategy = gameFactory.createWinnerStrategy();
+    this.unitActionCivType = gameFactory.createUnitAction();
+    this.playerSetup = gameFactory.createPlayerSetup();
+
+    // AlphaCiv configuration
+    pos_archer_red = new Position( 2, 0);
+    pos_legion_blue = new Position( 3, 2);
+    pos_settler_red = new Position( 4, 3);
+    pos_ufo_red = new Position( 6, 4);
+
+    // the only one I need to store for this stub
+    red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );
+
+    inTurn = Player.RED;
   }
 
   public Unit getUnitAt(Position p) {
@@ -105,12 +132,85 @@ public class StubGame2 implements Game {
       pos_ufo_red = to;
     }
     // notify our observer(s) about the changes on the tiles
-    gameObserver.worldChangedAt(from);
-    gameObserver.worldChangedAt(to);
+    for (GameObserver observer : observers) {
+      observer.worldChangedAt(from);
+      observer.worldChangedAt(to);
+    }
 
 
     return true; 
   }
+  public void killUnit(Position positionToClear) {
+    units.remove(positionToClear);
+  }
+  /**
+   * @param unitToCheck
+   * @return inversion of the check to settler type
+   */
+  public boolean canUnitAttack(Unit unitToCheck) {
+    return !Objects.equals(unitToCheck.getTypeString(), "settler");
+  }
+  public Position getPositionFromUnit(MutableUnit u) {
+    // loop through the units map and find the unit with the corresponding ID
+    UUID tempId = u.getUnitID();
+    for (Map.Entry<Position, Unit> entry : units.entrySet()) {
+      // get the key (position)
+      // get the unit (value)
+      Position pos = entry.getKey();
+      Unit unit = entry.getValue();
+      UnitImpl ui = (UnitImpl) unit;
+      if (ui.getUnitID() == u.getUnitID()) {
+        // this is the position we want
+        return pos;
+      }
+    }
+    return new Position(-1, -1);
+  }
+  // Helper function to retrieve the unit action type and not change the template design
+  public String getUnitActionStringType() {
+    if(unitActionCivType instanceof GammaCivUnitAction)
+    {
+      return "GammaCivUnitAction";
+    }
+    else if(unitActionCivType instanceof GenericUnitAction)
+    {
+      return "GenericUnitAction";
+    }
+    return "invalid class type";
+  }
+
+  public void placeCity(Position position, Player player) {
+    if (!cityExistsAt(position)) {
+      City newCity = createCity(player);
+      cities.put(position, newCity);
+      setCurrentCity(newCity);
+    }
+  }
+  // HELPER FUNCTIONS FOR BETACIV
+  public void setTurnCount(int turnCount) {
+    this.turnCount = turnCount;
+  }
+
+  public int getTurnCount() {
+    return turnCount;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
+  }
+
+  // create helper function to set the map according to setupWorld
+  // method in WorldLayout interface
+  public void setupWorldLayout(WorldLayout worldLayoutStrategy) {
+    if (worldLayoutStrategy != null) {
+      worldLayoutStrategy.setupWorld(this); // Pass the current game instance to the layout strategy
+    }
+  }
+  // Getter and setter for the current Unit variable
+  public Unit getCurrentUnit(){ return currentUnit; }
+  public void setCurrentUnit (MutableUnit u) { currentUnit = u; }
+  // Getter for the current player
+  public Player getCurrentPlayer() { return currentPlayer;}
 
   // === Turn handling ===
   private Player inTurn;
@@ -130,20 +230,6 @@ public class StubGame2 implements Game {
   // observer list is only a single one...
   public void addObserver(GameObserver observer) {
     gameObserver = observer;
-  } 
-
-  public StubGame2() { 
-    defineWorld(1); 
-    // AlphaCiv configuration
-    pos_archer_red = new Position( 2, 0);
-    pos_legion_blue = new Position( 3, 2);
-    pos_settler_red = new Position( 4, 3);
-    pos_ufo_red = new Position( 6, 4);
-
-    // the only one I need to store for this stub
-    red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );   
-
-    inTurn = Player.RED;
   }
 
   // A simple implementation to draw the map of DeltaCiv
@@ -162,7 +248,9 @@ public class StubGame2 implements Game {
         Position p = new Position(r,c);
         world.put( p, new StubTile(GameConstants.PLAINS));
 
-        // todo: do we need to adjust the world to look the same as what the GUI looks like when gradle show is ran?
+        for (GameObserver observer : observers) {
+          observer.worldChangedAt(new Position(0, 0));
+        }
       }
     }
   }
@@ -176,7 +264,7 @@ public class StubGame2 implements Game {
     return null;
   }
   public Player getWinner() {
-    return winnerStrategy.gameWinner((MutableGame) this);
+    return winnerStrategy.gameWinner(this);
   }
   public int getAge() {
     return age;
@@ -186,15 +274,18 @@ public class StubGame2 implements Game {
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
   public void changeProductionInCityAt( Position p, String unitType ) {}
   public void performUnitActionAt(Position p) {
+    System.out.println("-- StubGame2 / performUnitActionAt called.");
     Unit u = getUnitAt(p);
     // based on the type of game we are playing this will use the different
     // implementations
     if (this.unitActionCivType != null) {
       // get the position based on the unit
-      // convert unit to unit impl
-      UnitImpl ui = (UnitImpl) u;
+      // convert unit to mutable unit
+      MutableUnit mu = (MutableUnit) u;
       // run the action function
-      this.unitActionCivType.performAction(ui, p, (MutableGame) this);
+      System.out.println("-- StubGame2 / SemiCiv unit action is active");
+      this.unitActionCivType.performAction(mu, p, this);
+      gameObserver.worldChangedAt(p);
     } else {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance
@@ -230,7 +321,7 @@ public class StubGame2 implements Game {
 
 }
 
-class StubUnit implements  Unit {
+class StubUnit implements MutableUnit {
   private String type;
   private Player owner;
   public StubUnit(String type, Player owner) {
@@ -242,4 +333,15 @@ class StubUnit implements  Unit {
   public int getMoveCount() { return 1; }
   public int getDefensiveStrength() { return 0; }
   public int getAttackingStrength() { return 0; }
+
+  public void setDefendingStrength(int d) {}
+  public void setAttackingStrength(int a) {}
+  public void setTravelDistace(int t) {}
+  public int getTravelDistace() { return 0; }
+  public int getProductionCost() { return 0; }
+  public void setProductionCost(int cost) {}
+  public boolean getCanMove() { return true; }
+  public void setCanMove (boolean can_move) {}
+  // TODO needed to add this to get unique IDs
+  public UUID getUnitID() { return null; }
 }

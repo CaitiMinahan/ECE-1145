@@ -2,6 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 import hotciv.standard.Interfaces.MutableGame;
+import hotciv.standard.Interfaces.MutableUnit;
 import hotciv.standard.Interfaces.WorldLayout;
 
 public class GameDecorator implements MutableGame {
@@ -34,9 +35,9 @@ public class GameDecorator implements MutableGame {
     }
     public void setupWorldLayout(WorldLayout worldLayoutStrategy){ decoratedGame.setupWorldLayout(worldLayoutStrategy);}
     public Unit getCurrentUnit() { return decoratedGame.getCurrentUnit(); }
-    public void setCurrentUnit(Unit u) { decoratedGame.setCurrentUnit(u);}
+    public void setCurrentUnit(MutableUnit u) { decoratedGame.setCurrentUnit(u);}
     public Player getCurrentPlayer(){ return decoratedGame.getCurrentPlayer(); }
-    public Position getPositionFromUnit(UnitImpl u) { return decoratedGame.getPositionFromUnit(u); }
+    public Position getPositionFromUnit(MutableUnit u) { return decoratedGame.getPositionFromUnit(u); }
     public void killUnit(Position positionToClear) { decoratedGame.killUnit(positionToClear); }
     public boolean canUnitAttack(Unit unitToCheck) { return decoratedGame.canUnitAttack(unitToCheck); }
     public String getUnitActionStringType() { return decoratedGame.getUnitActionStringType(); }

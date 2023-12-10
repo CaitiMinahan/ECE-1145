@@ -7,6 +7,7 @@ import hotciv.stub.StubGame2;
 import minidraw.framework.DrawingEditor;
 import minidraw.standard.MiniDrawApplication;
 import minidraw.standard.NullTool;
+import hotciv.view.GfxConstants;
 
 import java.awt.event.MouseEvent;
 
