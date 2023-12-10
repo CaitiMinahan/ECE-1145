@@ -49,6 +49,7 @@ public class CivDrawing
   protected Drawing delegate;
   /** store all moveable figures visible in this drawing = units */
   protected Map<Unit,UnitFigure> unitFigureMap;
+  protected Map<City, CityFigure> cityFigureMap;
 
   /** the Game instance that this CivDrawing is going to render units
    * from */
@@ -125,6 +126,30 @@ public class CivDrawing
     }
   }
 
+  // added method to define the city figures
+  public void defineCityMap() {
+    // Iterate over the game world and create city figures
+    Position p;
+    for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
+      for (int c = 0; c < GameConstants.WORLDSIZE; c++) {
+        p = new Position(r, c);
+        City city = game.getCityAt(p);
+        if (city != null) {
+          // convert the city's Position to (x,y) coordinates
+          Point point = new Point(GfxConstants.getXFromColumn(p.getColumn()),
+                  GfxConstants.getYFromRow(p.getRow()));
+          CityFigure cityFigure = new CityFigure(city, point);
+          cityFigure.addFigureChangeListener(this);
+          // add the city to the map
+          cityFigureMap.put(city, cityFigure);
+
+          // also insert in delegate list
+          delegate.add(cityFigure);
+        }
+      }
+    }
+  }
+
   /** remove all unit figures in this
    * drawing, and reset the map (unit->unitfigure).
    * It is important to actually remove the figures
@@ -181,8 +206,10 @@ public class CivDrawing
           // Use a single city image for all cities
           String cityImageName = GfxConstants.CITY_ICON;
 
-          // Create a city icon using ImageFigure
-          ImageFigure cityIcon = new ImageFigure(cityImageName, point);
+          // Create a city icon using City Figure not image figure
+          CityFigure cityIcon = new CityFigure(city,
+                  new Point(GfxConstants.getXFromColumn(p.getColumn()),
+                  GfxConstants.getYFromRow(p.getRow())));
           cityIcon.addFigureChangeListener(this);
 
           // Insert in delegate list
@@ -205,27 +232,7 @@ public class CivDrawing
     defineCityMap();
   }
 
-  // added method to define the city figures
-  public void defineCityMap() {
-    // Iterate over the game world and create city figures
-    Position p;
-    for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
-      for (int c = 0; c < GameConstants.WORLDSIZE; c++) {
-        p = new Position(r, c);
-        City city = game.getCityAt(p);
-        if (city != null) {
-          // convert the city's Position to (x,y) coordinates
-          Point point = new Point(GfxConstants.getXFromColumn(p.getColumn()),
-                  GfxConstants.getYFromRow(p.getRow()));
-          CityFigure cityFigure = new CityFigure(city, point);
-          cityFigure.addFigureChangeListener(this);
 
-          // also insert in delegate list
-          delegate.add(cityFigure);
-        }
-      }
-    }
-  }
 
   // added this for completing turnEnds TODO for age output:
   // Initialize the age text figure
@@ -250,21 +257,21 @@ public class CivDrawing
 //    // TODO: Implementation pending
 //    // System.out.println("Fake it: tileFocusChangedAt " + position);
 //
-//    // Clear the existing selection by deselecting all figures
-//    delegate.clearSelection();
-//
-//    // Use an iterator to iterate over the figures and find the one corresponding to the focused tile
-//    Iterator<Figure> iterator = delegate.iterator();
-//    while (iterator.hasNext()) {
-//      Figure figure = iterator.next();
-//
-//      // Implement the logic to determine if the figure corresponds to the focused tile
-//      if (figureIsAtPosition(figure, position)) {
-//        // Add the figure to the selection to highlight or interact with it
-//        delegate.addToSelection(figure);
-//        break; // No need to continue iterating
-//      }
-//    }
+    // Clear the existing selection by deselecting all figures
+    delegate.clearSelection();
+
+    // Use an iterator to iterate over the figures and find the one corresponding to the focused tile
+    Iterator<Figure> iterator = delegate.iterator();
+    while (iterator.hasNext()) {
+      Figure figure = iterator.next();
+
+      // Implement the logic to determine if the figure corresponds to the focused tile
+      if (figureIsAtPosition(figure, position)) {
+        // Add the figure to the selection to highlight or interact with it
+        delegate.addToSelection(figure);
+        break; // No need to continue iterating
+      }
+    }
 
     // update the color of the unit or the city that corresponds to the player
     City city = game.getCityAt(position);
@@ -347,9 +354,9 @@ public class CivDrawing
     // everything. We simply rebuild the
     // entire Drawing.
     defineUnitMap();
-    defineIcons();
     // TODO: Cities pending
     defineCityMap();
+    defineIcons();
   }
 
   @Override

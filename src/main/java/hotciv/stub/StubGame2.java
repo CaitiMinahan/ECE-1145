@@ -7,12 +7,11 @@ import hotciv.standard.Interfaces.UnitAction;
 import hotciv.standard.Interfaces.Winner;
 import hotciv.standard.UnitImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static hotciv.standard.Interfaces.MutableGame.cities;
+// this is not usable for us since its static
+// instead of importing just create a new map
 
 /** Test stub for game for visual testing of
  * minidraw based graphics.
@@ -50,8 +49,10 @@ public class StubGame2 implements Game {
   private Position pos_legion_blue;
   private Position pos_settler_red;
   private Position pos_ufo_red;
+//  public Map<Position, City> cities = new HashMap<>();
 
   private Unit red_archer;
+  private City newCity;
 
   private Winner winnerStrategy;
   private int age; // represents current year of the game
@@ -59,13 +60,14 @@ public class StubGame2 implements Game {
 
   public CityImpl currentCity;
   private List<GameObserver> observers = new ArrayList<>();
-
+  // add a city to the map and give it blue ownership
+  private Position BlueCityPos ;
 
   public boolean cityExistsAt(Position position) {
     return cities.containsKey(position);
   }
 
-  public City createCity(Player player) {
+  public CityImpl createCity(Player player) {
     return new CityImpl(player);
   }
 
@@ -139,9 +141,15 @@ public class StubGame2 implements Game {
     pos_legion_blue = new Position( 3, 2);
     pos_settler_red = new Position( 4, 3);
     pos_ufo_red = new Position( 6, 4);
+    BlueCityPos = new Position(7,7);
+
+//    putCity(cityPos, BlueCity);
+//    cities.put(cityPos, BlueCity); How the hell do I add things to this
 
     // the only one I need to store for this stub
     red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );
+    // give the new city a stub city init
+    newCity = new StubCity(Player.BLUE);
 
     // create new game observer
     addObserver(gameObserver);
@@ -159,6 +167,7 @@ public class StubGame2 implements Game {
    * values provide a second world layout.
    */
   protected void defineWorld(int worldType) {
+    // TODO: the scope of this hashmap is limited to the function call, not sure this would work
     world = new HashMap<Position,Tile>();
     for ( int r = 0; r < GameConstants.WORLDSIZE; r++ ) {
       for ( int c = 0; c < GameConstants.WORLDSIZE; c++ ) {
@@ -173,10 +182,29 @@ public class StubGame2 implements Game {
   // TODO: Add more stub behaviour to test MiniDraw updating
   // added in the GameImpl methods for the above todo 
   public City getCityAt(Position p) {
-    if (cities.containsKey(p)) {
-      return cities.get(p);
+    if (p.equals(BlueCityPos)) {
+      return newCity;
+//      return null;
+    } else {
+      return null;
     }
-    return null;
+  }
+
+//  if (cities.containsKey(p))
+//  {
+//    return cities.get(p);
+//    } else {
+//      return null;
+//    }
+//  }
+
+  public void putCity(Position p, City c) {
+    if(!cities.containsKey(p)){
+      cities.put(p,c);
+    }
+    else {
+      System.out.println("Cannot set a city at pos: " + p + ".");
+    }
   }
   public Player getWinner() {
     return winnerStrategy.gameWinner((MutableGame) this);
@@ -235,11 +263,6 @@ public class StubGame2 implements Game {
       }
       // Implement additional logic based on the tile type if needed
     }  }
-
-  // todo: test placing a city ??
-
-  // todo: test placing a unit ??
-
 }
 
 class StubUnit implements  Unit {
@@ -254,4 +277,42 @@ class StubUnit implements  Unit {
   public int getMoveCount() { return 1; }
   public int getDefensiveStrength() { return 0; }
   public int getAttackingStrength() { return 0; }
+}
+
+class StubCity implements City {
+
+  private int size;
+  private Player owner;
+  private int populationSize;
+
+  //type of unit being produced at a certain city
+  private String productionUnit;
+  private String focus;
+  /*  treasury = number of money/production in the city's treasury
+   that can be used to produce a
+   unit in the city
+   */
+  private int treasury;
+
+  // TODO: modified CityImpl function so we pass in the owner of the city
+  public StubCity(Player owner) {
+    size = 1;
+    treasury = 0;
+    this.owner = owner;
+  }
+  public void setTreasury(int t){
+    this.treasury = t;
+  }
+
+  public void setSize(int size) { this.size = size;}
+  public void setPopulationSize(int popSize) {this.populationSize = popSize;}
+  public int getPopulationSize() { return this.populationSize;}
+  public Player getOwner() { return owner; }
+  public int getSize() { return size; }
+  public int getTreasury() { return treasury; }
+  public String getProduction() { return productionUnit; }
+  public String getWorkforceFocus() { return focus; }
+
+  // new function to set the owner of a city in case of battle
+  public void setOwner(Player player) { this.owner = player;}
 }
