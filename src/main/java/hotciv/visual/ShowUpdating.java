@@ -92,7 +92,6 @@ class UpdateTool extends NullTool {
     }
     case 5: {
       editor.showStatus("State change: Inspect City at (5,5)");
-
       City city = game.getCityAt(cityPosition);
       if (city != null) {
         game.setTileFocus(cityPosition);
