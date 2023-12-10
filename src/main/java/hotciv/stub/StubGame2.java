@@ -10,6 +10,7 @@ import hotciv.standard.UnitImpl;
 import java.util.*;
 
 import static hotciv.standard.Interfaces.MutableGame.cities;
+import static hotciv.standard.Interfaces.MutableGame.units;
 // this is not usable for us since its static
 // instead of importing just create a new map
 
@@ -61,7 +62,7 @@ public class StubGame2 implements Game {
   public CityImpl currentCity;
   private List<GameObserver> observers = new ArrayList<>();
   // add a city to the map and give it blue ownership
-  private Position BlueCityPos ;
+  private Position BlueCityPos;
 
   public boolean cityExistsAt(Position position) {
     return cities.containsKey(position);
@@ -76,43 +77,51 @@ public class StubGame2 implements Game {
   }
 
   public Unit getUnitAt(Position p) {
-    if ( p.equals(pos_archer_red) ) {
+    if (p.equals(pos_archer_red)) {
       return red_archer;
     }
-    if ( p.equals(pos_settler_red) ) {
-      return new StubUnit( GameConstants.SETTLER, Player.RED );
+    if (p.equals(pos_settler_red)) {
+      return new StubUnit(GameConstants.SETTLER, Player.RED);
     }
-    if ( p.equals(pos_legion_blue) ) {
-      return new StubUnit( GameConstants.LEGION, Player.BLUE );
+    if (p.equals(pos_legion_blue)) {
+      return new StubUnit(GameConstants.LEGION, Player.BLUE);
     }
-    if ( p.equals(pos_ufo_red) ) {
-      return new StubUnit( ThetaConstants.UFO, Player.RED );
+    if (p.equals(pos_ufo_red)) {
+      return new StubUnit(ThetaConstants.UFO, Player.RED);
     }
     return null;
   }
 
   // Stub only allows moving red archer
-  public boolean moveUnit( Position from, Position to ) { 
-    System.out.println( "-- StubGame2 / moveUnit called: "+from+"->"+to );
-    if ( from.equals(pos_archer_red) ) {
-      pos_archer_red = to;
-    }
-    else if (from.equals((pos_legion_blue))){
-      pos_legion_blue = to;
-    }
-    else if (from.equals((pos_settler_red))){
-      pos_settler_red = to;
-    }
-    else if (from.equals((pos_ufo_red))){
-      pos_ufo_red = to;
-    }
-    // notify our observer(s) about the changes on the tiles
-    gameObserver.worldChangedAt(from);
-    gameObserver.worldChangedAt(to);
+  public boolean moveUnit(Position from, Position to) {
+    System.out.println("-- StubGame2 / moveUnit called: " + from + "->" + to);
 
+    // get the unit to move
+    Unit newUnit = getUnitAt(from);
+    if (newUnit != null) {
 
-    return true; 
+      if (from.equals(pos_archer_red)) {
+        pos_archer_red = to;
+        units.put(to, newUnit);
+      } else if (from.equals((pos_legion_blue))) {
+        pos_legion_blue = to;
+        units.put(to, newUnit);
+      } else if (from.equals((pos_settler_red))) {
+        pos_settler_red = to;
+        units.put(to, newUnit);
+      } else if (from.equals((pos_ufo_red))) {
+        pos_ufo_red = to;
+        units.put(to, newUnit);
+      }
+      // notify our observer(s) about the changes on the tiles
+      gameObserver.worldChangedAt(from);
+      gameObserver.worldChangedAt(to);
+      return true;
+    } else {
+      return false;
+    }
   }
+
 
   // === Turn handling ===
   private Player inTurn;
