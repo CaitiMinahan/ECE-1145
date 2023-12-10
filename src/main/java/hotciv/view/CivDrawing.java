@@ -139,15 +139,28 @@ public class CivDrawing
     unitFigureMap.clear();
   }
 
-  protected ImageFigure turnShieldIcon;
+
+  // todo: create all protected image figures
+  protected ImageFigure turnShieldIcon, unitShieldIcon, cityShieldIcon;
   protected void defineIcons() {
     turnShieldIcon =
       new ImageFigure( "redshield",
                        new Point( GfxConstants.TURN_SHIELD_X,
-                                  GfxConstants.TURN_SHIELD_Y ) ); 
+                                  GfxConstants.TURN_SHIELD_Y ) );
+    unitShieldIcon =
+            new ImageFigure( GfxConstants.NOTHING,
+                    new Point( GfxConstants.UNIT_SHIELD_X,
+                            GfxConstants.UNIT_SHIELD_Y ) );
+    cityShieldIcon =
+            new ImageFigure( GfxConstants.NOTHING,
+                    new Point( GfxConstants.CITY_SHIELD_X,
+                            GfxConstants.CITY_SHIELD_Y ) );
     // insert in delegate figure list to ensure graphical
     // rendering.
     delegate.add(turnShieldIcon);
+//    delegate.add(unitShieldIcon);
+//    delegate.add(cityShieldIcon);
+
 
     // TODO: Further development to include rest of figures needed
     defineCityIcons();
@@ -260,12 +273,21 @@ public class CivDrawing
     if(city != null){
       // update the city shield color
       // get the player that owns that city
+      // check if the delegate has not been added and then add it
+      delegate.add(cityShieldIcon);
       Player owner = city.getOwner();
       switch(owner){
         case RED:
           // update the shield color
-          ImageFigure cityShield = new ImageFigure(GfxConstants.NOTHING, new Point (GfxConstants.CITY_SHIELD_X,GfxConstants.CITY_SHIELD_Y));
-          cityShield.set(GfxConstants.RED_SHIELD  ,new Point (GfxConstants.CITY_SHIELD_X,GfxConstants.CITY_SHIELD_Y));
+          cityShieldIcon.set(GfxConstants.RED_SHIELD,
+                  new Point (GfxConstants.CITY_SHIELD_X,
+                            GfxConstants.CITY_SHIELD_Y));
+          break;
+        case BLUE:
+          // update the shield color
+          cityShieldIcon.set(GfxConstants.BLUE_SHIELD,
+                  new Point (GfxConstants.CITY_SHIELD_X,
+                          GfxConstants.CITY_SHIELD_Y));
           break;
         default:
           System.out.println("default");
@@ -276,11 +298,20 @@ public class CivDrawing
       // update the unit shield color
       // get the player that owns that unit
       Player owner = unit.getOwner();
+      delegate.add(unitShieldIcon);
       switch(owner){
         case RED:
           // update the shield color
-          ImageFigure unitShield = new ImageFigure(GfxConstants.NOTHING, new Point (GfxConstants.UNIT_SHIELD_X,GfxConstants.UNIT_SHIELD_Y));
-          unitShield.set(GfxConstants.RED_SHIELD  ,new Point (GfxConstants.UNIT_SHIELD_X,GfxConstants.UNIT_SHIELD_Y));
+          System.out.println("Should change the unit shield to red");
+          unitShieldIcon.set(GfxConstants.RED_SHIELD,
+                  new Point (GfxConstants.UNIT_SHIELD_X,
+                          GfxConstants.UNIT_SHIELD_Y));
+          break;
+        case BLUE:
+          // update the shield color
+          unitShieldIcon.set(GfxConstants.BLUE_SHIELD,
+                  new Point (GfxConstants.UNIT_SHIELD_X,
+                          GfxConstants.UNIT_SHIELD_Y));
           break;
         default:
           System.out.println("default");
