@@ -32,7 +32,19 @@ public class ShowEndOfTurn {
     editor.open();
     editor.showStatus("Click to shield to see Game's endOfTurn method being called.");
 
-    // TODO: Replace the setting of the tool with your EndOfTurnTool implementation.
-    editor.setTool( new NullTool() );
+    EndOfTurnTool endOfTurnTool = new EndOfTurnTool(editor,game);
+    editor.setTool(endOfTurnTool);
   }
+}
+
+// create a new class that extends the tool
+class EndOfTurnTool extends NullTool{
+  private Game game;
+  private DrawingEditor editor;
+  public EndOfTurnTool(DrawingEditor editor, Game game){
+    this.editor = editor;
+    this.game = game;
+  }
+
+  // override the implementation and make sure it works for end of turn (click)
 }

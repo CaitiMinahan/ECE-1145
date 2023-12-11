@@ -49,6 +49,7 @@ public class CivDrawing
   protected Drawing delegate;
   /** store all moveable figures visible in this drawing = units */
   protected Map<Unit,UnitFigure> unitFigureMap;
+  protected Map<City, CityFigure> cityFigureMap;
 
   /** the Game instance that this CivDrawing is going to render units
    * from */
@@ -116,10 +117,40 @@ public class CivDrawing
           unitFigure.addFigureChangeListener(this);
           unitFigureMap.put(unit, unitFigure);
 
+          // get the unit move count and update TODO
+          int moveCount = unit.getMoveCount();
+
+
           // also insert in delegate list as it is
           // this list that is iterated by the
           // graphics rendering algorithms
           delegate.add(unitFigure);
+        }
+      }
+    }
+  }
+
+  // added method to define the city figures
+  public void defineCityMap() {
+    // Iterate over the game world and create city figures
+    Position p;
+    for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
+      for (int c = 0; c < GameConstants.WORLDSIZE; c++) {
+        p = new Position(r, c);
+        City city = game.getCityAt(p);
+        if (city != null) {
+          // convert the city's Position to (x,y) coordinates
+          Point point = new Point(GfxConstants.getXFromColumn(p.getColumn()),
+                  GfxConstants.getYFromRow(p.getRow()));
+          CityFigure cityFigure = new CityFigure(city, point);
+          cityFigure.addFigureChangeListener(this);
+          // add the city to the map
+          cityFigureMap.put(city, cityFigure);
+
+          // get the city production and update TODO
+
+          // also insert in delegate list
+          delegate.add(cityFigure);
         }
       }
     }
@@ -146,7 +177,7 @@ public class CivDrawing
   protected ImageFigure cityShieldIcon;
   protected ImageFigure unitShieldIcon;
   protected TextFigure moveUnitText;
-
+  protected TextFigure ageText;
   protected void defineIcons() {
     turnShieldIcon =
       new ImageFigure( "redshield",
@@ -171,15 +202,15 @@ public class CivDrawing
     // insert in delegate figure list to ensure graphical
     // rendering.
     delegate.add(turnShieldIcon);
-    delegate.add(unitShieldIcon);
-    delegate.add(cityShieldIcon);
+    //delegate.add(unitShieldIcon);
+    //delegate.add(cityShieldIcon);
     delegate.add(productionIcon);
     delegate.add(workForceFocusIcon);
     delegate.add(ageText);
     delegate.add(moveUnitText);
 
     // TODO: Further development to include rest of figures needed
-    defineCityIcons();
+    defineCityIcons(); // This gets called once at the start
   }
 
   // added method for create city figures for defineIcons() method
@@ -197,8 +228,10 @@ public class CivDrawing
           // Use a single city image for all cities
           String cityImageName = GfxConstants.CITY_ICON;
 
-          // Create a city icon using ImageFigure
-          ImageFigure cityIcon = new ImageFigure(cityImageName, point);
+          // Create a city icon using City Figure not image figure
+          CityFigure cityIcon = new CityFigure(city,
+                  new Point(GfxConstants.getXFromColumn(p.getColumn()),
+                  GfxConstants.getYFromRow(p.getRow())));
           cityIcon.addFigureChangeListener(this);
 
           // Insert in delegate list
@@ -221,31 +254,11 @@ public class CivDrawing
     defineCityMap();
   }
 
-  // added method to define the city figures
-  public void defineCityMap() {
-    // Iterate over the game world and create city figures
-    Position p;
-    for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
-      for (int c = 0; c < GameConstants.WORLDSIZE; c++) {
-        p = new Position(r, c);
-        City city = game.getCityAt(p);
-        if (city != null) {
-          // convert the city's Position to (x,y) coordinates
-          Point point = new Point(GfxConstants.getXFromColumn(p.getColumn()),
-                  GfxConstants.getYFromRow(p.getRow()));
-          CityFigure cityFigure = new CityFigure(city, point);
-          cityFigure.addFigureChangeListener(this);
 
-          // also insert in delegate list
-          delegate.add(cityFigure);
-        }
-      }
-    }
-  }
 
   // added this for completing turnEnds TODO for age output:
   // Initialize the age text figure
-  public TextFigure ageText;
+//  public TextFigure ageText;
 
   public void turnEnds(Player nextPlayer, int age) {
     // TODO: Remove system.out debugging output
@@ -263,9 +276,7 @@ public class CivDrawing
   }
 
   public void tileFocusChangedAt(Position position) {
-    // TODO: Implementation pending
-    System.out.println("Fake it: tileFocusChangedAt " + position);
-
+    // System.out.println("Fake it: tileFocusChangedAt " + position);
     // Clear the existing selection by deselecting all figures
     delegate.clearSelection();
 
@@ -279,6 +290,78 @@ public class CivDrawing
         // Add the figure to the selection to highlight or interact with it
         delegate.addToSelection(figure);
         break; // No need to continue iterating
+      }
+    }
+
+    // update the color of the unit or the city that corresponds to the player
+    City city = game.getCityAt(position);
+    Unit unit = game.getUnitAt(position);
+
+    if(city != null){
+      // update the city shield color
+      // get the player that owns that city
+      // check if the delegate has not been added and then add it
+      delegate.add(cityShieldIcon);
+      Player owner = city.getOwner();
+      // get the production in the city and display
+      productionIcon.set(city.getProduction(),
+              new Point( GfxConstants.CITY_PRODUCTION_X, GfxConstants.CITY_PRODUCTION_Y));
+      // get the balance in the city and display that
+      workForceFocusIcon.set(city.getWorkforceFocus(),
+              new Point( GfxConstants.WORKFORCEFOCUS_X, GfxConstants.WORKFORCEFOCUS_Y));
+      // delegate them in
+      delegate.add(productionIcon);
+      delegate.add(workForceFocusIcon);
+
+      // Print out what should be produced
+      System.out.println("The production in the city: " + city.getProduction());
+      System.out.println("The workForceFocus in the city: " + city.getWorkforceFocus());
+
+
+      switch(owner){
+        case RED:
+          // update the shield color
+          cityShieldIcon.set(GfxConstants.RED_SHIELD,
+                  new Point (GfxConstants.CITY_SHIELD_X,
+                            GfxConstants.CITY_SHIELD_Y));
+          break;
+        case BLUE:
+          // update the shield color
+          cityShieldIcon.set(GfxConstants.BLUE_SHIELD,
+                  new Point (GfxConstants.CITY_SHIELD_X,
+                          GfxConstants.CITY_SHIELD_Y));
+          break;
+        default:
+          System.out.println("default");
+      }
+
+    }
+    if (unit != null){
+      // update the unit shield color
+      // get the player that owns that unit
+      int moveCount = unit.getMoveCount();
+      Player owner = unit.getOwner();
+      delegate.add(unitShieldIcon);
+      // setting the text with the moves left
+      moveUnitText.setText(Integer.toString(moveCount));
+      delegate.add(moveUnitText);
+      switch(owner){
+        case RED:
+          // update the shield color
+          System.out.println("Should change the unit shield to red");
+          System.out.println("Move count: " + moveCount);
+          unitShieldIcon.set(GfxConstants.RED_SHIELD,
+                  new Point (GfxConstants.UNIT_SHIELD_X,
+                          GfxConstants.UNIT_SHIELD_Y));
+          break;
+        case BLUE:
+          // update the shield color
+          unitShieldIcon.set(GfxConstants.BLUE_SHIELD,
+                  new Point (GfxConstants.UNIT_SHIELD_X,
+                          GfxConstants.UNIT_SHIELD_Y));
+          break;
+        default:
+          System.out.println("default");
       }
     }
   }
@@ -311,9 +394,9 @@ public class CivDrawing
     // everything. We simply rebuild the
     // entire Drawing.
     defineUnitMap();
-    defineIcons();
     // TODO: Cities pending
     defineCityMap();
+    defineIcons();
   }
 
   @Override
