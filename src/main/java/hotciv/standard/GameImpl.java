@@ -43,6 +43,7 @@ public class GameImpl implements MutableGame {
   private Winner winnerStrategy;
   private UnitAction unitActionCivType;
   private PlayerSetup playerSetup;
+  private ChangeProduction productionStrategy;
   private Player currentPlayer;
   private int age; // represents current year of the game
   // tracks the number of turns in a round (increments every time each player becomes the current player)
@@ -61,6 +62,7 @@ public class GameImpl implements MutableGame {
     this.winnerStrategy = gameFactory.createWinnerStrategy();
     this.unitActionCivType = gameFactory.createUnitAction();
     this.playerSetup = gameFactory.createPlayerSetup();
+    this.productionStrategy = gameFactory.changeProduction();
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -233,6 +235,7 @@ public class GameImpl implements MutableGame {
 
   // @TODO need to implement this with the UFO
   public void changeProductionInCityAt(Position p, String unitType) {
+    productionStrategy.changeProduction(p, unitType, this);
   }
 
   // TODO: make sure all function calls to take Unit Action are replaced with perform unit action
