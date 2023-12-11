@@ -34,4 +34,7 @@ public class AlphaCivFactory implements GameFactory {
 
     @Override
     public ChangeProduction changeProduction() { return new GenericChangeProduction();}
+
+    @Override
+    public SetFocus changeWorkForceFocusInCityAt() { return new GenericSetFocus();}
 }
