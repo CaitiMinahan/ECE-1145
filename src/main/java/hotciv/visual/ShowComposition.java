@@ -57,10 +57,10 @@ class CompositionTool extends NullTool {
     this.game = game;
 
     // Initialize the tools
-     this.moveTool = new MoveTool(this.editor, this.game);
-     this.endOfTurnTool = new EndOfTurnTool(this.editor, this.game);
+    this.moveTool = new MoveTool(this.editor, this.game);
+    this.endOfTurnTool = new EndOfTurnTool(this.editor, this.game);
     this.actionTool = new ActionTool(this.editor, this.game);
-     this.setFocusTool = new SetFocusTool(this.editor, this.game);
+    this.setFocusTool = new SetFocusTool(this.editor, this.game);
   }
 
   // Mouse Events
@@ -120,6 +120,6 @@ class CompositionTool extends NullTool {
     // If this function is called, the mouse is being dragged
     // Update boolean
     drag = true;
-    // moveTool.mouseDrag(e, x, y);
+    moveTool.mouseDrag(e, x, y);
   }
 }
