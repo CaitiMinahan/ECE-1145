@@ -47,20 +47,20 @@ class CompositionTool extends NullTool {
   private boolean drag = false;
 
   // Tools
-  // private MoveTool moveTool;
-  // private EndOfTurnTool endOfTurnTool;
+   private MoveTool moveTool;
+   private EndOfTurnTool endOfTurnTool;
   private ActionTool actionTool;
-  // private SetFocusTool setFocusTool;
+   private SetFocusTool setFocusTool;
 
   public CompositionTool(DrawingEditor editor, Game game){
     this.editor = editor;
     this.game = game;
 
     // Initialize the tools
-    // this.moveTool = new MoveTool(this.editor, this.game);
-    // this.endOfTurnTool = new EndOfTurnTool(this.game);
+     this.moveTool = new MoveTool(this.editor, this.game);
+     this.endOfTurnTool = new EndOfTurnTool(this.editor, this.game);
     this.actionTool = new ActionTool(this.editor, this.game);
-    // this.setFocusTool = new SetFocusTool(this.editor, this.game);
+     this.setFocusTool = new SetFocusTool(this.editor, this.game);
   }
 
   // Mouse Events
@@ -70,20 +70,20 @@ class CompositionTool extends NullTool {
 
     // If the player is dragging the mouse
     if(drag) {
-      // moveTool.mouseUp(e, x, y);
+       moveTool.mouseUp(e, x, y);
       drag = false;
     }
     // If mouse ends up on a unit
     else if(game.getUnitAt(pos) != null){
       // Select the box of where that unit is
       System.out.println("Using SetFocusTool to set focus on the unit");
-      // setFocusTool.mouseUp(e, x, y);
+       setFocusTool.mouseUp(e, x, y);
     }
     // If mouse ends up on a city
     else if(game.getCityAt(pos) != null){
       // Select the box of where that city is
       System.out.println("Using SetFocusTool to set focus on the city");
-      // setFocusTool.mouseUp(e, x, y);
+       setFocusTool.mouseUp(e, x, y);
     }
   }
   public void mouseDown(MouseEvent e, int x, int y){
@@ -98,7 +98,7 @@ class CompositionTool extends NullTool {
     // That means you're on the EndOfTurnTool
     if(y_ShieldRange && x_ShieldRange){
       System.out.println("Calling EndOfTurnTool");
-      // endOfTurnTool.mouseDown(e, x, y);
+       endOfTurnTool.mouseDown(e, x, y);
     }
     // If the player clicks on a unit
     else if(game.getUnitAt(pos) != null){
@@ -112,7 +112,7 @@ class CompositionTool extends NullTool {
       // MoveTool should be called
       else{
         System.out.println("Calling MoveTool");
-        // moveTool.mouseDown(e, x, y);
+         moveTool.mouseDown(e, x, y);
       }
     }
   }
