@@ -10,7 +10,7 @@ public class CityImpl implements City {
     private int populationSize;
 
     //type of unit being produced at a certain city
-    private String productionUnit;
+    public String productionUnit;
     public String focus;
     /*  treasury = number of money/production in the city's treasury
      that can be used to produce a
@@ -23,6 +23,7 @@ public class CityImpl implements City {
         size = 1;
         treasury = 0;
         focus = GameConstants.foodFocus;
+        productionUnit = GameConstants.ARCHER;
         this.owner = owner;
     }
     public void setTreasury(int t){
