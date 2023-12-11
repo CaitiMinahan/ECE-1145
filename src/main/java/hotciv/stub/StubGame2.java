@@ -95,15 +95,15 @@ public class StubGame2 implements MutableGame {
     this.playerSetup = gameFactory.createPlayerSetup();
 
     // AlphaCiv configuration
-    pos_archer_red = new Position( 2, 0);
-    pos_legion_blue = new Position( 3, 2);
-    pos_settler_red = new Position( 4, 3);
-    pos_ufo_red = new Position( 6, 4);
-    BlueCityPos = new Position(7,7);
+    pos_archer_red = new Position(2, 0);
+    pos_legion_blue = new Position(3, 2);
+    pos_settler_red = new Position(4, 3);
+    pos_ufo_red = new Position(6, 4);
+    BlueCityPos = new Position(7, 7);
 
 
     // the only one I need to store for this stub
-    red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );
+    red_archer = new StubUnit(GameConstants.ARCHER, Player.RED);
     newCity = new StubCity(Player.BLUE);
 
     // create new game observer
@@ -157,9 +157,11 @@ public class StubGame2 implements MutableGame {
       return false;
     }
   }
+
   public void killUnit(Position positionToClear) {
     units.remove(positionToClear);
   }
+
   /**
    * @param unitToCheck
    * @return inversion of the check to settler type
@@ -167,6 +169,7 @@ public class StubGame2 implements MutableGame {
   public boolean canUnitAttack(Unit unitToCheck) {
     return !Objects.equals(unitToCheck.getTypeString(), "settler");
   }
+
   public Position getPositionFromUnit(MutableUnit u) {
     // loop through the units map and find the unit with the corresponding ID
     UUID tempId = u.getUnitID();
@@ -183,14 +186,12 @@ public class StubGame2 implements MutableGame {
     }
     return new Position(-1, -1);
   }
+
   // Helper function to retrieve the unit action type and not change the template design
   public String getUnitActionStringType() {
-    if(unitActionCivType instanceof GammaCivUnitAction)
-    {
+    if (unitActionCivType instanceof GammaCivUnitAction) {
       return "GammaCivUnitAction";
-    }
-    else if(unitActionCivType instanceof GenericUnitAction)
-    {
+    } else if (unitActionCivType instanceof GenericUnitAction) {
       return "GenericUnitAction";
     }
     return "invalid class type";
@@ -203,6 +204,7 @@ public class StubGame2 implements MutableGame {
       setCurrentCity(newCity);
     }
   }
+
   // HELPER FUNCTIONS FOR BETACIV
   public void setTurnCount(int turnCount) {
     this.turnCount = turnCount;
@@ -223,52 +225,70 @@ public class StubGame2 implements MutableGame {
       worldLayoutStrategy.setupWorld(this); // Pass the current game instance to the layout strategy
     }
   }
+
   // Getter and setter for the current Unit variable
-  public Unit getCurrentUnit(){ return currentUnit; }
-  public void setCurrentUnit (MutableUnit u) { currentUnit = u; }
+  public Unit getCurrentUnit() {
+    return currentUnit;
+  }
+
+  public void setCurrentUnit(MutableUnit u) {
+    currentUnit = u;
+  }
+
   // Getter for the current player
-  public Player getCurrentPlayer() { return currentPlayer;}
+  public Player getCurrentPlayer() {
+    return currentPlayer;
+  }
 
 
   // === Turn handling ===
   private Player inTurn;
+
   public void endOfTurn() {
-    System.out.println( "-- StubGame2 / endOfTurn called." );
+    System.out.println("-- StubGame2 / endOfTurn called.");
     inTurn = (getPlayerInTurn() == Player.RED ?
-              Player.BLUE : 
-              Player.RED );
+            Player.BLUE :
+            Player.RED);
     // no age increments
     gameObserver.turnEnds(inTurn, -4000);
     // update the system
-    Position newPos = new Position(0,0);
+    Position newPos = new Position(0, 0);
     gameObserver.worldChangedAt(newPos);
   }
 
-  public Player getPlayerInTurn() { return inTurn; }
+  public Player getPlayerInTurn() {
+    return inTurn;
+  }
 
   // === Observer handling ===
   protected GameObserver gameObserver;
+
   // observer list is only a single one...
   public void addObserver(GameObserver observer) {
     gameObserver = observer;
   }
 
   // A simple implementation to draw the map of DeltaCiv
-  protected Map<Position,Tile> world; 
-  public Tile getTileAt( Position p ) { return world.get(p); }
+  protected Map<Position, Tile> world;
+
+  public Tile getTileAt(Position p) {
+    return world.get(p);
+  }
 
 
-  /** define the world.
+  /**
+   * define the world.
+   *
    * @param worldType 1 gives one layout while all other
-   * values provide a second world layout.
+   *                  values provide a second world layout.
    */
   protected void defineWorld(int worldType) {
     // TODO: the scope of this hashmap is limited to the function call, not sure this would work
-    world = new HashMap<Position,Tile>();
-    for ( int r = 0; r < GameConstants.WORLDSIZE; r++ ) {
-      for ( int c = 0; c < GameConstants.WORLDSIZE; c++ ) {
-        Position p = new Position(r,c);
-        world.put( p, new StubTile(GameConstants.PLAINS));
+    world = new HashMap<Position, Tile>();
+    for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
+      for (int c = 0; c < GameConstants.WORLDSIZE; c++) {
+        Position p = new Position(r, c);
+        world.put(p, new StubTile(GameConstants.PLAINS));
 
         for (GameObserver observer : observers) {
           observer.worldChangedAt(new Position(0, 0));
@@ -282,34 +302,37 @@ public class StubGame2 implements MutableGame {
   public City getCityAt(Position p) {
     if (p.equals(BlueCityPos)) {
       return newCity;
-    }
-    else if (cities.containsKey(p)) {
+    } else if (cities.containsKey(p)) {
       return cities.get(p);
-    }
-    else {
+    } else {
       return null;
     }
   }
 
 
   public void putCity(Position p, City c) {
-    if(!cities.containsKey(p)){
-      cities.put(p,c);
-    }
-    else {
+    if (!cities.containsKey(p)) {
+      cities.put(p, c);
+    } else {
       System.out.println("Cannot set a city at pos: " + p + ".");
     }
   }
+
   public Player getWinner() {
     return winnerStrategy.gameWinner(this);
   }
+
   public int getAge() {
     return age;
   }
 
   // TODO: need to fill in the two methods below (they are empty in GameImpl)
-  public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
-  public void changeProductionInCityAt( Position p, String unitType ) {}
+  public void changeWorkForceFocusInCityAt(Position p, String balance) {
+  }
+
+  public void changeProductionInCityAt(Position p, String unitType) {
+  }
+
   public void performUnitActionAt(Position p) {
     System.out.println("-- StubGame2 / performUnitActionAt called.");
     Unit u = getUnitAt(p);
@@ -350,14 +373,18 @@ public class StubGame2 implements MutableGame {
       City newCity = getCityAt(position);
       Unit newUnit = getUnitAt(position);
 
-      if(newCity != null){
+      if (newCity != null) {
         System.out.println("City on this position");
       }
-      if(newUnit != null){
+      if (newUnit != null) {
         System.out.println("Unit on this position of type " + newUnit.getTypeString());
       }
       // Implement additional logic based on the tile type if needed
-    }  }
+    }
+    // update the function
+    Position newPos = new Position(0,0);
+    gameObserver.worldChangedAt(newPos);
+  }
 }
 
 class StubUnit implements MutableUnit {

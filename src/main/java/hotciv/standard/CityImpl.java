@@ -1,5 +1,6 @@
 package hotciv.standard;
 import hotciv.framework.City;
+import hotciv.framework.GameConstants;
 import hotciv.framework.Player;
 import hotciv.standard.*;
 
@@ -10,7 +11,7 @@ public class CityImpl implements City {
 
     //type of unit being produced at a certain city
     private String productionUnit;
-    private String focus;
+    public String focus;
     /*  treasury = number of money/production in the city's treasury
      that can be used to produce a
      unit in the city
@@ -21,6 +22,7 @@ public class CityImpl implements City {
     public CityImpl(Player owner) {
         size = 1;
         treasury = 0;
+        focus = GameConstants.foodFocus;
         this.owner = owner;
     }
     public void setTreasury(int t){

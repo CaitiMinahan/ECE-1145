@@ -231,6 +231,7 @@ public class GameImpl implements MutableGame {
   }
 
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
+
   }
 
   // @TODO need to implement this with the UFO
