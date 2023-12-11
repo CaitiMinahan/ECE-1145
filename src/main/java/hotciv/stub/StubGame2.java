@@ -156,14 +156,6 @@ public class StubGame2 implements MutableGame {
     } else {
       return false;
     }
-    // notify our observer(s) about the changes on the tiles
-//    TODO - might need to remove
-//    for (GameObserver observer : observers) {
-//      observer.worldChangedAt(from);
-//      observer.worldChangedAt(to);
-//    }
-//    return true;
-
   }
   public void killUnit(Position positionToClear) {
     units.remove(positionToClear);
@@ -259,32 +251,6 @@ public class StubGame2 implements MutableGame {
   // observer list is only a single one...
   public void addObserver(GameObserver observer) {
     gameObserver = observer;
-//<<<<<<< HEAD
-//=======
-//  }
-//
-//  public StubGame2() {
-//    defineWorld(1);
-//    // AlphaCiv configuration
-//    pos_archer_red = new Position( 2, 0);
-//    pos_legion_blue = new Position( 3, 2);
-//    pos_settler_red = new Position( 4, 3);
-//    pos_ufo_red = new Position( 6, 4);
-//    BlueCityPos = new Position(7,7);
-//
-////    putCity(cityPos, BlueCity);
-////    cities.put(cityPos, BlueCity); How the hell do I add things to this
-//
-//    // the only one I need to store for this stub
-//    red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );
-//    // give the new city a stub city init
-//    newCity = new StubCity(Player.BLUE);
-//
-//    // create new game observer
-//    addObserver(gameObserver);
-//
-//    inTurn = Player.RED;
-//>>>>>>> feature_caleb
   }
 
   // A simple implementation to draw the map of DeltaCiv
@@ -371,10 +337,7 @@ public class StubGame2 implements MutableGame {
     System.out.println(" Position: " + position);
 
     // Implement logic to set tile focus
-    // Notify observers about the tile focus change
-//    for (GameObserver observer : observers) {
-//      observer.tileFocusChangedAt(position);
-//    }
+    // Notify observer about the tile focus change
     gameObserver.tileFocusChangedAt(position);
 
     // Handle different tile types
