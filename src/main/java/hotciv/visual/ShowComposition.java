@@ -36,8 +36,8 @@ public class ShowComposition {
     editor.open();
     editor.showStatus("Click and drag any item to see Game's proper response.");
 
-    // TODO: Replace the setting of the tool with your CompositionTool implementation.
-    editor.setTool( new NullTool() );
+    CompositionTool compositionTool = new CompositionTool(editor, game);
+    editor.setTool(compositionTool);
   }
 }
 class CompositionTool extends NullTool {
@@ -70,20 +70,20 @@ class CompositionTool extends NullTool {
 
     // If the player is dragging the mouse
     if(drag) {
-       moveTool.mouseUp(e, x, y);
+      moveTool.mouseUp(e, x, y);
       drag = false;
     }
     // If mouse ends up on a unit
     else if(game.getUnitAt(pos) != null){
       // Select the box of where that unit is
       System.out.println("Using SetFocusTool to set focus on the unit");
-       setFocusTool.mouseUp(e, x, y);
+      setFocusTool.mouseUp(e, x, y);
     }
     // If mouse ends up on a city
     else if(game.getCityAt(pos) != null){
       // Select the box of where that city is
       System.out.println("Using SetFocusTool to set focus on the city");
-       setFocusTool.mouseUp(e, x, y);
+      setFocusTool.mouseUp(e, x, y);
     }
   }
   public void mouseDown(MouseEvent e, int x, int y){
@@ -112,7 +112,7 @@ class CompositionTool extends NullTool {
       // MoveTool should be called
       else{
         System.out.println("Calling MoveTool");
-         moveTool.mouseDown(e, x, y);
+        moveTool.mouseDown(e, x, y);
       }
     }
   }

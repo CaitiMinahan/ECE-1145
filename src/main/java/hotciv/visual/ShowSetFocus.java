@@ -51,7 +51,7 @@ class SetFocusTool extends NullTool{
   }
 
   // override the implementation and see what needs to happen for a move (click)
-  public void mouseDown(MouseEvent e, int x, int y) {
+  public void mouseUp(MouseEvent e, int x, int y) {
     // set the focus to a tile that was clicked on
     Position newPosition = GfxConstants.getPositionFromXY(x,y);
     game.setTileFocus(newPosition);
