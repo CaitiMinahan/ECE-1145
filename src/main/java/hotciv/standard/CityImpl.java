@@ -1,5 +1,6 @@
 package hotciv.standard;
 import hotciv.framework.City;
+import hotciv.framework.GameConstants;
 import hotciv.framework.Player;
 import hotciv.standard.*;
 
@@ -9,8 +10,8 @@ public class CityImpl implements City {
     private int populationSize;
 
     //type of unit being produced at a certain city
-    private String productionUnit;
-    private String focus;
+    public String productionUnit;
+    public String focus;
     /*  treasury = number of money/production in the city's treasury
      that can be used to produce a
      unit in the city
@@ -21,6 +22,8 @@ public class CityImpl implements City {
     public CityImpl(Player owner) {
         size = 1;
         treasury = 0;
+        focus = GameConstants.foodFocus;
+        productionUnit = GameConstants.ARCHER;
         this.owner = owner;
     }
     public void setTreasury(int t){
@@ -40,6 +43,7 @@ public class CityImpl implements City {
     public String getProduction() { return productionUnit; }
     @Override
     public String getWorkforceFocus() { return focus; }
+    public void setWorkForceFocus(String focus1) { focus = focus1; }
 
     // new function to set the owner of a city in case of battle
     public void setOwner(Player player) { this.owner = player;}

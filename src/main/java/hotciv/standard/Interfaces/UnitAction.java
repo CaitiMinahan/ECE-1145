@@ -8,8 +8,8 @@ import hotciv.standard.UnitImpl;
 
 // Set up the template to be implemented by the generic and gamma variants
 public interface UnitAction {
-    void performAction(UnitImpl currentUnit, Position p, MutableGame currentGame);
+    void performAction(MutableUnit currentUnit, Position p, MutableGame currentGame);
     boolean moveUnit( Position from, Position to, MutableGame currentGame);
-    void updateUnitMap(Position from, Position to, Unit unit_from, MutableGame currentGame);
+    void updateUnitMap(Position from, Position to, MutableUnit unit_from, MutableGame currentGame);
 
 }

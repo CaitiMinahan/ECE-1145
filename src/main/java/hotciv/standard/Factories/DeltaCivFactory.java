@@ -38,4 +38,7 @@ public class DeltaCivFactory implements GameFactory {
     @Override
     public ChangeProduction changeProduction() { return new GenericChangeProduction();}
 
+    @Override
+    public SetFocus setFocus() { return new GenericSetFocus();}
+
 }
