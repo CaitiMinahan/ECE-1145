@@ -132,6 +132,9 @@ public class StubGame2 implements Game {
               Player.RED );
     // no age increments
     gameObserver.turnEnds(inTurn, -4000);
+    // update the system
+    Position newPos = new Position(0,0);
+    gameObserver.worldChangedAt(newPos);
   }
 
   public Player getPlayerInTurn() { return inTurn; }
