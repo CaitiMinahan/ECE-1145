@@ -1,9 +1,13 @@
 package hotciv.visual;
 
 import hotciv.framework.Game;
+import hotciv.framework.Position;
 import hotciv.stub.StubGame2;
+import hotciv.view.GfxConstants;
 import minidraw.framework.*;
 import minidraw.standard.*;
+
+import java.awt.event.MouseEvent;
 
 /** Template code for exercise FRS 36.40.
 
@@ -32,7 +36,24 @@ public class ShowSetFocus {
     editor.open();
     editor.showStatus("Click a tile to see Game's setFocus method being called.");
 
-    // TODO: Replace the setting of the tool with your SetFocusTool implementation.
-    editor.setTool( new SelectionTool(editor) );
+    SetFocusTool setFocusTool = new SetFocusTool(editor, game);
+    editor.setTool(setFocusTool);
+  }
+}
+
+class SetFocusTool extends NullTool{
+  private Game game;
+  private DrawingEditor editor;
+
+  public SetFocusTool(DrawingEditor editor, Game game){
+    this.editor = editor;
+    this.game = game;
+  }
+
+  // override the implementation and see what needs to happen for a move (click)
+  public void mouseDown(MouseEvent e, int x, int y) {
+    // set the focus to a tile that was clicked on
+    Position newPosition = GfxConstants.getPositionFromXY(x,y);
+    game.setTileFocus(newPosition);
   }
 }

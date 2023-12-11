@@ -2,6 +2,7 @@ package hotciv.visual;
 
 import hotciv.framework.City;
 import hotciv.framework.Game;
+import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.stub.StubGame2;
 import minidraw.framework.DrawingEditor;
@@ -54,6 +55,8 @@ public class ShowUpdating {
 class UpdateTool extends NullTool {
   private Game game;
   private DrawingEditor editor;
+
+  Position cityPosition = new Position(7, 7);
   public UpdateTool(DrawingEditor editor, Game game) {
     this.editor = editor;
     this.game = game;
@@ -90,9 +93,9 @@ class UpdateTool extends NullTool {
     }
     case 5: {
       editor.showStatus("State change: Inspect City at (5,5)");
-      Position cityPosition = new Position(5, 5);
       City city = game.getCityAt(cityPosition);
       if (city != null) {
+        game.setTileFocus(cityPosition);
         System.out.println("City found at position " + cityPosition);
         System.out.println("City owner: " + city.getOwner());
         System.out.println("City size: " + city.getSize());
@@ -110,6 +113,7 @@ class UpdateTool extends NullTool {
     // TODO: Add more state changes for other things to test
     default: {
       editor.showStatus("No more changes in my list...");
+      game.endOfTurn();
     }
     }
     count ++;

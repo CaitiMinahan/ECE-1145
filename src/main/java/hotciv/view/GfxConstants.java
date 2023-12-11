@@ -53,7 +53,8 @@ public class GfxConstants {
   public final static int TURN_SHIELD_Y = 64;
   public final static int AGE_TEXT_X = 535;
   public final static int AGE_TEXT_Y = 23;
-  
+
+
   public final static int UNIT_SHIELD_X = 594;
   public final static int UNIT_SHIELD_Y = 188;
   public final static int UNIT_COUNT_X = 598;
