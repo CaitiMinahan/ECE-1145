@@ -60,6 +60,7 @@ public class CivDrawing
     this.delegate = new StandardDrawing();
     this.game = game;
     this.unitFigureMap = new HashMap<>();
+    this.cityFigureMap = new HashMap<>();
 
     // Initialize ageText to see if this resolves it from being null when turnEnds is called
     ageText = new TextFigure("", new Point(GfxConstants.AGE_TEXT_X, GfxConstants.AGE_TEXT_Y));
@@ -136,8 +137,8 @@ public class CivDrawing
     // the selection!
     clearSelection();
 
-    // remove all unit figures in this drawing
-    removeAllCityFigures();
+    // remove all city figures in this drawing
+//    removeAllCityFigures();
     // Iterate over the game world and create city figures
     Position p;
     for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
@@ -176,11 +177,13 @@ public class CivDrawing
     unitFigureMap.clear();
   }
   protected void removeAllCityFigures() {
-    for (City c : cityFigureMap.keySet()) {
-      CityFigure cf = cityFigureMap.get(c);
-      delegate.remove(cf);
+    if(cityFigureMap.size() > 0) {
+      for (City c : cityFigureMap.keySet()) {
+        CityFigure cf = cityFigureMap.get(c);
+        delegate.remove(cf);
+      }
+      cityFigureMap.clear();
     }
-    cityFigureMap.clear();
   }
 
 

@@ -356,6 +356,7 @@ public class StubGame2 implements MutableGame {
       // run the action function
       System.out.println("-- StubGame2 / SemiCiv unit action is active");
       this.unitActionCivType.performAction(mu, p, this);
+
       gameObserver.worldChangedAt(p);
     } else {
       // for some reason the unitActionCivType is null when it should be generic or
