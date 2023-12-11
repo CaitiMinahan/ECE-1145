@@ -16,9 +16,9 @@ public interface MutableGame extends Game {
     Map<Player, Integer> playerSuccessfulAttacks = new HashMap<>(); // tracks the players wins in attacking
     void setupWorldLayout(WorldLayout worldLayout);
     Unit getCurrentUnit();
-    void setCurrentUnit(Unit u);
+    void setCurrentUnit(MutableUnit u);
     Player getCurrentPlayer();
-    Position getPositionFromUnit(UnitImpl u);
+    Position getPositionFromUnit(MutableUnit u);
     void killUnit(Position positionToClear);
     boolean canUnitAttack(Unit unitToCheck);
     String getUnitActionStringType();

@@ -257,5 +257,50 @@ public class TestAlphaCiv {
     assertThat(unit.getOwner(), is(player1));
 
   }
+
+  // testing the observer pattern
+  // these tests will use methods from the GameObserverSpy to make sure the Observer is interacting with the game
+  // the Observer should be notified whenever there is a state change
+  @Test
+  public void testWorldChangedAt() {
+      // Setup: Add an observer
+      GameObserverSpy observer = new GameObserverSpy();
+      game.addObserver(observer);
+
+      Position observerFrom = new Position(0, 0);
+      Position observerTo = new Position(3, 3);
+
+      // Action: Make a change in the world (e.g., move a unit)
+      assertThat(game.moveUnit(observerFrom, observerTo), is(true));
+
+      // Assertion: Verify that the observer's worldChangedAt method was called
+      assertTrue(observer.worldChangedAtCalled);
+    }
+
+    @Test
+    public void testTurnEnds() {
+        // Setup: Add an observer
+        GameObserverSpy observer = new GameObserverSpy();
+        game.addObserver(observer);
+
+        // Action: Move to the end of the turn
+        game.endOfTurn();
+
+        // Assertion: Verify that the observer's turnEnds method was called
+        assertTrue(observer.turnEndsCalled);
+    }
+
+    @Test
+    public void testTileFocusChangedAt() {
+        // Setup: Add an observer
+        GameObserverSpy observer = new GameObserverSpy();
+        game.addObserver(observer);
+
+        // Action: Change the focus to a tile
+        game.setTileFocus(new Position(2, 2));
+
+        // Assertion: Verify that the observer's tileFocusChangedAt method was called
+        assertTrue(observer.tileFocusChangedAtCalled);
+    }
 }
 

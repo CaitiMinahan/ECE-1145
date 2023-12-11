@@ -2,6 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 import hotciv.standard.Interfaces.MutableGame;
+import hotciv.standard.Interfaces.MutableUnit;
 import hotciv.standard.Interfaces.UnitAction;
 import hotciv.standard.Interfaces.UnitAttacking;
 
@@ -17,7 +18,7 @@ public class ThetaCivUnitAction implements UnitAction {
         this.unitAttacking = unitAttacking; // allows for test stubs
     }
     @Override
-    public void performAction(UnitImpl currentUnit, Position p, MutableGame currentGame)
+    public void performAction(MutableUnit currentUnit, Position p, MutableGame currentGame)
     {
         // if the current unit is a settler
         // build a city
@@ -71,7 +72,7 @@ public class ThetaCivUnitAction implements UnitAction {
     }
     //define a function to move the units since it gets called three times
     @Override
-    public void updateUnitMap(Position from, Position to, Unit unit_from, MutableGame game){
+    public void updateUnitMap(Position from, Position to, MutableUnit unit_from, MutableGame game){
         game.units.remove(from);
         game.units.put(to, unit_from);
     }
@@ -80,29 +81,29 @@ public class ThetaCivUnitAction implements UnitAction {
     // then place the unit at the desired position
     // check for unit at 'from' position
     @Override
-    public boolean moveUnit( Position from, Position to, MutableGame game) {
+    public boolean moveUnit(Position from, Position to, MutableGame game) {
         Unit unit_from = game.getUnitAt(from);
+        MutableUnit mUnit_from = (MutableUnit) unit_from;
         // set the current unit in game
-        game.setCurrentUnit(unit_from);
+        game.setCurrentUnit(mUnit_from);
         // test the unit for the allowable moves
-        UnitImpl ui = (UnitImpl) unit_from;
-        int travelMoves = ui.getTravelDistace();
+        int travelMoves = mUnit_from.getTravelDistace();
         if(travelMoves == 0){
             return false; // unit has no moves left
         }
-            if (unit_from == null) {
+            if (mUnit_from == null) {
                 return false;
             }
             // get the current unit type once
-            String unitTypeString = unit_from.getTypeString();
-            boolean unitCanMove = ((UnitImpl) unit_from).getCanMove();
+            String unitTypeString = mUnit_from.getTypeString();
+            boolean unitCanMove = mUnit_from.getCanMove();
             // check to see if the unit to move is a fortified archer
             if (unitTypeString.equals("archer") && !unitCanMove)
                 return false;
             else if (unitTypeString.equals("archer") && unitCanMove && game.getUnitAt(to) == null) {
-                updateUnitMap(from, to, unit_from, game);
+                updateUnitMap(from, to, mUnit_from, game);
                 // unit is moved, remove a travel distance
-                ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
+                mUnit_from.setTravelDistace(travelMoves - 1);
                 return true;
             }
             // if the 'to' unit already has a unit there
@@ -129,7 +130,7 @@ public class ThetaCivUnitAction implements UnitAction {
                     // call the functions
                     if(unitAttacking.canAttackerBeatDefender((UnitImpl) attackingUnit, (UnitImpl) foundUnit, from, to, game)) {
                         game.killUnit(to);
-                        updateUnitMap(from, to, unit_from, game);
+                        updateUnitMap(from, to, mUnit_from, game);
                         // update the successful attack map
                         int currentSuccessfulAttacks = game.playerSuccessfulAttacks.get(attackingPlayer);
                         game.playerSuccessfulAttacks.put(attackingPlayer, currentSuccessfulAttacks + 1);
@@ -154,8 +155,8 @@ public class ThetaCivUnitAction implements UnitAction {
                 return false; // cannot fortify tiles (move own units to tile with own units)
             }
             // otherwise, move the unit from the original position to the new one
-            updateUnitMap(from, to, unit_from, game);
-            ((UnitImpl) unit_from).setTravelDistace(travelMoves - 1);
+            updateUnitMap(from, to, mUnit_from, game);
+            mUnit_from.setTravelDistace(travelMoves - 1);
             // here we have no units in the to position - safe to move
             // check for city
             // if there is a city, transfer ownership of the city
@@ -163,7 +164,7 @@ public class ThetaCivUnitAction implements UnitAction {
             if(currentCity != null){
                 // transfer ownership
                 if(unit_from.getTypeString() != GameConstants.UFO){
-                    ((CityImpl) currentCity).setOwner(unit_from.getOwner());
+                    ((CityImpl) currentCity).setOwner(mUnit_from.getOwner());
                 }
             }
         return true;

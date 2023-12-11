@@ -1,13 +1,13 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
+import hotciv.standard.Interfaces.*;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID; // TODO: had to add this to track units
-
-import hotciv.standard.Interfaces.*;
+import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Skeleton implementation of HotCiv.
@@ -43,13 +43,19 @@ public class GameImpl implements MutableGame {
   private Winner winnerStrategy;
   private UnitAction unitActionCivType;
   private PlayerSetup playerSetup;
+  private ChangeProduction productionStrategy;
   private Player currentPlayer;
+  private SetFocus setFocusStrategy;
   private int age; // represents current year of the game
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
   public CityImpl currentCity;
-  private Unit currentUnit;
+  private MutableUnit currentUnit;
   public TileImpl currentTile;
+
+  // adding this to implement GameObserver
+  private List<GameObserver> observers = new ArrayList<>();
+
   public GameImpl(GameFactory gameFactory) {
     // use the factory to create the appropriate strategies for the following variant behaviors:
     this.worldLayoutStrategy = gameFactory.createWorldLayout();
@@ -57,6 +63,8 @@ public class GameImpl implements MutableGame {
     this.winnerStrategy = gameFactory.createWinnerStrategy();
     this.unitActionCivType = gameFactory.createUnitAction();
     this.playerSetup = gameFactory.createPlayerSetup();
+    this.productionStrategy = gameFactory.changeProduction();
+    this.setFocusStrategy = gameFactory.setFocus();
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -90,13 +98,13 @@ public class GameImpl implements MutableGame {
   }
 
   // Getter and setter for the current Unit variable
-  public Unit getCurrentUnit(){ return currentUnit; }
-  public void setCurrentUnit (Unit u) { currentUnit = u; }
+  public MutableUnit getCurrentUnit(){ return currentUnit; }
+  public void setCurrentUnit (MutableUnit u) { currentUnit = u; }
 
   // Getter for the current player
   public Player getCurrentPlayer() { return currentPlayer;}
 
-  public Position getPositionFromUnit(UnitImpl u) {
+  public Position getPositionFromUnit(MutableUnit u) {
     // loop through the units map and find the unit with the corresponding ID
     UUID tempId = u.getUnitID();
     for (Map.Entry<Position, Unit> entry : units.entrySet()) {
@@ -169,20 +177,25 @@ public class GameImpl implements MutableGame {
     return "invalid class type";
   }
 
-  // refactored this to use the different ActionType versions (Delegate)
+  // modified moveUnit to support the observer behavior
   public boolean moveUnit(Position from, Position to) {
     // get the current unit action type
     UnitAction UnitActionCivType = unitActionCivType; // from constructor/priv variables
-    // based on the type of game we are playing this will use the different
-    // implementations
-    if (UnitActionCivType != null) {
-      // run the move function
-      return UnitActionCivType.moveUnit(from, to, this);
+
+    // Debug print to check the value of unitActionCivType
+//    System.out.println("UnitActionCivType: " + UnitActionCivType);
+
+    // Check if the unit can actually move
+    if (unitActionCivType != null && unitActionCivType.moveUnit(from, to, this)) {
+      // Notify observers about the world change
+      for (GameObserver observer : observers) {
+        observer.worldChangedAt(to);
+      }
+      return true; // Indicate successful move
     } else {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance
       System.out.println("The UnitAction type was null, should be generic or GammaCiv");
-
     }
     return false;
   }
@@ -211,13 +224,21 @@ public class GameImpl implements MutableGame {
         ((UnitImpl) currUnit).setTravelDistace(1);
       }
     }
+
+    // added this for implementing the observer pattern
+    // Notify observers about the end of turn
+    for (GameObserver observer : observers) {
+      observer.turnEnds(getPlayerInTurn(), getAge());
+    }
   }
 
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
+    setFocusStrategy.setFocus(p, balance, this);
   }
 
   // @TODO need to implement this with the UFO
   public void changeProductionInCityAt(Position p, String unitType) {
+    productionStrategy.changeProduction(p, unitType, this);
   }
 
   // TODO: make sure all function calls to take Unit Action are replaced with perform unit action
@@ -227,16 +248,31 @@ public class GameImpl implements MutableGame {
     // implementations
     if (this.unitActionCivType != null) {
       // get the position based on the unit
-      // convert unit to unit impl
-      UnitImpl ui = (UnitImpl) u;
+      // convert unit to mutable unit
+      MutableUnit mu = (MutableUnit) u;
       // run the action function
-      this.unitActionCivType.performAction(ui, p, this);
+      this.unitActionCivType.performAction(mu, p, this);
     } else {
       // for some reason the unitActionCivType is null when it should be generic or
       // gammaCiv instance
       System.out.println("The UnitAction type was null, should be generic or GammaCiv");
     }
   }
+
+  @Override
+  public void addObserver(GameObserver observer) {
+    observers.add(observer);
+  }
+
+  @Override
+  public void setTileFocus(Position position) {
+    // Implement logic to set tile focus
+    // Notify observers about the tile focus change
+    for (GameObserver observer : observers) {
+      observer.tileFocusChangedAt(position);
+    }
+  }
+
   public void placeCity(Position position, Player player) {
     if (!cityExistsAt(position)) {
       City newCity = createCity(player);
