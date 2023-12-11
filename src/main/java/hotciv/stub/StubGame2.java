@@ -51,7 +51,7 @@ public class StubGame2 implements MutableGame {
   private Position pos_legion_blue;
   private Position pos_settler_red;
   private Position pos_ufo_red;
-//  public Map<Position, City> cities = new HashMap<>();
+  public Map<Position, City> cities = new HashMap<>();
 
   private Unit red_archer;
   private Unit currentUnit;
@@ -105,6 +105,9 @@ public class StubGame2 implements MutableGame {
     // the only one I need to store for this stub
     red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );
     newCity = new StubCity(Player.BLUE);
+
+    // create new game observer
+    addObserver(gameObserver);
 
     inTurn = Player.RED;
   }
@@ -313,19 +316,15 @@ public class StubGame2 implements MutableGame {
   public City getCityAt(Position p) {
     if (p.equals(BlueCityPos)) {
       return newCity;
-//      return null;
-    } else {
+    }
+    else if (cities.containsKey(p)) {
+      return cities.get(p);
+    }
+    else {
       return null;
     }
   }
 
-//  if (cities.containsKey(p))
-//  {
-//    return cities.get(p);
-//    } else {
-//      return null;
-//    }
-//  }
 
   public void putCity(Position p, City c) {
     if(!cities.containsKey(p)){

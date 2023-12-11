@@ -223,7 +223,7 @@ public class GameImpl implements MutableGame {
       }
     }
 
-    // added this for implementing the obersver pattern
+    // added this for implementing the observer pattern
     // Notify observers about the end of turn
     for (GameObserver observer : observers) {
       observer.turnEnds(getPlayerInTurn(), getAge());

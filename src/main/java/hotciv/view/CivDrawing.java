@@ -55,7 +55,7 @@ public class CivDrawing
    * from */
   protected Game game;
   
-  public CivDrawing( DrawingEditor editor, Game game ) {
+  public CivDrawing(DrawingEditor editor, Game game ) {
     super();
     this.delegate = new StandardDrawing();
     this.game = game;
@@ -132,6 +132,12 @@ public class CivDrawing
 
   // added method to define the city figures
   public void defineCityMap() {
+    // ensure no units of the old list are accidental in
+    // the selection!
+    clearSelection();
+
+    // remove all unit figures in this drawing
+    removeAllCityFigures();
     // Iterate over the game world and create city figures
     Position p;
     for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
@@ -168,6 +174,13 @@ public class CivDrawing
       delegate.remove(uf);
     }
     unitFigureMap.clear();
+  }
+  protected void removeAllCityFigures() {
+    for (City c : cityFigureMap.keySet()) {
+      CityFigure cf = cityFigureMap.get(c);
+      delegate.remove(cf);
+    }
+    cityFigureMap.clear();
   }
 
 
@@ -235,8 +248,11 @@ public class CivDrawing
     // insert in delegate figure list to ensure graphical
     // rendering.
     delegate.add(turnShieldIcon);
-//    delegate.add(unitShieldIcon); commented out to prevent black screen
-//    delegate.add(cityShieldIcon);
+    //    // insert in delegate figure list to ensure graphical
+    // rendering.
+    delegate.add(unitShieldIcon);
+    delegate.add(cityShieldIcon);
+    delegate.add(ageText);
 
 //>>>>>>> feature_caleb
 
@@ -260,9 +276,7 @@ public class CivDrawing
           String cityImageName = GfxConstants.CITY_ICON;
 
           // Create a city icon using City Figure not image figure
-          CityFigure cityIcon = new CityFigure(city,
-                  new Point(GfxConstants.getXFromColumn(p.getColumn()),
-                  GfxConstants.getYFromRow(p.getRow())));
+          CityFigure cityIcon = new CityFigure(city,point);
           cityIcon.addFigureChangeListener(this);
 
           // Insert in delegate list
