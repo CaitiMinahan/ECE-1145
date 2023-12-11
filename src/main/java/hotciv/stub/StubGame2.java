@@ -99,9 +99,12 @@ public class StubGame2 implements MutableGame {
     pos_legion_blue = new Position( 3, 2);
     pos_settler_red = new Position( 4, 3);
     pos_ufo_red = new Position( 6, 4);
+    BlueCityPos = new Position(7,7);
+
 
     // the only one I need to store for this stub
     red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );
+    newCity = new StubCity(Player.BLUE);
 
     inTurn = Player.RED;
   }
