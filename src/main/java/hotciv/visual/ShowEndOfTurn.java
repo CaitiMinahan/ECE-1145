@@ -2,8 +2,11 @@ package hotciv.visual;
 
 import hotciv.framework.Game;
 import hotciv.stub.StubGame2;
+import hotciv.view.GfxConstants;
 import minidraw.framework.*;
 import minidraw.standard.*;
+
+import java.awt.event.MouseEvent;
 
 /** Template code for exercise FRS 36.42.
 
@@ -32,7 +35,31 @@ public class ShowEndOfTurn {
     editor.open();
     editor.showStatus("Click to shield to see Game's endOfTurn method being called.");
 
-    // TODO: Replace the setting of the tool with your EndOfTurnTool implementation.
-    editor.setTool( new NullTool() );
+    EndOfTurnTool endOfTurnTool = new EndOfTurnTool(editor,game);
+    editor.setTool(endOfTurnTool);
+  }
+}
+
+// create a new class that extends the tool
+class EndOfTurnTool extends NullTool{
+  private Game game;
+  private DrawingEditor editor;
+  public EndOfTurnTool(DrawingEditor editor, Game game){
+    this.editor = editor;
+    this.game = game;
+  }
+
+  // override the implementation and make sure it works for end of turn (click)
+  public void mouseDown(MouseEvent e, int x, int y){
+    // get the location of x-y and if on the shield location then do the end of turn
+    if ((x >= GfxConstants.TURN_SHIELD_X && x <= GfxConstants.TURN_SHIELD_X + 27) &&
+            (y >= GfxConstants.TURN_SHIELD_Y && y <= GfxConstants.TURN_SHIELD_X + 39))
+    {
+      // we have a click inside the turn shield
+      System.out.println("We have a click inside the turn shield. Run EOT");
+      // run end of turn
+      game.endOfTurn();
+
+    }
   }
 }

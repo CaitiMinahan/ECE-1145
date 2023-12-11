@@ -12,6 +12,7 @@ public interface GameFactory {
     UnitAction createUnitAction();
     PlayerSetup createPlayerSetup();
     ChangeProduction changeProduction();
+    SetFocus setFocus();
 
     // these call the interfaces created for the variant classes (i.e., interfaces: WorldLayout, WorldAging, Winner, UnitAction)
     // the createX() methods will be called in the GameImpl constructor to reference the factories

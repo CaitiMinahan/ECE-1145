@@ -43,7 +43,9 @@ public class GameImpl implements MutableGame {
   private Winner winnerStrategy;
   private UnitAction unitActionCivType;
   private PlayerSetup playerSetup;
+  private ChangeProduction productionStrategy;
   private Player currentPlayer;
+  private SetFocus setFocusStrategy;
   private int age; // represents current year of the game
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
@@ -61,6 +63,8 @@ public class GameImpl implements MutableGame {
     this.winnerStrategy = gameFactory.createWinnerStrategy();
     this.unitActionCivType = gameFactory.createUnitAction();
     this.playerSetup = gameFactory.createPlayerSetup();
+    this.productionStrategy = gameFactory.changeProduction();
+    this.setFocusStrategy = gameFactory.setFocus();
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -221,7 +225,7 @@ public class GameImpl implements MutableGame {
       }
     }
 
-    // added this for implementing the obersver pattern
+    // added this for implementing the observer pattern
     // Notify observers about the end of turn
     for (GameObserver observer : observers) {
       observer.turnEnds(getPlayerInTurn(), getAge());
@@ -229,10 +233,12 @@ public class GameImpl implements MutableGame {
   }
 
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
+    setFocusStrategy.setFocus(p, balance, this);
   }
 
   // @TODO need to implement this with the UFO
   public void changeProductionInCityAt(Position p, String unitType) {
+    productionStrategy.changeProduction(p, unitType, this);
   }
 
   // TODO: make sure all function calls to take Unit Action are replaced with perform unit action
