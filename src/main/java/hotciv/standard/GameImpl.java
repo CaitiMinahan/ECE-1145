@@ -45,7 +45,7 @@ public class GameImpl implements MutableGame {
   private PlayerSetup playerSetup;
   private ChangeProduction productionStrategy;
   private Player currentPlayer;
-  private SetFocus setFocus;
+  private SetFocus setFocusStrategy;
   private int age; // represents current year of the game
   // tracks the number of turns in a round (increments every time each player becomes the current player)
   private int turnCount;
@@ -64,7 +64,7 @@ public class GameImpl implements MutableGame {
     this.unitActionCivType = gameFactory.createUnitAction();
     this.playerSetup = gameFactory.createPlayerSetup();
     this.productionStrategy = gameFactory.changeProduction();
-    this.setFocus = gameFactory.setFocus();
+    this.setFocusStrategy = gameFactory.setFocus();
 
     // initialize the game with the first player as RED
     currentPlayer = Player.RED;
@@ -233,7 +233,7 @@ public class GameImpl implements MutableGame {
   }
 
   public void changeWorkForceFocusInCityAt(Position p, String balance) {
-    productionStrategy
+    setFocusStrategy.setFocus(p, balance, this);
   }
 
   // @TODO need to implement this with the UFO

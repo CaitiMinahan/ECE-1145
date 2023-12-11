@@ -31,5 +31,5 @@ public class BetaCivFactory implements GameFactory {
     public ChangeProduction changeProduction() { return new GenericChangeProduction();}
 
     @Override
-    public SetFocus changeWorkForceFocusInCityAt() { new GenericSetFocus();}
+    public SetFocus setFocus() { return new GenericSetFocus();}
 }

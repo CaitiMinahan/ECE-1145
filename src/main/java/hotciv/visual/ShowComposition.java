@@ -2,6 +2,9 @@ package hotciv.visual;
 
 import hotciv.framework.Game;
 import hotciv.framework.Position;
+import hotciv.standard.Factories.SemiCivFactory;
+import hotciv.standard.GameImpl;
+import hotciv.standard.Interfaces.GameFactory;
 import hotciv.stub.StubGame2;
 import minidraw.framework.*;
 import minidraw.standard.*;
